@@ -56,7 +56,7 @@ export default function Login() {
         </div>
       </div>
     </div>
-    <div className="hidden bg-muted md:block size-auto  md:m-auto">
+    <div className="hidden bg-muted md:flex md:justify-center md:content-center size-auto  md:m-auto">
       <Image
         src={PentagoLogo}
         alt="Image"
