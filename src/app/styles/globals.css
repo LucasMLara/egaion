@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
   
+/* .root,
+#root,
+#docs-root {
+  --primary-color: #EDEAEF;
+  --secondary-color: #000;
+} */
+
+
+*{
+  background-color: #EDEAEF;
+}
