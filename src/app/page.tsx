@@ -44,9 +44,11 @@ export default function Login() {
             className="transition-all"
             />
           </div>
+          <Link href='/home'>
           <Button type="submit" className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all">
             Entrar
           </Button>
+          </Link>
         </div>
         <div className="mt-4 text-center text-sm ">
           Ainda não possui uma conta?
