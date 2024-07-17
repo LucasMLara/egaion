@@ -8,6 +8,7 @@ import PentagoLogo from '@/assets/Pentago.svg'
 
 export default function EsqueciSenha() {
   return (
+    
     <div className="mx-auto grid h-screen max-w-[1440px] grid-cols-1 place-content-center bg-neutral-500 md:grid-cols-2">
     <div className="flex items-center justify-center py-12">
       <div className="mx-auto grid w-[350px] gap-6">
