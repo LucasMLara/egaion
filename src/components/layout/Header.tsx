@@ -1,49 +1,25 @@
-'use client'
-import { useState, useEffect } from 'react';
-import Image from 'next/image'
-import logoutbtn from '@/assets/icons/Logout.svg'
-import userbtn from '@/assets/icons/Usuário.svg'
 import Logo from '@/assets/BrandPentago.svg'
 import Link from "next/link"
-
-
+import { UserIcon, LogOutIcon } from 'lucide-react'
+import Shadow from './Shadow'
 
 export default function Header() {
-
-  const [shadow, setShadow] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setShadow(true);
-      } else {
-        setShadow(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  
-  
   return (
-    <header className={`w-full h-16 flex justify-between sticky top-0 ${shadow ? 'shadow-md' : ''} bg-neutral-400 z-50`}>
+    <header className={`relative w-full h-16 flex justify-between bg-neutral-400 z-50`}>
       <div className='h-full w-full flex items-center'>
         <Link href='https://www.pentago.com.br/novo/index.html' target='_blank'>
-          <Image src={Logo} className='size-14 mx-6 hover:scale-110 transition-all' alt='logo' />
+          <Logo className='size-14 mx-6 hover:scale-110 transition-all' />
         </Link>
       </div>
       <div className='h-full w-full flex justify-end items-center'>
         <Link href='#'>
-          <Image src={userbtn} className='mx-3 size-6 hover:scale-110 transition-all' alt='usuário' />
+          <UserIcon className='mx-3 size-6 hover:scale-110 transition-all' />
         </Link>
         <Link href='/'>
-          <Image src={logoutbtn} alt='Logout' className='mx-3 size-6 hover:scale-110 transition-all' />
+          <LogOutIcon className='mx-3 size-6 hover:scale-110 transition-all' />
         </Link>
       </div>
+      <Shadow />
     </header>
   )
 }

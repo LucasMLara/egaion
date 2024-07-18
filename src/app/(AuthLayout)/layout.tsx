@@ -1,5 +1,6 @@
 import DrawerMenu from "@/components/layout/DrawerMenu"
 import Header from "@/components/layout/Header"
+import Content from "./content"
 
 export default function AuthLayout({
   children,
@@ -7,11 +8,14 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-          <>
-            <Header />
-            <DrawerMenu />
-              {children}
-              {/* <footer className="h-24 w-full bg-neutral-800 bottom-0 right-0 absolute ml-24">a</footer> */}
-          </>
+    <div className="grid grid-rows-[auto_1fr] h-svh overflow-y-hidden">
+      <Header />
+      <div className="grid grid-cols-[auto_1fr] h-full overflow-y-hidden">
+        <DrawerMenu />
+        <Content>
+          {children}
+        </Content>
+      </div>
+    </div>
   )
 }
