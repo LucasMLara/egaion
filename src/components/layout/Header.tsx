@@ -5,7 +5,6 @@ import logoutbtn from '@/assets/icons/Logout.svg'
 import userbtn from '@/assets/icons/Usuário.svg'
 import Logo from '@/assets/BrandPentago.svg'
 import Link from "next/link"
-import UserIcon from '@/components/icons/UserIconComponent'
 
 
 
@@ -31,10 +30,10 @@ export default function Header() {
   
   
   return (
-    <header className={`w-full h-16 flex justify-between sticky top-0 ${shadow ? 'shadow-md' : ''} bg-neutral-400`}>
+    <header className={`w-full h-16 flex justify-between sticky top-0 ${shadow ? 'shadow-md' : ''} bg-neutral-400 z-50`}>
       <div className='h-full w-full flex items-center'>
         <Link href='https://www.pentago.com.br/novo/index.html' target='_blank'>
-          <Image src={Logo} className='size-14 mx-4 hover:scale-110 transition-all' alt='logo' />
+          <Image src={Logo} className='size-14 mx-6 hover:scale-110 transition-all' alt='logo' />
         </Link>
       </div>
       <div className='h-full w-full flex justify-end items-center'>
