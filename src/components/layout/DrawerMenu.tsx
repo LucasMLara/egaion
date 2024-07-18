@@ -1,9 +1,4 @@
 import React from 'react'
-import HomeIcon from '@/assets/icons/Home.svg'
-import DocIcon from '@/assets/icons/Documentacao.svg'
-import EditalIcon from "@/assets/icons/Editais.svg"
-import EquipeIcon from "@/assets/icons/Equipe técnica.svg"
-import Image from 'next/image'
 import Link from "next/link"
 import {
   Tooltip,
@@ -11,16 +6,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { HomeIcon, FileTextIcon, UsersIcon, EditIcon } from 'lucide-react'
 
 
 export default function DrawerMenu() {
   return (
-    <div className='w-24 h-screen bg-neutral-400 fixed flex flex-col items-center justify-center gap-16'>
+    <div className='w-24 h-full bg-neutral-400 flex flex-col items-center justify-center gap-16'>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='/home'>
-              <Image className='mx-3 size-6 hover:scale-110 transition-all' src={HomeIcon} alt=''></Image>
+              <HomeIcon className="size-6 stroke-black hover:stroke-red-500" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -32,11 +28,11 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='/team'>
-              <Image className='mx-3 size-6 hover:scale-110 transition-all' src={EquipeIcon} alt='' ></Image>
+              <UsersIcon className="size-6 stroke-black hover:stroke-red-500" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Equipe T.</p>
+            <p>Equipe Técnica</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -44,7 +40,7 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='edital'>
-              <Image className='mx-3 size-6 hover:scale-110 transition-all' src={EditalIcon} alt=''></Image>
+              <EditIcon className="size-6 stroke-black hover:stroke-red-500" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -56,11 +52,11 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='docs'>
-              <Image className='mx-3 size-6 hover:scale-110 transition-all' src={DocIcon} alt=''></Image>
+              <FileTextIcon className="size-6 stroke-black hover:stroke-red-500" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Doc.</p>
+            <p>Documentação</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider> 
