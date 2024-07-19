@@ -1,15 +1,11 @@
 import React from 'react'
+import PentagoLogo from '@/assets/Pentago.svg'
 
 export default function Team() {
   return (
-    <section className='bg-primary-300 border-4 border-primary-800 relative grid place-content-center ml-24'>
-      <div className="size-5 bg-primary-200" />
-      <div className="size-5 bg-primary-300" />
-      <div className="size-5 bg-primary-400" />
-      <div className="size-5 bg-primary-500" />
-      <div className="size-5 bg-primary-600" />
-      <div className="size-5 bg-primary-700" />
-      <div className="size-5 bg-primary-800" />
+    <section className='h-full flex flex-wrap flex-col items-center justify-center'>
+      <PentagoLogo className="size-96 animate-[bounce_3000ms_ease_infinite]" />
+      <h1 className='text-2xl'>Em desenvolvimento...</h1>
     </section>
   )
 }

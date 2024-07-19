@@ -12,8 +12,7 @@ export default function Login() {
       <div className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-4">
     <div className="bg-muted block md:hidden size-auto md:m-auto">
-      <PentagoLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale"
-      />
+      <PentagoLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
     </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -55,8 +54,7 @@ export default function Login() {
       </div>
     </div>
     <div className="hidden bg-muted md:flex md:justify-center md:content-center size-full  md:m-auto">
-      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3"
-      />
+      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3" />
     </div>
   </div>
   );

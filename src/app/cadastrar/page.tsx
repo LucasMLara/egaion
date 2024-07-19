@@ -87,9 +87,8 @@ export default function Cadastro() {
         </div>
       </div>
     </div>
-    <div className="hidden bg-muted md:flex md:justify-center md:content-center size-auto  md:m-auto">
-      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3"
-      />
+    <div className="hidden bg-muted md:flex md:justify-center md:content-center size-full  md:m-auto">
+      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3" />
     </div>
   </div>
     </>
