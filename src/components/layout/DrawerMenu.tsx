@@ -16,7 +16,7 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='/home'>
-              <HomeIcon className="size-6 stroke-black hover:stroke-red-500" />
+              <HomeIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -28,7 +28,7 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='/team'>
-              <UsersIcon className="size-6 stroke-black hover:stroke-red-500" />
+              <UsersIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -40,7 +40,7 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='edital'>
-              <EditIcon className="size-6 stroke-black hover:stroke-red-500" />
+              <EditIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -52,7 +52,7 @@ export default function DrawerMenu() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='docs'>
-              <FileTextIcon className="size-6 stroke-black hover:stroke-red-500" />
+              <FileTextIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>

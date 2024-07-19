@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,7 @@ export default function EsqueciSenha() {
       <div className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-4">
     <div className="bg-muted block md:hidden size-auto md:m-auto">
-      <Image
-        src={PentagoLogo}
-        alt="Image"
-        className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale"
+      <PentagoLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale"
       />
     </div>
           <div className="grid gap-2">
@@ -43,10 +40,7 @@ export default function EsqueciSenha() {
       </div>
     </div>
     <div className="hidden bg-muted md:flex md:justify-center md:content-center size-auto  md:m-auto">
-      <Image
-        src={PentagoLogo}
-        alt="Image"
-        className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3"
+      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3"
       />
     </div>
   </div>

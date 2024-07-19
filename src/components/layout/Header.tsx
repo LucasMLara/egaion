@@ -8,15 +8,15 @@ export default function Header() {
     <header className={`relative w-full h-16 flex justify-between bg-neutral-400 z-50`}>
       <div className='h-full w-full flex items-center'>
         <Link href='https://www.pentago.com.br/novo/index.html' target='_blank'>
-          <Logo className='size-14 mx-6 hover:scale-110 transition-all' />
+          <Logo className='size-14 mx-6 hover:scale-110 transition-all hover:drop-shadow-lg' />
         </Link>
       </div>
       <div className='h-full w-full flex justify-end items-center'>
         <Link href='#'>
-          <UserIcon className='mx-3 size-6 hover:scale-110 transition-all' />
+          <UserIcon className='mx-3 size-6 hover:scale-110 transition-all hover:stroke-primary-400' />
         </Link>
         <Link href='/'>
-          <LogOutIcon className='mx-3 size-6 hover:scale-110 transition-all' />
+          <LogOutIcon className='mx-3 size-6 hover:scale-110 transition-all hover:stroke-primary-400' />
         </Link>
       </div>
       <Shadow />
