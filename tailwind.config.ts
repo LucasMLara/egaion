@@ -23,13 +23,13 @@ const config = {
       },
       colors: {
         primary: {
-          200: "#FED4D8",
-          300: "#F99EA6",
-          400: "#F26B76",
-          500: "#E73B49",
-          600: "#C42E3A",
-          700: "#9F222C",
-          800: "#7A1820",
+          200: "#CCDFF5",
+          300: "#88B4E4",
+          400: "#4489CF",
+          500: "#005EB8",
+          600: "#004E9D",
+          700: "#003F80",
+          800: "#002F62",
         },
         auxiliary: {
           error: {
@@ -58,7 +58,7 @@ const config = {
         },
       },
       backgroundImage: {
-        "gradient-primary": `linear-gradient(-160deg,#281214, #000000 30%)`,
+        "gradient-primary": `linear-gradient(165deg,#002F62, #003F80 75%)`,
       },
       keyframes: {
         "accordion-down": {

@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${fontSans.className} bg-neutral-500`}>{children}</body>
+      <body className={`${fontSans.className} bg-primary-200`}>{children}</body>
     </html>
   );
 }

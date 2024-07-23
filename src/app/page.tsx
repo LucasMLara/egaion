@@ -2,17 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link"
-import PentagoLogo from '@/assets/Pentago.svg'
+import SebraeLogo from '@/assets/Sebrae.svg'
 
 
 export default function Login() {
   return (
-    <div className="mx-auto grid h-screen max-w-[1440px] grid-cols-1 place-content-center bg-neutral-500 md:grid-cols-2">
+    <div className="mx-auto grid h-screen max-w-[1440px] grid-cols-1 place-content-center bg-primary-200 md:grid-cols-2">
     <div className="flex items-center justify-center py-12">
       <div className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-4">
     <div className="bg-muted block md:hidden size-auto md:m-auto">
-      <PentagoLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
+      <SebraeLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
     </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -54,7 +54,7 @@ export default function Login() {
       </div>
     </div>
     <div className="hidden bg-muted md:flex md:justify-center md:content-center size-full  md:m-auto">
-      <PentagoLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3" />
+      <SebraeLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3" />
     </div>
   </div>
   );
