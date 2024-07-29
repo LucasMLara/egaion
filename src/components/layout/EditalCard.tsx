@@ -21,15 +21,24 @@ import {
 import { Button } from "@/components/ui/button"
 
 
-interface IEditalCard {
-
+type IEditalCard = {
+  status?: 'ok' | 'pending' | 'error';
 }
 
-export default function EditalCard() {
+
+
+const statusClasses = {
+  ok: 'bg-auxiliary-success-400 text-neutral-600',
+  pending: 'bg-auxiliary-warning-500 text-neutral-600',
+  error: 'bg-auxiliary-error-400 text-neutral-500',
+};
+
+export default function EditalCard({ status } : IEditalCard) {
+  const statusClass = status ? statusClasses[status] : '';
   return (
     <Dialog>
         <DialogTrigger asChild>
-          <Card className="size-64 cursor-pointer hover:shadow-xl transition-all">
+          <Card className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}>
             <CardHeader>
               <CardTitle>Edital: 0001/2024</CardTitle>
               <CardDescription>Data: 00/00/00</CardDescription>
@@ -54,7 +63,7 @@ export default function EditalCard() {
         lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun 
         </div>
         <DialogFooter>
-          <Link href={'/registeredital/1'}>
+          <Link href={'/1'}>
             <Button type="submit" className='bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait'>Ver Detalhes</Button>
           </Link>
         </DialogFooter>

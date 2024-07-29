@@ -9,6 +9,9 @@ export default async function Home() {
 
   return (
     <section className='flex flex-wrap gap-6 py-10 items-center justify-center'>
+      <EditalCard status='ok'/>
+      <EditalCard status='error'/>
+      <EditalCard status='pending'/>
       {editalCards}
     </section>
   );

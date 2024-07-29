@@ -1,12 +1,16 @@
 import React from 'react'
-import PentagoLogo from '@/assets/Pentago.svg'
+import EditalCard from '@/components/layout/EditalCard'
+
 
 
 export default function Editais() {
+  const editaisCount = Math.round(Math.random() * 20);
+
+  const editalCards = Array.from({ length: editaisCount }, (_, index) => <EditalCard key={index} />);
+
   return (
-    <section className='h-full flex flex-wrap flex-col items-center justify-center'>
-      <PentagoLogo className="size-96 animate-[bounce_3000ms_ease_infinite]" />
-      <h1 className='text-2xl'>Em desenvolvimento...</h1>
+    <section className='flex flex-wrap gap-6 py-10 items-center justify-center'>
+      {editalCards}
     </section>
-  )
+  );
 }
