@@ -39,7 +39,7 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href='edital'>
+            <Link href='editais'>
               <EditIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
