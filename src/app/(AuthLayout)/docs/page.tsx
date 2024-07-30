@@ -2,6 +2,7 @@ import React from 'react'
 import PentagoLogo from '@/assets/Pentago.svg'
 
 
+
 export default function Documentacao() {
   return (
     <section className='h-full flex flex-wrap flex-col items-center justify-center'>
