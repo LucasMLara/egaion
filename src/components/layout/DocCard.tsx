@@ -1,4 +1,4 @@
-import Link from "next/link";
+"use client";
 
 import {
   Card,
@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 
-type IEditalCard = {
+type iDocCard = {
   status?: "ok" | "pending" | "error";
 };
 
@@ -29,8 +31,8 @@ const statusClasses = {
   pending: "bg-auxiliary-warning-500 text-neutral-600",
   error: "bg-auxiliary-error-400 text-neutral-500",
 };
-
-export default function EditalCard({ status }: IEditalCard) {
+const currentDate = new Date().toLocaleDateString("pt-BR");
+export default function DocCard({ status }: iDocCard) {
   const statusClass = status ? statusClasses[status] : "";
   return (
     <Dialog>
@@ -39,8 +41,8 @@ export default function EditalCard({ status }: IEditalCard) {
           className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}
         >
           <CardHeader>
-            <CardTitle>Edital: 0001/2024</CardTitle>
-            <CardDescription>Data: 00/00/00</CardDescription>
+            <CardTitle>DOCUMENTO</CardTitle>
+            <CardDescription>Data: {currentDate}</CardDescription>
             <div>
               <Badge className="justify-center bg-neutral-700">Área 1</Badge>
               <Badge className="justify-center bg-auxiliary-success-600">
@@ -60,32 +62,32 @@ export default function EditalCard({ status }: IEditalCard) {
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="h-2/5 overflow-y-scroll">
+      <DialogContent className="h-3/5 overflow-auto">
         <DialogHeader>
-          <DialogTitle>Detalhes do Edital:</DialogTitle>
-          <DialogDescription className="font-ubuntu">
-            Descrição
+          <DialogTitle className="font-ubuntu text-xl">
+            Situação do Documento:
+          </DialogTitle>
+          <DialogDescription className="font-ubuntu text-md">
+            CNPJ
           </DialogDescription>
         </DialogHeader>
-        <div className="container">
+        <div>
+          <h1 className="font-bold text-lg">Justificativa:</h1>
           lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
           ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
+          lorem ipsunlorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
           lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
           ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
+          lorem ipsun lorem ipsun lorem ipsun lorem ipsun
         </div>
-        <DialogFooter>
-          <Link href={"/1"}>
-            <Button
-              type="submit"
-              className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
-            >
-              Ver Detalhes
-            </Button>
-          </Link>
+        <DialogFooter className="flex flex-col flex-wrap">
+          <Input
+            id="cnpj"
+            type="file"
+            required
+            onChange={(e) => console.log(e)}
+          />
+          <Button className="bg-gradient-primary w-full">Enviar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

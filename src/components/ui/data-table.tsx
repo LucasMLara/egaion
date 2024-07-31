@@ -43,7 +43,7 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 7 }); // Updated state for pagination
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 7 });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -89,7 +89,7 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="w-full md:w-96 transition-all"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

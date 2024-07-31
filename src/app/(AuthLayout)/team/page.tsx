@@ -1,6 +1,5 @@
-
-import { Payment, columns } from "./columns"
-import { DataTable } from "@/components/ui/data-table"
+import { Payment, columns } from "./columns";
+import { DataTable } from "@/components/ui/data-table";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -248,13 +247,17 @@ async function getData(): Promise<Payment[]> {
   ];
 }
 
-
 export default async function Team() {
-  const data = await getData()
+  const data = await getData();
 
   return (
-    <section className='h-full flex flex-wrap flex-col items-center justify-center'>
-      <DataTable columns={columns} data={data} />
+    <section className="flex flex-wrap flex-col gap-6 justify-center place-content-center">
+      <h1 className="text-2xl font-bold text-neutral-700 text-center m-9">
+        Equipe Técnica{" "}
+      </h1>
+      <div className="flex w-flex-wrap gap-6 place-content-center w-full">
+        <DataTable columns={columns} data={data} />
+      </div>
     </section>
-  )
+  );
 }

@@ -24,7 +24,7 @@ export type Payment = {
 export const columns: ColumnDef<Payment>[] = [
   {
     id: "Seleção",
-    accessorKey: "Selecão",
+    accessorKey: "status",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Payment>[] = [
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(payment.id)}
               >
-                Copy payment ID
+                Copiar ID
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
