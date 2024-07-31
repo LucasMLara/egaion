@@ -1,21 +1,20 @@
-import React from 'react'
-import Link from "next/link"
+import React from "react";
+import Link from "next/link";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { HomeIcon, FileTextIcon, UsersIcon, EditIcon } from 'lucide-react'
-
+} from "@/components/ui/tooltip";
+import { HomeIcon, FileTextIcon, UsersIcon, EditIcon } from "lucide-react";
 
 export default function DrawerMenu() {
   return (
-    <div className='w-24 h-full bg-neutral-400 flex flex-col items-center justify-center gap-16'>
+    <div className="w-24 h-full bg-neutral-400 flex flex-col items-center justify-center gap-16">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href='/home'>
+            <Link href="/home">
               <HomeIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
@@ -27,7 +26,7 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href='/team'>
+            <Link href="/team">
               <UsersIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
@@ -39,7 +38,7 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href='editais'>
+            <Link href="editais">
               <EditIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
@@ -51,7 +50,7 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href='docs'>
+            <Link href="docs">
               <FileTextIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
           </TooltipTrigger>
@@ -59,7 +58,7 @@ export default function DrawerMenu() {
             <p>Documentação</p>
           </TooltipContent>
         </Tooltip>
-      </TooltipProvider> 
+      </TooltipProvider>
     </div>
-  )
+  );
 }
