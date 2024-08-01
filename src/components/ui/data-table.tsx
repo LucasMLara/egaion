@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
             </div>
           )}
         </div>
-        <div className="flex">
+        <div className="grid justify-items-center gap-2 sm:flex">
           <Input
             placeholder="Buscar membro de Equipe..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-26 mx-4">
+              <Button variant="outline" className="mx-4">
                 <FilterIcon className="hover:stroke-primary-400 hover:scale-110 transition-all" />
               </Button>
             </DropdownMenuTrigger>
@@ -122,12 +122,12 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4"></div>
       <div>
         <Table>
-          <TableHeader>
+          <TableHeader className="block">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="grid [grid-template-columns:repeat(auto-fit,_minmax(100px,_1fr))] items-center">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="grid items-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -140,12 +140,13 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="grid max-h-96 overflow-y-auto">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="grid grid-flow-col [grid-template-columns:repeat(auto-fill,1fr)] items-center"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

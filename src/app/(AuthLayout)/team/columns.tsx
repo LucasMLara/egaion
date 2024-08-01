@@ -65,12 +65,12 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "Opçoes",
-    header: () => <div className="text-center">Opções</div>,
+    header: () => <div className="text-right">Opções</div>,
     cell: ({ row }) => {
       const payment = row.original;
       const dynamicUrl = `/team/${payment.id}`;
       return (
-        <div className="text-center">
+        <div className="text-center flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
