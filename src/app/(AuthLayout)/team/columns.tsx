@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -67,6 +68,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: () => <div className="text-center">Opções</div>,
     cell: ({ row }) => {
       const payment = row.original;
+      const dynamicUrl = `/team/${payment.id}`;
       return (
         <div className="text-center">
           <DropdownMenu>
@@ -83,9 +85,10 @@ export const columns: ColumnDef<Payment>[] = [
               >
                 Copiar ID
               </DropdownMenuItem>
-              {/* <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+              <DropdownMenuSeparator />
+              <Link href={`/team/${payment.id}`}>
+                <DropdownMenuItem>ds dsd</DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
