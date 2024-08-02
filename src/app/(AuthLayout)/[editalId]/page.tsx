@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
+import { currentDate } from "@/lib/utils";
 export default function page({
   params,
 }: {
@@ -10,8 +10,6 @@ export default function page({
     editalId: string;
   };
 }) {
-  const currentDate = new Date().toLocaleDateString("pt-BR");
-
   return (
     <section className="h-full grid grid-rows-2 gap-4 overflow-y-hidden">
       <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600">

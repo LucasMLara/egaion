@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-
+import { currentDate } from "@/lib/utils";
 type iDocCard = {
   status?: "ok" | "pending" | "error";
 };
@@ -31,7 +31,6 @@ const statusClasses = {
   pending: "bg-auxiliary-warning-500 text-neutral-600",
   error: "bg-auxiliary-error-400 text-neutral-500",
 };
-const currentDate = new Date().toLocaleDateString("pt-BR");
 export default function DocCard({ status }: iDocCard) {
   const statusClass = status ? statusClasses[status] : "";
   return (

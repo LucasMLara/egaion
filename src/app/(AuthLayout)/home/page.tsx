@@ -1,12 +1,21 @@
 import React from "react";
 import EditalCard from "@/components/layout/EditalCard";
+import { generateEditalCardData, IEditalCard } from "@/lib/utils";
+
+const asyncEditalCardData = async () => {
+  return await new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(generateEditalCardData());
+    }, 3000)
+  );
+};
+
+async function getData(): Promise<IEditalCard[]> {
+  return generateEditalCardData();
+}
 
 export default async function Home() {
-  const editaisCount = Math.round(Math.random() * 20);
-
-  const editalCards = Array.from({ length: editaisCount }, (_, index) => (
-    <EditalCard key={index} />
-  ));
+  const editalCardData = await getData();
 
   return (
     <section className="flex flex-wrap gap-6 py-10 items-center justify-center flex-col">
@@ -14,10 +23,20 @@ export default async function Home() {
         Meus Editais
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
-        <EditalCard status="ok" />
-        <EditalCard status="error" />
-        <EditalCard status="pending" />
-        {editalCards}
+        {editalCardData.map((card) => (
+          <EditalCard
+            key={card.editalId}
+            status={card.status}
+            areas={card.areas}
+            editalCardContent={card.editalCardContent}
+            editalCardTitle={card.editalCardTitle}
+            editalCardDate={card.editalCardDate}
+            editalDialogTitle={card.editalDialogTitle}
+            editalDialogDescription={card.editalDialogDescription}
+            editalDialogContent={card.editalDialogContent}
+            editalId={card.editalId}
+          />
+        ))}
       </div>
     </section>
   );

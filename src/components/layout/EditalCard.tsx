@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import {
   Card,
   CardContent,
@@ -7,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Dialog,
   DialogContent,
@@ -19,10 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-type IEditalCard = {
-  status?: "ok" | "pending" | "error";
-};
+import { currentDate } from "@/lib/utils";
+import { IEditalCard } from "@/lib/utils";
 
 const statusClasses = {
   ok: "bg-auxiliary-success-400 text-neutral-600",
@@ -30,7 +26,25 @@ const statusClasses = {
   error: "bg-auxiliary-error-400 text-neutral-500",
 };
 
-export default function EditalCard({ status }: IEditalCard) {
+type Area = "area1" | "area2" | "area3";
+
+const areaColors: Record<Area, string> = {
+  area1: "bg-neutral-700",
+  area2: "bg-auxiliary-success-600",
+  area3: "bg-auxiliary-error-400",
+};
+
+export default function EditalCard({
+  status,
+  areas,
+  editalCardContent,
+  editalCardTitle,
+  editalCardDate,
+  editalDialogTitle,
+  editalDialogDescription,
+  editalDialogContent,
+  editalId,
+}: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
   return (
     <Dialog>
@@ -39,46 +53,38 @@ export default function EditalCard({ status }: IEditalCard) {
           className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}
         >
           <CardHeader>
-            <CardTitle>Edital: 0001/2024</CardTitle>
-            <CardDescription>Data: 00/00/00</CardDescription>
+            <CardTitle>{editalCardTitle}</CardTitle>
+            <CardDescription>
+              {`${editalCardDate ? editalCardDate : currentDate}`}
+            </CardDescription>
             <div>
-              <Badge className="justify-center bg-neutral-700">Área 1</Badge>
-              <Badge className="justify-center bg-auxiliary-success-600">
-                Área 2
-              </Badge>
-              <Badge className="justify-center bg-auxiliary-error-400">
-                Subárea 1
-              </Badge>
-              <Badge className="justify-center bg-neutral-700">Subárea 2</Badge>
-              <Badge className="justify-center bg-gradient-primary">
-                Subárea 3
-              </Badge>
+              {areas?.map((area, i) => (
+                <Badge
+                  key={i}
+                  className={`justify-center ${
+                    typeof area === "string"
+                      ? areaColors[area as Area]
+                      : "bg-neutral-700"
+                  }`}
+                >
+                  {area}
+                </Badge>
+              ))}
             </div>
           </CardHeader>
-          <CardContent>
-            loren ipsun loren ipsun loren ipsun loren ipsun loren
-          </CardContent>
+          <CardContent>{editalCardContent}</CardContent>
         </Card>
       </DialogTrigger>
       <DialogContent className="h-2/5 overflow-y-scroll">
         <DialogHeader>
-          <DialogTitle>Detalhes do Edital:</DialogTitle>
+          <DialogTitle>Detalhes do Edital: {editalDialogTitle}</DialogTitle>
           <DialogDescription className="font-ubuntu">
-            Descrição
+            {editalDialogDescription}
           </DialogDescription>
         </DialogHeader>
-        <div className="container">
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-        </div>
+        <div className="container">{editalDialogContent}</div>
         <DialogFooter>
-          <Link href={"/1"}>
+          <Link href={`/${editalId}`}>
             <Button
               type="submit"
               className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
