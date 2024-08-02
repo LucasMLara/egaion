@@ -14,6 +14,9 @@ type FormState = {
 
 export default async function signIn(_: FormState, formData: FormData) {
   try {
+    // sleep
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     await _signIn("credentials", {
       email: String(formData.get("email")),
       password: String(formData.get("password")),
