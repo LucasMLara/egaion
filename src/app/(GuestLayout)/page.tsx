@@ -8,13 +8,16 @@ import signIn from "@/services/signIn";
 import { useFormState } from "react-dom";
 import React from "react";
 import { toast } from "sonner";
+import { LoaderIcon } from "lucide-react";
 
 export default function Login() {
   const [formState, formAction] = useFormState(signIn, { error: null });
+  const [formIsSubmitting, setFormIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
     if (formState.error) {
       toast.error(formState.error.message);
+      setFormIsSubmitting(false);
     }
   }, [formState.error]);
 
@@ -22,7 +25,11 @@ export default function Login() {
     <div className="mx-auto grid h-screen max-w-[1440px] grid-cols-1 place-content-center bg-primary-200 md:grid-cols-2">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
-          <form action={formAction} className="grid gap-4">
+          <form
+            action={formAction}
+            onSubmit={() => setFormIsSubmitting(true)}
+            className="grid gap-4"
+          >
             <div className="bg-muted block md:hidden size-auto md:m-auto">
               <SebraeLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
             </div>
@@ -58,9 +65,14 @@ export default function Login() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
+              className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
+              disabled={formIsSubmitting}
             >
-              Entrar
+              {formIsSubmitting ? (
+                <LoaderIcon className="animate-spin" />
+              ) : (
+                "Entrar"
+              )}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm ">
