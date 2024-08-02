@@ -9,8 +9,6 @@ export default async function GuestLayout({
 }) {
   const session = await auth();
 
-  console.log(session);
-
   if (session) {
     redirect("/home");
   }
