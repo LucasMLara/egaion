@@ -2,9 +2,11 @@ import SebraeLogo from "@/assets/Sebrae.svg";
 import Link from "next/link";
 import { UserIcon, LogOutIcon } from "lucide-react";
 import Shadow from "./Shadow";
-import { signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
+// import Image from "next/image";
 
-export default function Header() {
+export default async function Header() {
+  // const session = await auth();
   return (
     <header
       className={`relative w-full h-16 flex justify-between bg-neutral-400 z-50`}
@@ -16,6 +18,12 @@ export default function Header() {
       </div>
       <div className="h-full w-full flex justify-end items-center">
         <Link href="#">
+          {/* <Image
+            src={session?.user.image}
+            alt={session?.user.name}
+            width={20}
+            height={20}
+          /> */}
           <UserIcon className="mx-3 size-6 hover:scale-110 transition-all hover:stroke-primary-400" />
         </Link>
         <form
