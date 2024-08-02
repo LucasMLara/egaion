@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Ubuntu as FontSans } from "next/font/google"  // Change this line
+import { Ubuntu as FontSans } from "next/font/google"; // Change this line
 import "./styles/globals.css";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
-  weight:["300", "400", "500", "700"],
-  subsets: ['latin']
-})
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Egaion",
@@ -19,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${fontSans.className} bg-primary-200`}>{children}</body>
+      <body className={`${fontSans.className} bg-primary-200`}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
