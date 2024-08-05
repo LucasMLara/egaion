@@ -1,6 +1,7 @@
 import React from "react";
 import EditalCard from "@/components/layout/EditalCard";
-import { generateEditalCardData, IEditalCard } from "@/lib/utils";
+import { generateEditalCardData } from "@/lib/utils";
+import { IEditalCard } from "@/types/types";
 
 const asyncEditalCardData = async () => {
   return await new Promise((resolve) =>

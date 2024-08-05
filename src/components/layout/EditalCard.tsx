@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { currentDate } from "@/lib/utils";
-import { IEditalCard } from "@/lib/utils";
+import { IEditalCard } from "@/types/types";
 
 const statusClasses = {
   ok: "bg-auxiliary-success-400 text-neutral-600",
