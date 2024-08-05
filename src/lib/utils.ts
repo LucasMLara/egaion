@@ -1,25 +1,13 @@
 import { type ClassValue, clsx } from "clsx";
 // import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { IEditalCard } from "@/types/types";
+import { IEditalCard, IDocCard } from "@/types/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const currentDate = new Date().toLocaleDateString("pt-BR");
-
-// export type IEditalCard = {
-//   status?: "ok" | "pending" | "error" | null;
-//   areas?: string[] | ReactNode[];
-//   editalCardContent: ReactNode;
-//   editalCardTitle: string;
-//   editalCardDate: Date | string;
-//   editalDialogTitle: string;
-//   editalDialogDescription: string;
-//   editalDialogContent: ReactNode | string;
-//   editalId: string;
-// };
 
 const statusOptions: IEditalCard["status"][] = ["ok", "pending", "error", null];
 const areaOptions: string[] = ["area1", "area2", "area3"];
@@ -56,6 +44,29 @@ export function generateEditalCardData(): IEditalCard[] {
     };
 
     data.push(card);
+  }
+
+  return data;
+}
+
+export function generateDocCardData(): IDocCard[] {
+  const length = Math.floor(Math.random() * 20) + 1;
+  const data: IDocCard[] = [];
+
+  for (let i = 0; i < length; i++) {
+    const docCard: IDocCard = {
+      docId: `ID-${i + 1}`,
+      docTitle: `Doc Title ${i + 1}`,
+      docContent: sampleContent,
+      docStatus: getRandomItem(statusOptions),
+      docAreas: [getRandomItem(areaOptions), getRandomItem(areaOptions)],
+      docDate: getRandomDate(),
+      docDialogTitle: `Dialog Title ${i + 1}`,
+      docDialogDescription: `Description for Dialog ${i + 1}`,
+      docDialogContent: sampleDialogContent,
+    };
+
+    data.push(docCard);
   }
 
   return data;
