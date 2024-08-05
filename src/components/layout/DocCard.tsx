@@ -17,22 +17,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { IDocCard } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { currentDate } from "@/lib/utils";
-type iDocCard = {
-  status?: "ok" | "pending" | "error";
-};
 
 const statusClasses = {
   ok: "bg-auxiliary-success-400 text-neutral-600",
   pending: "bg-auxiliary-warning-500 text-neutral-600",
   error: "bg-auxiliary-error-400 text-neutral-500",
 };
-export default function DocCard({ status }: iDocCard) {
-  const statusClass = status ? statusClasses[status] : "";
+
+type Area = "area1" | "area2" | "area3";
+
+const areaColors: Record<Area, string> = {
+  area1: "bg-neutral-700",
+  area2: "bg-auxiliary-success-600",
+  area3: "bg-auxiliary-error-400",
+};
+
+export default function DocCard({
+  docStatus,
+  docTitle,
+  docDate,
+  docAreas,
+  docContent,
+  docDialogContent,
+  docDialogDescription,
+  docDialogTitle,
+}: IDocCard) {
+  const statusClass = docStatus ? statusClasses[docStatus] : "";
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,45 +55,43 @@ export default function DocCard({ status }: iDocCard) {
           className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}
         >
           <CardHeader>
-            <CardTitle>DOCUMENTO</CardTitle>
-            <CardDescription>Data: {currentDate}</CardDescription>
+            <CardTitle>{docTitle}</CardTitle>
+            <CardDescription>{`${
+              docDate ? docDate : currentDate
+            }`}</CardDescription>
             <div>
-              <Badge className="justify-center bg-neutral-700">Área 1</Badge>
-              <Badge className="justify-center bg-auxiliary-success-600">
-                Área 2
-              </Badge>
-              <Badge className="justify-center bg-auxiliary-error-400">
-                Subárea 1
-              </Badge>
-              <Badge className="justify-center bg-neutral-700">Subárea 2</Badge>
-              <Badge className="justify-center bg-gradient-primary">
-                Subárea 3
-              </Badge>
+              {docAreas?.map((area, i) => (
+                <Badge
+                  key={i}
+                  className={`justify-center ${
+                    typeof area === "string"
+                      ? areaColors[area as Area]
+                      : "bg-neutral-700"
+                  }`}
+                >
+                  {area}
+                </Badge>
+              ))}
             </div>
           </CardHeader>
-          <CardContent>
-            loren ipsun loren ipsun loren ipsun loren ipsun loren
-          </CardContent>
+          <CardContent>{docContent}</CardContent>
         </Card>
       </DialogTrigger>
       <DialogContent className="h-3/5 overflow-auto">
         <DialogHeader>
           <DialogTitle className="font-ubuntu text-xl">
-            Situação do Documento:
+            Situação do Documento: {docDialogTitle}
           </DialogTitle>
           <DialogDescription className="font-ubuntu text-md">
-            CNPJ
+            CNPJ : {docDialogDescription}
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <h1 className="font-bold text-lg">Justificativa:</h1>
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsunlorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem
-          ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-          lorem ipsun lorem ipsun lorem ipsun lorem ipsun
-        </div>
+        {docDialogContent && (
+          <div>
+            <h1 className="font-bold text-lg">Justificativa:</h1>
+            {docDialogContent}
+          </div>
+        )}
         <DialogFooter className="flex flex-col flex-wrap">
           <Input
             id="cnpj"
