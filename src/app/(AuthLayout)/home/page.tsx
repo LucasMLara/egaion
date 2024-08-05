@@ -3,13 +3,13 @@ import EditalCard from "@/components/layout/EditalCard";
 import { generateEditalCardData } from "@/lib/utils";
 import { IEditalCard } from "@/types/types";
 
-const asyncEditalCardData = async () => {
-  return await new Promise((resolve) =>
-    setTimeout(() => {
-      resolve(generateEditalCardData());
-    }, 3000)
-  );
-};
+// const asyncEditalCardData = async () => {
+//   return await new Promise((resolve) =>
+//     setTimeout(() => {
+//       resolve(generateEditalCardData());
+//     }, 3000)
+//   );
+// };
 
 async function getData(): Promise<IEditalCard[]> {
   return generateEditalCardData();
