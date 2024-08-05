@@ -9,7 +9,7 @@ import { useFormState } from "react-dom";
 import React from "react";
 import { toast } from "sonner";
 import { LoaderIcon } from "lucide-react";
-import { signIn as nextAuthSignIn } from "next-auth/react";
+// import { signIn as nextAuthSignIn } from "next-auth/react";
 
 export default function Login() {
   const [formState, formAction] = useFormState(signIn, { error: null });
@@ -39,10 +39,9 @@ export default function Login() {
               <Input
                 className="transition-all"
                 id="email"
-                type="email"
+                type="text"
                 name="email"
                 placeholder="egaion@pentago.com.br"
-                required
               />
             </div>
             <div className="grid gap-2">
@@ -59,7 +58,6 @@ export default function Login() {
                 id="password"
                 type="password"
                 name="password"
-                required
                 placeholder="**********"
                 className="transition-all"
               />
@@ -75,14 +73,14 @@ export default function Login() {
                 "Entrar"
               )}
             </Button>
-            <Button
+            {/* <Button
               type="button"
               onClick={async () => {
                 await nextAuthSignIn("google");
               }}
             >
               Continuar com Google
-            </Button>
+            </Button> */}
           </form>
           <div className="mt-4 text-center text-sm ">
             Ainda não possui uma conta?

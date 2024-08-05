@@ -27,7 +27,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         const schema = z.object({
-          email: z.string().email("Email inválido"),
+          email: z
+            .string()
+            .min(1, "Email é obrigatório")
+            .email("Email inválido"),
           password: z.string(),
         });
 
@@ -46,7 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (
           !bcrypt.compareSync(credentials.password as string, user.password)
         ) {
-          throw new Error("Senha incorreta");
+          throw new Error("Suas credenciais estão incorretas");
         }
 
         return {
