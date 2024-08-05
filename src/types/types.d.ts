@@ -1,12 +1,23 @@
 import { z } from "zod";
 
 export const DocSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  content: z.string(),
+  docId: z.string(),
+  docTitle: z.string(),
+  docContent: z.string(),
+  docStatus: z.union([
+    z.literal("ok"),
+    z.literal("pending"),
+    z.literal("error"),
+    z.literal(null),
+  ]),
+  docAreas: z.array(z.string()),
+  docDate: z.string(),
+  docDialogTitle: z.string(),
+  docDialogDescription: z.string(),
+  docDialogContent: z.string(),
 });
 
-export const IEditalCard = z.object({
+export const EditalSchema = z.object({
   status: z.union([
     z.literal("ok"),
     z.literal("pending"),
@@ -23,5 +34,5 @@ export const IEditalCard = z.object({
   editalId: z.string(),
 });
 
-type IEditalCard = z.infer<typeof IEditalCard>;
-type User = z.infer<typeof DocSchema>;
+type IEditalCard = z.infer<typeof EditalSchema>;
+type IDocCard = z.infer<typeof DocSchema>;
