@@ -68,7 +68,6 @@ export const columns: ColumnDef<Payment>[] = [
     header: () => <div className="text-right">Opções</div>,
     cell: ({ row }) => {
       const payment = row.original;
-      const dynamicUrl = `/team/${payment.id}`;
       return (
         <div className="text-center flex justify-end">
           <DropdownMenu>
@@ -85,9 +84,14 @@ export const columns: ColumnDef<Payment>[] = [
               >
                 Copiar ID
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(payment.status)}
+              >
+                Copiar Status
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <Link href={`/team/${payment.id}`}>
-                <DropdownMenuItem>ds dsd</DropdownMenuItem>
+                <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>
