@@ -38,7 +38,7 @@ const areaColors: Record<Area, string> = {
 };
 
 export default function DocCard({
-  docStatus,
+  // docStatus,
   docTitle,
   docDate,
   docAreas,
@@ -47,12 +47,12 @@ export default function DocCard({
   docDialogDescription,
   docDialogTitle,
 }: IDocCard) {
-  const statusClass = docStatus ? statusClasses[docStatus] : "";
+  // const statusClass = docStatus ? statusClasses[docStatus] : "";
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Card
-          className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}
+          className={`size-64 cursor-pointer hover:shadow-xl transition-all`}
         >
           <CardHeader>
             <CardTitle>{docTitle}</CardTitle>
