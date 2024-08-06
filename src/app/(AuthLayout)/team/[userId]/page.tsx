@@ -13,7 +13,7 @@ export default async function TeamMember({
 }) {
   const { userId } = params;
   const member = await getData(userId);
-  const docCardData = generateDocCardData(6);
+  const docCardData = generateDocCardData(12);
 
   const maskCpf = (cpf: string) => {
     return cpf.replace(/(\d{2})\d{5}(\d{3})/, "$1***$2");
@@ -71,7 +71,7 @@ export default async function TeamMember({
             />
           </div>
         </div>
-        <div className="grid justify-center md:grid-cols-2">
+        <div className="flex flex-wrap gap-2 justify-evenly">
           {docCardData.map((card) => (
             <DocCard
               key={card.docId}
