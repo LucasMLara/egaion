@@ -1,9 +1,10 @@
 import { Payment, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
+export async function getData(memberId?: string): Promise<Payment[]> {
+  memberId ? console.log(memberId) : null;
+
+  const teamMember: Payment[] = [
     {
       id: "728ed52f",
       amount: 100,
@@ -245,6 +246,12 @@ async function getData(): Promise<Payment[]> {
       email: "lucius.fox@example.com",
     },
   ];
+
+  if (memberId) {
+    const member = teamMember.find((member) => member.id === memberId);
+    return member ? [member] : [];
+  }
+  return teamMember;
 }
 
 export default async function Team() {
