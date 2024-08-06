@@ -17,6 +17,18 @@ export const DocSchema = z.object({
   docDialogContent: z.string(),
 });
 
+export const TeamMember = z.object({
+  id: z.string(),
+  contact: z.number(),
+  docNumber: z.string(),
+  status: z.union([
+    z.literal("OK"),
+    z.literal("Documento Pendente"),
+    z.literal("Documento Reprovado"),
+  ]),
+  email: z.string(),
+});
+
 export const EditalSchema = z.object({
   status: z.union([
     z.literal("ok"),
@@ -36,3 +48,4 @@ export const EditalSchema = z.object({
 
 type IEditalCard = z.infer<typeof EditalSchema>;
 type IDocCard = z.infer<typeof DocSchema>;
+type ITeamMember = z.infer<typeof TeamMember>;
