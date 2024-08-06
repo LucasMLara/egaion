@@ -26,8 +26,6 @@ export default async function Documentacao() {
             docContent={card.docContent}
             docDialogContent={card.docDialogContent}
             docDialogDescription={card.docDialogDescription}
-            docDialogFooter={card.docDialogFooter}
-            docDialogHeader={card.docDialogHeader}
             docDialogTitle={card.docDialogTitle}
             docId={card.docId}
           />
