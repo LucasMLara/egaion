@@ -49,8 +49,8 @@ export function generateEditalCardData(): IEditalCard[] {
   return data;
 }
 
-export function generateDocCardData(): IDocCard[] {
-  const length = Math.floor(Math.random() * 20) + 1;
+export function generateDocCardData(size: number = 20): IDocCard[] {
+  const length = Math.floor(Math.random() * size) + 1;
   const data: IDocCard[] = [];
 
   for (let i = 0; i < length; i++) {
