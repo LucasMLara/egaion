@@ -58,6 +58,25 @@ export const columns: ColumnDef<ITeamMember>[] = [
       <div className="text-center">{`${row.original.email}`}</div>
     ),
   },
+  // {
+  //   accessorKey: "status",
+  //   header: ({ column }) => {
+  //     return (
+  //       <div className="text-center">
+  //         <Button
+  //           variant="ghost"
+  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //         >
+  //           Status
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  //   cell: ({ row }) => (
+  //     <div className="text-center">{`${row.original.status}`}</div>
+  //   ),
+  // },
   {
     accessorKey: "Opçoes",
     header: () => <div className="text-right">Opções</div>,
