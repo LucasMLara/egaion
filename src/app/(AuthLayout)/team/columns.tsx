@@ -15,14 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ITeamMember } from "@/types/types";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<ITeamMember>[] = [
   {
     id: "Seleção",
     accessorKey: "status",
@@ -67,7 +62,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "Opçoes",
     header: () => <div className="text-right">Opções</div>,
     cell: ({ row }) => {
-      const payment = row.original;
+      const member = row.original;
       return (
         <div className="text-center flex justify-end">
           <DropdownMenu>
@@ -80,17 +75,17 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Selecione</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
+                onClick={() => navigator.clipboard.writeText(member.id)}
               >
                 Copiar ID
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.status)}
+                onClick={() => navigator.clipboard.writeText(member.status)}
               >
                 Copiar Status
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link href={`/team/${payment.id}`}>
+              <Link href={`/team/${member.id}`}>
                 <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
