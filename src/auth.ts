@@ -42,11 +42,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const user = users[credentials.email as keyof typeof users];
 
-        if (!user) {
-          throw new Error("Usuário não cadastrado");
-        }
-
         if (
+          !user ||
           !bcrypt.compareSync(credentials.password as string, user.password)
         ) {
           throw new Error("Suas credenciais estão incorretas");
