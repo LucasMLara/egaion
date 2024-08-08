@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HomeIcon, FileTextIcon, UsersIcon, EditIcon } from "lucide-react";
+import { HomeIcon, UsersIcon, EditIcon } from "lucide-react";
 
 export default function DrawerMenu() {
   return (
@@ -26,18 +26,6 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href="/team">
-              <UsersIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Equipe Técnica</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
             <Link href="/editais">
               <EditIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
@@ -50,6 +38,18 @@ export default function DrawerMenu() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
+            <Link href="/team">
+              <UsersIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Equipe Técnica</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      {/* <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
             <Link href="/docs">
               <FileTextIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
             </Link>
@@ -58,7 +58,7 @@ export default function DrawerMenu() {
             <p>Documentação</p>
           </TooltipContent>
         </Tooltip>
-      </TooltipProvider>
+      </TooltipProvider> */}
     </div>
   );
 }
