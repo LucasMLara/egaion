@@ -16,6 +16,15 @@ export default function Cadastro() {
                 <SebraeLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="razaoSocial">Razão Social</Label>
+                <Input
+                  className="transition-all"
+                  id="razaoSocial"
+                  type="razaoSocial"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   className="transition-all"
@@ -26,11 +35,12 @@ export default function Cadastro() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="razaoSocial">Razão Social</Label>
+                <Label htmlFor="emailConfirmation">Confirmar Email</Label>
                 <Input
                   className="transition-all"
-                  id="razaoSocial"
-                  type="razaoSocial"
+                  id="emailConfirmation"
+                  type="emailConfirmation"
+                  placeholder="Insira seu email novamente"
                   required
                 />
               </div>
@@ -45,7 +55,7 @@ export default function Cadastro() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="contato">Contato</Label>
+                <Label htmlFor="contato">Telefone</Label>
                 <Input
                   className="transition-all"
                   id="contato"
