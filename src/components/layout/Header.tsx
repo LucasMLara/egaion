@@ -33,7 +33,7 @@ export default async function Header() {
           />
           <UserIcon className="mx-3 size-6 hover:scale-110 transition-all hover:stroke-primary-400" />
         </Link> */}
-        <TooltipProvider>
+        {/* <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="">
@@ -48,7 +48,7 @@ export default async function Header() {
               </p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> */}
         <form
           className="flex"
           action={async () => {
