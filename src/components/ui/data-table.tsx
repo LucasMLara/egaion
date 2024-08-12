@@ -124,7 +124,10 @@ export function DataTable<TData, TValue>({
         <Table>
           <TableHeader className="block">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="grid [grid-template-columns:repeat(auto-fit,_minmax(100px,_1fr))] items-center">
+              <TableRow
+                key={headerGroup.id}
+                className="grid [grid-template-columns:repeat(auto-fit,_minmax(100px,_1fr))] items-center"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} className="grid items-center">
@@ -162,7 +165,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 flex items-center justify-center"
                 >
                   Nenhum resultado! Vamos Cadastrar?
                 </TableCell>
