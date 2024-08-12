@@ -33,7 +33,6 @@ export function generateEditalCardData(): IEditalCard[] {
   for (let i = 0; i < length; i++) {
     const card: IEditalCard = {
       status: getRandomItem(statusOptions),
-      areas: [getRandomItem(areaOptions), getRandomItem(areaOptions)],
       editalCardContent: sampleContent,
       editalCardTitle: `Edital: ${String(i + 1).padStart(4, "0")}/2024`,
       editalCardDate: getRandomDate(),
