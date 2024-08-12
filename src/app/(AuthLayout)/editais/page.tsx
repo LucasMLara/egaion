@@ -12,7 +12,7 @@ export default function Editais() {
         {generateEditalCardData().map((card) => (
           <EditalCard
             key={card.editalId}
-            areas={card.areas}
+            status={card.status}
             editalCardContent={card.editalCardContent}
             editalCardTitle={card.editalCardTitle}
             editalCardDate={card.editalCardDate}

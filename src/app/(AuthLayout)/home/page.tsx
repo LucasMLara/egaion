@@ -28,7 +28,6 @@ export default async function Home() {
           <EditalCard
             key={card.editalId}
             status={card.status}
-            areas={card.areas}
             editalCardContent={card.editalCardContent}
             editalCardTitle={card.editalCardTitle}
             editalCardDate={card.editalCardDate}
