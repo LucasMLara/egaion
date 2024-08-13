@@ -35,7 +35,7 @@ export default function DrawerMenu() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <TooltipProvider>
+      {/* <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href="/team">
@@ -47,7 +47,7 @@ export default function DrawerMenu() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      {/* <TooltipProvider>
+      <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href="/docs">
