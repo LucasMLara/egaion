@@ -58,7 +58,6 @@ export function generateDocCardData(size: number = 20): IDocCard[] {
       docTitle: `Doc Title ${i + 1}`,
       docContent: sampleContent,
       docStatus: getRandomItem(statusOptions),
-      docAreas: [getRandomItem(areaOptions), getRandomItem(areaOptions)],
       docDate: getRandomDate(),
       docDialogTitle: `Dialog Title ${i + 1}`,
       docDialogDescription: `Description for Dialog ${i + 1}`,

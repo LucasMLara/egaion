@@ -41,7 +41,6 @@ export default function DocCard({
   docStatus,
   docTitle,
   docDate,
-  docAreas,
   docContent,
   docDialogContent,
   docDialogDescription,
@@ -59,20 +58,6 @@ export default function DocCard({
             <CardDescription>{`${
               docDate ? docDate : currentDate
             }`}</CardDescription>
-            <div>
-              {docAreas?.map((area, i) => (
-                <Badge
-                  key={i}
-                  className={`justify-center ${
-                    typeof area === "string"
-                      ? areaColors[area as Area]
-                      : "bg-neutral-700"
-                  }`}
-                >
-                  {area}
-                </Badge>
-              ))}
-            </div>
           </CardHeader>
           <CardContent>{docContent}</CardContent>
         </Card>
