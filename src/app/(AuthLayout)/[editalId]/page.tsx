@@ -7,6 +7,7 @@ import FileUploader from "@/components/myCustomInputs/FileUploader";
 import { mockInputsEmpresa, history } from "@/mocks";
 import { FileTextIcon, ClipboardIcon, CheckCircleIcon } from "lucide-react";
 import CreateConsultant from "@/components/layout/CreateConsultant";
+import Attachments from "@/components/layout/Attachments";
 
 export default function page({
   params,
@@ -17,8 +18,8 @@ export default function page({
 }) {
   return (
     <section className="h-full">
-      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="content" className="w-auto m-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
           </TabsTrigger>
@@ -26,7 +27,10 @@ export default function page({
             Documentos
           </TabsTrigger>
           <TabsTrigger value="cadastroConsultor" className="text-center">
-            Cadastro de Consultor
+            Consultor
+          </TabsTrigger>
+          <TabsTrigger value="anexos" className="text-center">
+            Anexos
           </TabsTrigger>
           <TabsTrigger value="historico" className="text-center">
             Histórico
@@ -239,7 +243,9 @@ export default function page({
             className="w-auto"
           >
             <TabsList
-              className={`grid w-full grid-cols-${mockInputsEmpresa.length}`}
+              className={`grid w-full grid-cols-${
+                Object.keys(mockInputsEmpresa).length
+              }`}
             >
               {mockInputsEmpresa.map((item, index) => {
                 const categoryKey = Object.keys(item)[0];
@@ -263,7 +269,7 @@ export default function page({
                 );
               })}
             </TabsList>
-            <div className="">
+            <div>
               {mockInputsEmpresa.map((item, index) => {
                 const categoryKey = Object.keys(item)[0];
                 const filesArray = item[categoryKey];
@@ -309,6 +315,9 @@ export default function page({
               ))}
             </ul>
           </div>
+        </TabsContent>
+        <TabsContent value="anexos">
+          <Attachments />
         </TabsContent>
         <TabsContent value="cadastroConsultor">
           <CreateConsultant />
