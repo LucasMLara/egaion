@@ -242,11 +242,7 @@ export default function page({
             defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
             className="w-auto"
           >
-            <TabsList
-              className={`grid w-full grid-cols-${
-                Object.keys(mockInputsEmpresa).length
-              }`}
-            >
+            <TabsList className={`grid w-full grid-cols-3`}>
               {mockInputsEmpresa.map((item, index) => {
                 const categoryKey = Object.keys(item)[0];
                 return (
