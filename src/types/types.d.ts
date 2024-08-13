@@ -19,7 +19,6 @@ export const DocSchema = z.object({
     z.literal("error"),
     z.literal(null),
   ]),
-  docAreas: z.array(z.string()),
   docDate: z.string(),
   docDialogTitle: z.string(),
   docDialogDescription: z.string(),
