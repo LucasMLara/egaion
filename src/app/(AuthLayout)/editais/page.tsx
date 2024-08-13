@@ -11,8 +11,8 @@ export default function Editais() {
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
         {generateEditalCardData().map((card) => (
           <EditalCard
+            status={null}
             key={card.editalId}
-            status={card.status}
             editalCardContent={card.editalCardContent}
             editalCardTitle={card.editalCardTitle}
             editalCardDate={card.editalCardDate}
