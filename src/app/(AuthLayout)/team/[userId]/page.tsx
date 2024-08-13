@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { getData } from "../page";
-import DocCard from "@/components/layout/DocCard";
-import { generateDocCardData } from "@/lib/utils";
+import FileUploader from "@/components/myCustomInputs/FileUploader";
 
 export default async function TeamMember({
   params,
@@ -13,7 +12,6 @@ export default async function TeamMember({
 }) {
   const { userId } = params;
   const member = await getData(userId);
-  const docCardData = generateDocCardData(12);
 
   const maskCpf = (cpf: string) => {
     return cpf.replace(/(\d{2})\d{5}(\d{3})/, "$1***$2");
@@ -70,22 +68,6 @@ export default async function TeamMember({
               defaultValue={member[0].contact}
             />
           </div>
-        </div>
-        <div className="flex flex-wrap gap-2 justify-evenly">
-          {docCardData.map((card) => (
-            <DocCard
-              key={card.docId}
-              docStatus={card.docStatus}
-              docTitle={card.docTitle}
-              docDate={card.docDate}
-              docAreas={card.docAreas}
-              docContent={card.docContent}
-              docDialogContent={card.docDialogContent}
-              docDialogDescription={card.docDialogDescription}
-              docDialogTitle={card.docDialogTitle}
-              docId={card.docId}
-            />
-          ))}
         </div>
         <div className="w-full flex justify-end mt-4">
           <Button
