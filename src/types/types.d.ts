@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const DocInputSchema = z.object({
+  padrao: z.boolean().optional(),
+  titulo: z.string(),
+  label: z.string(),
+  // arquivo: z.instanceof(File),
+  arquivo: z.string(),
+  onchange: z.function(z.any()),
+});
+
 export const DocSchema = z.object({
   docId: z.string(),
   docTitle: z.string(),
@@ -48,3 +57,4 @@ export const EditalSchema = z.object({
 type IEditalCard = z.infer<typeof EditalSchema>;
 type IDocCard = z.infer<typeof DocSchema>;
 type ITeamMember = z.infer<typeof TeamMember>;
+type IDocInput = z.infer<typeof DocInputSchema>;
