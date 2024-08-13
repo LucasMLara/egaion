@@ -73,13 +73,13 @@ export const mockInputsEmpresa: mockInputFiles[] = [
       { comprovanteRegularidadeFGTS: "Comprovante de Regularidade FGTS" },
     ],
   },
-  // {
-  //   "Atestado de Capacidade Técnica": [
-  //     { teste1: "Teste 1" },
-  //     { teste2: "Teste 2" },
-  //     { teste3: "Teste 3" },
-  //   ],
-  // },
+  {
+    "Qualificacão Técnica": [
+      { reLatoDeExperiencia: "Relato de Experiência" },
+      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+      { certificado: "Certificados" },
+    ],
+  },
 ];
 
 export const history = [
