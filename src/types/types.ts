@@ -54,16 +54,19 @@ export const DocSchema = z.object({
   docDialogContent: z.string(),
 });
 
-export const TeamMember = z.object({
+export const consultantSchema = z.object({
   id: z.string(),
-  contact: z.number(),
-  docNumber: z.string(),
-  status: z.union([
-    z.literal("OK"),
-    z.literal("Documento Pendente"),
-    z.literal("Documento Reprovado"),
-  ]),
-  email: z.string(),
+  nome: z.string().min(1, "Nome é obrigatório"),
+  CPF: z.string().min(11, "CPF deve ter no mínimo 11 caracteres"),
+  email: z.string().email("Email inválido"),
+  confirmEmail: z.string().email("Email inválido"),
+  contato: z.string().min(10, "Telefone deve ter no mínimo 10 caracteres"),
+  documentos: z.array(
+    z.object({
+      key: z.string(),
+      file: z.any(),
+    })
+  ),
 });
 
 export const EditalSchema = z.object({
@@ -82,9 +85,13 @@ export const EditalSchema = z.object({
   editalId: z.string(),
 });
 
+export type ConsultantRowDisplay = Omit<
+  IConsultant,
+  "confirmEmail" | "documentos"
+>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
 export type IDocCard = z.infer<typeof DocSchema>;
-export type ITeamMember = z.infer<typeof TeamMember>;
 export type IDocInput = z.infer<typeof DocInputSchema>;
 export type ISignUp = z.infer<typeof SignUpSchema>;
 export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
+export type IConsultant = z.infer<typeof consultantSchema>;
