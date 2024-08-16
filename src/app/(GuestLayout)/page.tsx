@@ -9,7 +9,6 @@ import { useFormState } from "react-dom";
 import React from "react";
 import { toast } from "sonner";
 import { LoaderIcon } from "lucide-react";
-// import { signIn as nextAuthSignIn } from "next-auth/react";
 
 export default function Login() {
   const [formState, formAction] = useFormState(signIn, { error: null });
@@ -23,7 +22,7 @@ export default function Login() {
   }, [formState.error]);
 
   return (
-    <div className="mx-auto grid h-screen max-w-[1440px] grid-cols-1 place-content-center bg-primary-200 md:grid-cols-2">
+    <>
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <form
@@ -31,9 +30,6 @@ export default function Login() {
             onSubmit={() => setFormIsSubmitting(true)}
             className="grid gap-4"
           >
-            <div className="bg-muted block md:hidden size-auto md:m-auto">
-              <SebraeLogo className="h-full w-full object-fill dark:brightness-[0.2] dark:grayscale" />
-            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -90,9 +86,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted md:flex md:justify-center md:content-center size-full  md:m-auto">
-        <SebraeLogo className="h-full xl:w-full object-fill dark:brightness-[0.2] dark:grayscale w-2/3" />
-      </div>
-    </div>
+    </>
   );
 }
