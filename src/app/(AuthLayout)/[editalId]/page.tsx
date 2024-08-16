@@ -8,6 +8,7 @@ import { mockInputsEmpresa, history } from "@/mocks";
 import { FileTextIcon, ClipboardIcon, CheckCircleIcon } from "lucide-react";
 import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
+import ConsultantTable from "@/components/ConsultantTable/ConsultantTable";
 
 export default function page({
   params,
@@ -18,7 +19,7 @@ export default function page({
 }) {
   return (
     <section className="h-full">
-      <Tabs defaultValue="content" className="w-auto m-4">
+      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
@@ -237,6 +238,24 @@ export default function page({
             </p>
           </div>
         </TabsContent>
+        <TabsContent value="cadastroConsultor">
+          <Tabs defaultValue="consultantTable">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="consultantTable">
+                Tabela de Consultores
+              </TabsTrigger>
+              <TabsTrigger value="createConsultant">
+                Cadastrar Consultores
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="consultantTable">
+              <ConsultantTable />
+            </TabsContent>
+            <TabsContent value="createConsultant">
+              <CreateConsultant />
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
         <TabsContent value="documents">
           <Tabs
             defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
@@ -309,9 +328,6 @@ export default function page({
         </TabsContent>
         <TabsContent value="anexos">
           <Attachments />
-        </TabsContent>
-        <TabsContent value="cadastroConsultor">
-          <CreateConsultant />
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
