@@ -292,11 +292,6 @@ export default function page({
               })}
             </div>
           </Tabs>
-          <div className="flex justify-end p-5">
-            <Button className="float-end  bg-gradient-primary">
-              Cadastrar
-            </Button>
-          </div>
         </TabsContent>
         <TabsContent value="historico">
           <h2 className="text-lg text-center font-bold mb-4">Histórico</h2>
@@ -319,6 +314,9 @@ export default function page({
           <CreateConsultant />
         </TabsContent>
       </Tabs>
+      <div className="flex justify-end p-5">
+        <Button className="float-end  bg-gradient-primary">Cadastrar</Button>
+      </div>
     </section>
   );
 }
