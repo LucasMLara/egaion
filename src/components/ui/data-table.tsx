@@ -85,9 +85,9 @@ export function DataTable<TData, TValue>({
         <div className="grid justify-items-center gap-2 sm:flex">
           <Input
             placeholder="Buscar membro de Equipe..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("CPF")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+              table.getColumn("CPF")?.setFilterValue(event.target.value)
             }
             className="w-full md:w-96 transition-all"
           />
@@ -167,7 +167,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 flex items-center justify-center"
                 >
-                  Nenhum resultado! Vamos Cadastrar?
+                  Nenhum resultado!
                 </TableCell>
               </TableRow>
             )}
