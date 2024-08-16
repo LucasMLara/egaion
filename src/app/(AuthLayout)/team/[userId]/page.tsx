@@ -2,8 +2,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { getData } from "../page";
-import FileUploader from "@/components/myCustomInputs/FileUploader";
+import { getData } from "@/components/ConsultantTable/ConsultantTable";
+import { maskCpf } from "@/lib/utils";
 
 export default async function TeamMember({
   params,
@@ -13,10 +13,6 @@ export default async function TeamMember({
   const { userId } = params;
   const member = await getData(userId);
 
-  const maskCpf = (cpf: string) => {
-    return cpf.replace(/(\d{2})\d{5}(\d{3})/, "$1***$2");
-  };
-  const name = member[0].email.split("@")[0];
   return (
     <section className="my-6">
       <h1 className="text-2xl font-bold text-neutral-700 text-center">
@@ -32,7 +28,7 @@ export default async function TeamMember({
               type="nome"
               required
               name="nome"
-              defaultValue={name}
+              defaultValue={member[0].nome}
             />
           </div>
           <div className="flex flex-col gap-2 my-2 flex-grow">
@@ -54,7 +50,7 @@ export default async function TeamMember({
               id="CPF"
               disabled
               type="CPF"
-              defaultValue={maskCpf(member[0].docNumber)}
+              defaultValue={maskCpf(member[0].CPF)}
               name="CPF"
             />
           </div>
@@ -65,7 +61,7 @@ export default async function TeamMember({
               id="contato"
               type="text"
               name="contato"
-              defaultValue={member[0].contact}
+              defaultValue={member[0].contato}
             />
           </div>
         </div>

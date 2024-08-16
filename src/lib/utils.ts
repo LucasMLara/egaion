@@ -8,7 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const currentDate = new Date().toLocaleDateString("pt-BR");
-
+export const maskCpf = (cpf: string) => {
+  return cpf.replace(/(\d{2})\d{5}(\d{3})/, "$1***$2");
+};
 const statusOptions: IEditalCard["status"][] = ["ok", "pending", "error", null];
 const areaOptions: string[] = ["area1", "area2", "area3"];
 const sampleContent = "Sample Content";
