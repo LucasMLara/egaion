@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const forgetPasswordSchema = z.object({
+  email: z.string().min(1, "Campo obrigatório").email("Email inválido"),
+});
+
 export const SignUpSchema = z.object({
   razaoSocial: z.string().min(3, "Campo obrigatório"),
   email: z
@@ -83,3 +87,4 @@ export type IDocCard = z.infer<typeof DocSchema>;
 export type ITeamMember = z.infer<typeof TeamMember>;
 export type IDocInput = z.infer<typeof DocInputSchema>;
 export type ISignUp = z.infer<typeof SignUpSchema>;
+export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
