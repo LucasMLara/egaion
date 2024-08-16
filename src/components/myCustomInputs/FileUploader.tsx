@@ -27,15 +27,6 @@ export default function FileUploader({
         value={arquivo}
         onChange={onchange}
       />
-      <div className="flex items-center gap-2">
-        <p className="text-sm">Documento Padrão ?</p>
-        <Checkbox
-          className="transition-all m-2"
-          id="inscricaoCnpjPadrao"
-          checked={padrao}
-          onChange={(ps) => setArquivoPadrao(!ps)}
-        />
-      </div>
       <Separator />
     </div>
   );
