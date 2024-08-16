@@ -17,7 +17,7 @@ import {
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import SebraeLogo from "@/assets/Sebrae.svg";
+
 import { ISignUp, SignUpSchema } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
 
