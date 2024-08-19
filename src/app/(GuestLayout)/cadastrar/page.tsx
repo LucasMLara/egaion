@@ -49,161 +49,159 @@ export default function Cadastro() {
   }
 
   return (
-    <>
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col w-96">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col"
-            >
-              <FormField
-                control={form.control}
-                name="razaoSocial"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Razão Social</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Empresa XYZ LTDA"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+    <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col w-96">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col"
+          >
+            <FormField
+              control={form.control}
+              name="razaoSocial"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Razão Social</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Empresa XYZ LTDA"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email.email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="usuário@dominio.com"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email.emailConfirmation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="usuário@dominio.com"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="CNPJ"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CNPJ</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="00000000000000"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="telefone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefone</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="27999999999"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password.password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="*************"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password.passwordConfirmation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="*************"
+                      {...field}
+                      className="transition-all"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="mt-5 gap-3 flex flex-col">
+              <Button
+                type="submit"
+                disabled={formIsSubmitting}
+                className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
+              >
+                {formIsSubmitting ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Cadastrar"
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="email.email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="usuário@dominio.com"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email.emailConfirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="usuário@dominio.com"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="CNPJ"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CNPJ</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="00000000000000"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="telefone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Telefone</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="27999999999"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password.password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="*************"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password.passwordConfirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="*************"
-                        {...field}
-                        className="transition-all"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="mt-5 gap-3 flex flex-col">
+              </Button>
+              <Link href="/">
                 <Button
                   type="submit"
-                  disabled={formIsSubmitting}
-                  className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
+                  variant="outline"
+                  className="w-full hover:shadow-lg hover:shadow-gray-500/40 transition-all"
                 >
-                  {formIsSubmitting ? (
-                    <LoaderIcon className="animate-spin" />
-                  ) : (
-                    "Cadastrar"
-                  )}
+                  Voltar
                 </Button>
-                <Link href="/">
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    className="w-full hover:shadow-lg hover:shadow-gray-500/40 transition-all"
-                  >
-                    Voltar
-                  </Button>
-                </Link>
-              </div>
-            </form>
-          </Form>
-        </div>
+              </Link>
+            </div>
+          </form>
+        </Form>
       </div>
-    </>
+    </div>
   );
 }
