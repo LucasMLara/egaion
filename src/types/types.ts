@@ -4,6 +4,65 @@ export const forgetPasswordSchema = z.object({
   email: z.string().min(1, "Campo obrigatório").email("Email inválido"),
 });
 
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 3;
+const ACCEPTED_FILE_TYPES = ["application/pdf"];
+
+export const consultantSchema = z.object({
+  id: z.string(),
+  nome: z.string().min(1, "Nome é obrigatório"),
+  CPF: z.string().min(11, "CPF deve ter no mínimo 11 caracteres"),
+  email: z
+    .object({
+      email: z.string().email("Email inválido"),
+      emailConfirmation: z.string().email("Email inválido"),
+    })
+    .refine((data) => data.email === data.emailConfirmation, {
+      message: "Os emails não são iguais",
+      path: ["emailConfirmation"],
+    }),
+  contato: z.string().min(10, "Telefone deve ter no mínimo 10 caracteres"),
+  consultantCPF: z
+    .instanceof(File, {
+      message: "Campo Obrigatório",
+    })
+    .refine((file) => {
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, "Seu arquivo precisa ser de no máximo 3MB")
+    .refine((file) => {
+      return ACCEPTED_FILE_TYPES.includes(file.type);
+    }, "Insira somente arquivos em PDF"),
+  comprovanteVinculoCNPJ: z
+    .instanceof(File, {
+      message: "Campo Obrigatório",
+    })
+    .refine((file) => {
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, "Seu arquivo precisa ser de no máximo 3MB")
+    .refine((file) => {
+      return ACCEPTED_FILE_TYPES.includes(file.type);
+    }, "Insira somente arquivos em PDF"),
+  comprovanteFormacaoAcademica: z
+    .instanceof(File, {
+      message: "Campo Obrigatório",
+    })
+    .refine((file) => {
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, "Seu arquivo precisa ser de no máximo 3MB")
+    .refine((file) => {
+      return ACCEPTED_FILE_TYPES.includes(file.type);
+    }, "Insira somente arquivos em PDF"),
+  registroProfissionalClasse: z
+    .instanceof(File, {
+      message: "Campo Obrigatório",
+    })
+    .refine((file) => {
+      return !file || file.size <= MAX_UPLOAD_SIZE;
+    }, "Seu arquivo precisa ser de no máximo 3MB")
+    .refine((file) => {
+      return ACCEPTED_FILE_TYPES.includes(file.type);
+    }, "Insira somente arquivos em PDF"),
+});
+
 export const SignUpSchema = z.object({
   razaoSocial: z.string().min(3, "Campo obrigatório"),
   email: z
@@ -52,21 +111,6 @@ export const DocSchema = z.object({
   docDialogTitle: z.string(),
   docDialogDescription: z.string(),
   docDialogContent: z.string(),
-});
-
-export const consultantSchema = z.object({
-  id: z.string(),
-  nome: z.string().min(1, "Nome é obrigatório"),
-  CPF: z.string().min(11, "CPF deve ter no mínimo 11 caracteres"),
-  email: z.string().email("Email inválido"),
-  confirmEmail: z.string().email("Email inválido"),
-  contato: z.string().min(10, "Telefone deve ter no mínimo 10 caracteres"),
-  documentos: z.array(
-    z.object({
-      key: z.string(),
-      file: z.any(),
-    })
-  ),
 });
 
 export const EditalSchema = z.object({
