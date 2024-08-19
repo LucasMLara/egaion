@@ -136,7 +136,7 @@ export default function CreateConsultant() {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    accept="application/pdf"
+                    accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
                     className="transition-all"
                     onChange={(e) => {
@@ -160,7 +160,7 @@ export default function CreateConsultant() {
                 <FormControl>
                   <Input
                     type="file"
-                    accept="application/pdf"
+                    accept="application/pdf, image/jpeg, image/jpg"
                     className="transition-all"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
@@ -182,7 +182,7 @@ export default function CreateConsultant() {
                 <FormLabel>Comprovante de Formação Acadêmica</FormLabel>
                 <FormControl>
                   <Input
-                    accept="application/pdf"
+                    accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
                     className="transition-all"
                     onChange={(e) => {
@@ -205,7 +205,7 @@ export default function CreateConsultant() {
                 <FormLabel>Registro Profissional em Órgão de Classe</FormLabel>
                 <FormControl>
                   <Input
-                    accept="application/pdf"
+                    accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
                     className="transition-all"
                     onChange={(e) => {
