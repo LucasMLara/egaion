@@ -4,7 +4,7 @@ export const forgetPasswordSchema = z.object({
   email: z.string().min(1, "Campo obrigatório").email("Email inválido"),
 });
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3;
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 10;
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpg", "image/jpeg"];
 
 export const consultantSchema = z.object({
