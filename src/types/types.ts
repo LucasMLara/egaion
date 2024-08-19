@@ -129,10 +129,14 @@ export const EditalSchema = z.object({
   editalId: z.string(),
 });
 
-export type ConsultantRowDisplay = Omit<
-  IConsultant,
-  "confirmEmail" | "documentos"
->;
+export type ConsultantRowDisplay = {
+  CPF: string;
+  id: string;
+  email: string;
+  nome: string;
+  contato: string;
+};
+
 export type IEditalCard = z.infer<typeof EditalSchema>;
 export type IDocCard = z.infer<typeof DocSchema>;
 export type IDocInput = z.infer<typeof DocInputSchema>;
