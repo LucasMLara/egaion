@@ -331,7 +331,9 @@ export default function page({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Button className="float-end  bg-gradient-primary">Cadastrar</Button>
+        <Button className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all">
+          Cadastrar
+        </Button>
       </div>
     </section>
   );
