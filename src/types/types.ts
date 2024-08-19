@@ -5,7 +5,7 @@ export const forgetPasswordSchema = z.object({
 });
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3;
-const ACCEPTED_FILE_TYPES = ["application/pdf"];
+const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpg", "image/jpeg"];
 
 export const consultantSchema = z.object({
   id: z.string(),
@@ -30,7 +30,7 @@ export const consultantSchema = z.object({
     }, "Seu arquivo precisa ser de no máximo 3MB")
     .refine((file) => {
       return ACCEPTED_FILE_TYPES.includes(file.type);
-    }, "Insira somente arquivos em PDF"),
+    }, "Insira somente arquivos em PDF, JPEG ou JPG"),
   comprovanteVinculoCNPJ: z
     .instanceof(File, {
       message: "Campo Obrigatório",
@@ -40,7 +40,7 @@ export const consultantSchema = z.object({
     }, "Seu arquivo precisa ser de no máximo 3MB")
     .refine((file) => {
       return ACCEPTED_FILE_TYPES.includes(file.type);
-    }, "Insira somente arquivos em PDF"),
+    }, "Insira somente arquivos em PDF, JPEG ou JPG"),
   comprovanteFormacaoAcademica: z
     .instanceof(File, {
       message: "Campo Obrigatório",
@@ -50,7 +50,7 @@ export const consultantSchema = z.object({
     }, "Seu arquivo precisa ser de no máximo 3MB")
     .refine((file) => {
       return ACCEPTED_FILE_TYPES.includes(file.type);
-    }, "Insira somente arquivos em PDF"),
+    }, "Insira somente arquivos em PDF, JPEG ou JPG"),
   registroProfissionalClasse: z
     .instanceof(File, {
       message: "Campo Obrigatório",
@@ -60,7 +60,7 @@ export const consultantSchema = z.object({
     }, "Seu arquivo precisa ser de no máximo 3MB")
     .refine((file) => {
       return ACCEPTED_FILE_TYPES.includes(file.type);
-    }, "Insira somente arquivos em PDF"),
+    }, "Insira somente arquivos em PDF, JPEG ou JPG"),
 });
 
 export const SignUpSchema = z.object({
