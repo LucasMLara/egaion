@@ -2,9 +2,8 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 import { ConsultantRowDisplay } from "@/types/types";
 
-export async function getData(
-  memberId?: string
-): Promise<ConsultantRowDisplay[]> {
+//TODO  Verificar se tem como usar serverside aqui , e se tiver q ser client, que o fetch ocorra 1x , e nao que ocorra a cada troca de aba para a aba onde está a tabela
+export function getData(memberId?: string): ConsultantRowDisplay[] {
   const consultant: ConsultantRowDisplay[] = [
     {
       id: "728ed52f",
@@ -294,8 +293,8 @@ export async function getData(
   return consultant;
 }
 
-export default async function ConsultantTable() {
-  const data = await getData();
+export default function ConsultantTable() {
+  const data = getData();
 
   return (
     <section className="flex flex-wrap flex-col gap-6 justify-center place-content-center">
