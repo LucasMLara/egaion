@@ -95,11 +95,11 @@ export const columns: ColumnDef<ConsultantRowDisplay>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Selecione</DropdownMenuLabel>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(member.id)}
               >
                 Copiar ID
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <Link href={`/team/${member.id}`}>
                 <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>

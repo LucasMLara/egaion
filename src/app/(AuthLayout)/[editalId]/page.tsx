@@ -19,7 +19,7 @@ export default function page({
 }) {
   return (
     <section className="h-full">
-      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
+      <Tabs defaultValue="content" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
