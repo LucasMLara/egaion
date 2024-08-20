@@ -104,6 +104,20 @@ export const EditalSchema = z.object({
   editalId: z.string(),
 });
 
+export const PasswordRecoverySchema = z.object({
+  password: z
+    .object({
+      password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+      passwordConfirmation: z
+        .string()
+        .min(6, "A senha deve ter no mínimo 6 caracteres"),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: "Suas senhas não coincidem",
+      path: ["passwordConfirmation"],
+    }),
+});
+
 export type ConsultantRowDisplay = {
   CPF: string;
   id: string;
@@ -112,6 +126,7 @@ export type ConsultantRowDisplay = {
   contato: string;
 };
 
+export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
 export type IDocCard = z.infer<typeof DocSchema>;
 export type IDocInput = z.infer<typeof DocInputSchema>;
