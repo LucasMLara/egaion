@@ -280,7 +280,7 @@ export default function page({
                     {categoryKey.match(/regularidade/i) && (
                       <ClipboardIcon className="inline md:hidden" />
                     )}
-                    {categoryKey.match(/atestado/i) && (
+                    {categoryKey.match(/qualifica/i) && (
                       <CheckCircleIcon className="inline md:hidden" />
                     )}
                   </TabsTrigger>
