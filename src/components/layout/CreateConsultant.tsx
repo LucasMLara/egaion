@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { consultantSchema, IConsultant } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { nanoid } from "nanoid";
-
 import {
   Form,
   FormControl,
@@ -15,13 +14,11 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useEditalInEdition } from "@/store/useEditalInEdition";
 
 export default function CreateConsultant() {
   const { cadastrarConsultor, editalData } = useEditalStore();
-  const { Consultores } = editalData;
-  const consultor = Consultores[Consultores.length - 1];
   const { setConsultant, editalInEdition } = useEditalInEdition();
 
   const form = useForm<IConsultant>({
@@ -42,30 +39,42 @@ export default function CreateConsultant() {
     },
   });
 
-  form.watch((data) => {
-    setConsultant({ key: "cpf", data: data?.CPF ?? "" });
-    setConsultant({ key: "nome", data: data?.nome ?? "" });
-  });
+  const consultantCPFRef = useRef<HTMLInputElement | null>(null);
+  const comprovanteVinculoCNPJRef = useRef<HTMLInputElement | null>(null);
+  const comprovanteFormacaoAcademicaRef = useRef<HTMLInputElement | null>(null);
+  const registroProfissionalClasseRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    form.setValue("nome", editalInEdition.consultant.nome);
-    form.setValue("CPF", editalInEdition.consultant.cpf);
-    form.setValue("email.email", editalInEdition.consultant.email);
-    form.setValue("email.emailConfirmation", editalInEdition.consultant.email);
-    form.setValue("contato", editalInEdition.consultant.telefone);
-  }, []);
+    if (editalInEdition?.consultant) {
+      form.setValue("nome", editalInEdition.consultant.nome);
+      form.setValue("CPF", editalInEdition.consultant.cpf);
+      form.setValue("email.email", editalInEdition.consultant.email);
+      form.setValue(
+        "email.emailConfirmation",
+        editalInEdition.consultant.email
+      );
+      form.setValue("contato", editalInEdition.consultant.telefone);
+    }
+  }, [editalInEdition, form]);
 
   function onSubmit(data: IConsultant) {
     console.log("Dados do consultor na submissao", data);
     cadastrarConsultor(data);
+    form.reset();
+    if (consultantCPFRef.current) consultantCPFRef.current.value = "";
+    if (comprovanteVinculoCNPJRef.current)
+      comprovanteVinculoCNPJRef.current.value = "";
+    if (comprovanteFormacaoAcademicaRef.current)
+      comprovanteFormacaoAcademicaRef.current.value = "";
+    if (registroProfissionalClasseRef.current)
+      registroProfissionalClasseRef.current.value = "";
   }
-  console.log(form.getValues());
+
   return (
     <Form {...form}>
       <form
-        // onChange={() => console.log(form.getValues())}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 md:grid-cols-2  gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
       >
         <div>
           <FormField
@@ -167,11 +176,11 @@ export default function CreateConsultant() {
                   <Input
                     accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
+                    ref={consultantCPFRef}
                     className="transition-all"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
                         field.onChange(e.target.files[0]);
-                        console.log(e);
                       }
                     }}
                   />
@@ -190,11 +199,11 @@ export default function CreateConsultant() {
                   <Input
                     type="file"
                     accept="application/pdf, image/jpeg, image/jpg"
+                    ref={comprovanteVinculoCNPJRef}
                     className="transition-all"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
                         field.onChange(e.target.files[0]);
-                        console.log(e);
                       }
                     }}
                   />
@@ -213,11 +222,11 @@ export default function CreateConsultant() {
                   <Input
                     accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
+                    ref={comprovanteFormacaoAcademicaRef}
                     className="transition-all"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
                         field.onChange(e.target.files[0]);
-                        console.log(e);
                       }
                     }}
                   />
@@ -236,11 +245,11 @@ export default function CreateConsultant() {
                   <Input
                     accept="application/pdf, image/jpeg, image/jpg"
                     type="file"
+                    ref={registroProfissionalClasseRef}
                     className="transition-all"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
                         field.onChange(e.target.files[0]);
-                        console.log(e);
                       }
                     }}
                   />
