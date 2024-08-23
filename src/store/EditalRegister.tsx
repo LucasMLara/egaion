@@ -52,8 +52,10 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       permitirEnviar: false,
       cadastrarConsultor: (consultor) =>
         set((state) => ({
-          editalData: { ...state.editalData },
-          Consultores: [...state.editalData.Consultores, consultor],
+          editalData: {
+            ...state.editalData,
+            Consultores: [...state.editalData.Consultores, consultor],
+          },
         })),
     }),
     { name: "editalStorage" }
