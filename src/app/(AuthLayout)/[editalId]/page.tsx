@@ -9,7 +9,10 @@ import { FileTextIcon, ClipboardIcon, CheckCircleIcon } from "lucide-react";
 import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import ConsultantTable from "@/components/ConsultantTable/ConsultantTable";
-
+import { useEditalStore } from "@/store/EditalRegister";
+useEditalStore.subscribe((state) =>
+  console.log("Estado modificado no zustand", state)
+);
 export default function page({
   params,
 }: {
@@ -19,7 +22,7 @@ export default function page({
 }) {
   return (
     <section className="h-full">
-      <Tabs defaultValue="content" className="w-auto m-4">
+      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
@@ -239,7 +242,7 @@ export default function page({
           </div>
         </TabsContent>
         <TabsContent value="cadastroConsultor">
-          <Tabs defaultValue="consultantTable">
+          <Tabs defaultValue="createConsultant">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="consultantTable">
                 Tabela de Consultores

@@ -1,22 +1,27 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { generateEditalCardData } from "@/lib/utils";
-import { IEditalCard } from "@/types/types";
 
-// const asyncEditalCardData = async () => {
-//   return await new Promise((resolve) =>
-//     setTimeout(() => {
-//       resolve(generateEditalCardData());
-//     }, 3000)
-//   );
-// };
+import { useMyEditals } from "@/store/useMyEditals";
+import { IMyEditals } from "@/store/useMyEditals/types";
 
-async function getData(): Promise<IEditalCard[]> {
-  return generateEditalCardData();
-}
+export default function Home() {
+  const { myEditals, setListMyEditals } = useMyEditals();
 
-export default async function Home() {
-  const editalCardData = await getData();
+  useEffect(() => {
+    setListMyEditals(
+      generateEditalCardData().map(
+        (edital): IMyEditals => ({
+          id: edital.editalId,
+          date: new Date(edital.editalCardDate),
+          title: edital.editalCardTitle,
+          description: edital.editalCardContent,
+          status: edital.status,
+        })
+      )
+    );
+  }, []);
 
   return (
     <section className="flex flex-wrap gap-6 py-10 items-center justify-center flex-col">
@@ -24,17 +29,17 @@ export default async function Home() {
         Meus Editais
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
-        {editalCardData.map((card) => (
+        {myEditals.map((card) => (
           <EditalCard
-            key={card.editalId}
+            key={card.id}
             status={card.status}
-            editalCardContent={card.editalCardContent}
-            editalCardTitle={card.editalCardTitle}
-            editalCardDate={card.editalCardDate}
-            editalDialogTitle={card.editalDialogTitle}
-            editalDialogDescription={card.editalDialogDescription}
-            editalDialogContent={card.editalDialogContent}
-            editalId={card.editalId}
+            editalCardContent={card.description}
+            editalCardTitle={card.title}
+            editalCardDate={card.date.toLocaleDateString("pt-BR")}
+            editalDialogTitle={card.title}
+            editalDialogDescription={card.description}
+            editalDialogContent={card.description}
+            editalId={card.id}
           />
         ))}
       </div>
