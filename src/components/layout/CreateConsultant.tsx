@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { consultantSchema, IConsultant } from "@/types/types";
+import { useEditalStore } from "@/store/EditalRegister";
+import { nanoid } from "nanoid";
 
 import {
   Form,
@@ -13,34 +15,55 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useEditalInEdition } from "@/store/useEditalInEdition";
 
 export default function CreateConsultant() {
+  const { cadastrarConsultor, editalData } = useEditalStore();
+  const { Consultores } = editalData;
+  const consultor = Consultores[Consultores.length - 1];
+  const { setConsultant, editalInEdition } = useEditalInEdition();
+
   const form = useForm<IConsultant>({
     resolver: zodResolver(consultantSchema),
     defaultValues: {
-      nome: "",
+      nome: editalInEdition.consultant.nome,
       email: {
-        email: "",
-        emailConfirmation: "",
+        email: editalInEdition.consultant.email,
+        emailConfirmation: editalInEdition.consultant.email,
       },
       consultantCPF: undefined,
       comprovanteFormacaoAcademica: undefined,
       comprovanteVinculoCNPJ: undefined,
       registroProfissionalClasse: undefined,
-      contato: "",
-      CPF: "",
-      id: "",
+      contato: editalInEdition.consultant.telefone,
+      CPF: editalInEdition.consultant.cpf,
+      id: nanoid(),
     },
   });
 
-  async function onSubmit(data: IConsultant) {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    console.log(data);
-  }
+  form.watch((data) => {
+    setConsultant({ key: "cpf", data: data?.CPF ?? "" });
+    setConsultant({ key: "nome", data: data?.nome ?? "" });
+  });
 
+  useEffect(() => {
+    form.setValue("nome", editalInEdition.consultant.nome);
+    form.setValue("CPF", editalInEdition.consultant.cpf);
+    form.setValue("email.email", editalInEdition.consultant.email);
+    form.setValue("email.emailConfirmation", editalInEdition.consultant.email);
+    form.setValue("contato", editalInEdition.consultant.telefone);
+  }, []);
+
+  function onSubmit(data: IConsultant) {
+    console.log("Dados do consultor na submissao", data);
+    cadastrarConsultor(data);
+  }
+  console.log(form.getValues());
   return (
     <Form {...form}>
       <form
+        // onChange={() => console.log(form.getValues())}
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2  gap-4"
       >
