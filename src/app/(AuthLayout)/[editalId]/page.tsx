@@ -22,7 +22,7 @@ export default function EditalId({
     editalId: string;
   };
 }) {
-  const { permitirEnviar } = useEditalStore();
+  const { permissaoDeEnvio } = useEditalStore();
   return (
     <section className="h-full">
       <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
@@ -339,7 +339,7 @@ export default function EditalId({
       <div className="flex justify-end p-5">
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
-          disabled={permitirEnviar}
+          disabled={permissaoDeEnvio}
         >
           Cadastrar
         </Button>
