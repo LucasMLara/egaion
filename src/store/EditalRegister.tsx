@@ -26,6 +26,9 @@ type IEditalStore = {
 type editalActions = {
   cadastrarConsultor: (consultor: IConsultant) => void;
   reset: () => void;
+  removerConsultor: (consultorId: string) => void;
+  permissaoDeEnvio: boolean;
+  alterarPermissao: (permitir: boolean) => void;
 };
 
 const initialState = {
@@ -49,7 +52,17 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       reset: () => {
         set(initialState);
       },
-      permitirEnviar: false,
+      alterarPermissao: (permitir) => set({ permissaoDeEnvio: permitir }),
+      permissaoDeEnvio: false,
+      removerConsultor: (consultorId) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Consultores: state.editalData.Consultores.filter(
+              (consultor) => consultor.id !== consultorId
+            ),
+          },
+        })),
       cadastrarConsultor: (consultor) =>
         set((state) => ({
           editalData: {
