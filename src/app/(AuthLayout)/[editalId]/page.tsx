@@ -10,16 +10,19 @@ import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import ConsultantTable from "@/components/ConsultantTable/ConsultantTable";
 import { useEditalStore } from "@/store/EditalRegister";
+
 useEditalStore.subscribe((state) =>
-  console.log("Estado modificado no zustand", state)
+  console.log("Estado modificado no zustand", state.editalData)
 );
-export default function page({
+
+export default function EditalId({
   params,
 }: {
   params: {
     editalId: string;
   };
 }) {
+  const { permitirEnviar } = useEditalStore();
   return (
     <section className="h-full">
       <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
@@ -334,7 +337,10 @@ export default function page({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Button className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all">
+        <Button
+          className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
+          disabled={permitirEnviar}
+        >
           Cadastrar
         </Button>
       </div>
