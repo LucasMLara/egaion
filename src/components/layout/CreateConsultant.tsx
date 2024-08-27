@@ -15,9 +15,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef } from "react";
-import { useEditalInEdition } from "@/store/useEditalInEdition";
 import ConsultantCard from "./ConsultantCard";
-// TODO capturar os erros do formstate para impedir que o botao da pagina do edital id seja clicado se houver algum erro utilizando o zustand como forma de guardar os erros globalmente
+
 export default function CreateConsultant() {
   const { cadastrarConsultor, editalData, reset, alterarPermissao } =
     useEditalStore();
@@ -70,7 +69,7 @@ export default function CreateConsultant() {
     const uniqueId = nanoid();
     console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
     cadastrarConsultor({ ...data, id: uniqueId });
-    resetConsultantForm();
+    // resetConsultantForm();
   }
 
   return (

@@ -7,7 +7,7 @@ export const forgetPasswordSchema = z.object({
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 10;
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpg", "image/jpeg"];
 
-const fileSchema = z
+export const fileSchema = z
   .instanceof(File, {
     message: "Campo Obrigatório",
   })
@@ -70,6 +70,7 @@ export const DocInputSchema = z.object({
   label: z.string(),
   arquivo: z.string(),
   onchange: z.function(),
+  accept: z.string().optional(),
 });
 
 export const DocSchema = z.object({
@@ -133,3 +134,4 @@ export type IDocInput = z.infer<typeof DocInputSchema>;
 export type ISignUp = z.infer<typeof SignUpSchema>;
 export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
 export type IConsultant = z.infer<typeof consultantSchema>;
+export type IFile = z.infer<typeof fileSchema>;

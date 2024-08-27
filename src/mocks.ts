@@ -4,26 +4,6 @@ type mockInputFiles = {
   }[];
 };
 
-export const mockInputsConsultor: mockInputFiles[] = [
-  {
-    documentoConsultor: [
-      {
-        documentoPessoal:
-          "Documentos Pessoais (Carteira de Identidade e/ou CPF)",
-      },
-      {
-        comprovanteVinculoComPJ: "Comprovante de Vínculo com PJ",
-      },
-      {
-        comprovanteAcademico: "Comprovante de formação Acadêmica",
-      },
-      {
-        registroProfissional: "Registro Profissional em Órgão de Classe",
-      },
-    ],
-  },
-];
-
 export const mockInputsEmpresa: mockInputFiles[] = [
   {
     "Habilitacão Jurídica": [

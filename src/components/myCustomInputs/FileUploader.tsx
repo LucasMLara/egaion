@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
 import React from "react";
@@ -11,10 +9,8 @@ export default function FileUploader({
   arquivo,
   label,
   onchange,
-  padrao,
   titulo,
 }: IDocInput) {
-  const [, setArquivoPadrao] = useState(padrao);
   return (
     <div className="grid md:grid-cols-[1fr_3fr] m-8">
       <Label className="my-5" htmlFor={titulo}>

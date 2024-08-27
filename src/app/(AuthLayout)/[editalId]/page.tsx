@@ -8,12 +8,7 @@ import { mockInputsEmpresa, history } from "@/mocks";
 import { FileTextIcon, ClipboardIcon, CheckCircleIcon } from "lucide-react";
 import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
-import ConsultantTable from "@/components/ConsultantTable/ConsultantTable";
 import { useEditalStore } from "@/store/EditalRegister";
-
-useEditalStore.subscribe((state) =>
-  console.log("Estado modificado no zustand", state.editalData)
-);
 
 export default function EditalId({
   params,
@@ -25,7 +20,7 @@ export default function EditalId({
   const { permissaoDeEnvio } = useEditalStore();
   return (
     <section className="h-full">
-      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
+      <Tabs defaultValue="documents" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
@@ -43,6 +38,86 @@ export default function EditalId({
             Histórico
           </TabsTrigger>
         </TabsList>
+        <TabsContent value="documents">
+          <Tabs
+            defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
+            className="w-auto"
+          >
+            <TabsList className={`grid w-full grid-cols-3`}>
+              {mockInputsEmpresa.map((item, index) => {
+                const categoryKey = Object.keys(item)[0];
+                return (
+                  <TabsTrigger
+                    key={index}
+                    value={categoryKey}
+                    className="text-center"
+                  >
+                    <span className="hidden md:inline">{categoryKey}</span>
+                    {categoryKey.match(/jurídica/i) && (
+                      <FileTextIcon className="inline md:hidden" />
+                    )}
+                    {categoryKey.match(/regularidade/i) && (
+                      <ClipboardIcon className="inline md:hidden" />
+                    )}
+                    {categoryKey.match(/qualifica/i) && (
+                      <CheckCircleIcon className="inline md:hidden" />
+                    )}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+            <div>
+              {mockInputsEmpresa.map((item, index) => {
+                const categoryKey = Object.keys(item)[0];
+                const filesArray = item[categoryKey];
+                return (
+                  <TabsContent key={index} value={categoryKey}>
+                    <h2 className="text-lg text-center font-bold mb-4">
+                      {categoryKey}
+                    </h2>
+                    {filesArray.map((fileItem, fileIndex) => {
+                      const fileKey = Object.keys(fileItem)[0];
+                      const fileLabel = fileItem[fileKey];
+                      return (
+                        <FileUploader
+                          label={fileLabel}
+                          titulo={fileKey}
+                          key={fileIndex}
+                          arquivo=""
+                          onchange={(e) => console.log(e)}
+                        />
+                      );
+                    })}
+                  </TabsContent>
+                );
+              })}
+            </div>
+          </Tabs>
+        </TabsContent>
+        <TabsContent value="cadastroConsultor">
+          <h2 className="text-lg text-center font-bold mb-4">
+            Cadastrar Consultores
+          </h2>
+          <CreateConsultant />
+        </TabsContent>
+        <TabsContent value="historico">
+          <h2 className="text-lg text-center font-bold mb-4">Histórico</h2>
+          <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
+            <ul className="m-4">
+              {history.map((item, index) => (
+                <li key={index} className="m-4">
+                  <span> {item.date}</span>
+                  <h3 className="text-lg font-bold">{item.title}</h3>
+                  <p>{item.status}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </TabsContent>
+        <TabsContent value="anexos">
+          <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
+          <Attachments />
+        </TabsContent>
         <TabsContent value="content" className="py-5">
           <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
             <h1 className="text-center m-4 text-2xl font-bold">
@@ -243,97 +318,6 @@ export default function EditalId({
               lorem ipsun lorem ipsun{" "}
             </p>
           </div>
-        </TabsContent>
-        <TabsContent value="cadastroConsultor">
-          <Tabs defaultValue="createConsultant">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="consultantTable">
-                Tabela de Consultores
-              </TabsTrigger>
-              <TabsTrigger value="createConsultant">
-                Cadastrar Consultores
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="consultantTable">
-              <ConsultantTable />
-            </TabsContent>
-            <TabsContent value="createConsultant">
-              <CreateConsultant />
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-        <TabsContent value="documents">
-          <Tabs
-            defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
-            className="w-auto"
-          >
-            <TabsList className={`grid w-full grid-cols-3`}>
-              {mockInputsEmpresa.map((item, index) => {
-                const categoryKey = Object.keys(item)[0];
-                return (
-                  <TabsTrigger
-                    key={index}
-                    value={categoryKey}
-                    className="text-center"
-                  >
-                    <span className="hidden md:inline">{categoryKey}</span>
-                    {categoryKey.match(/jurídica/i) && (
-                      <FileTextIcon className="inline md:hidden" />
-                    )}
-                    {categoryKey.match(/regularidade/i) && (
-                      <ClipboardIcon className="inline md:hidden" />
-                    )}
-                    {categoryKey.match(/qualifica/i) && (
-                      <CheckCircleIcon className="inline md:hidden" />
-                    )}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-            <div>
-              {mockInputsEmpresa.map((item, index) => {
-                const categoryKey = Object.keys(item)[0];
-                const filesArray = item[categoryKey];
-                return (
-                  <TabsContent key={index} value={categoryKey}>
-                    <h2 className="text-lg text-center font-bold mb-4">
-                      {categoryKey}
-                    </h2>
-                    {filesArray.map((fileItem, fileIndex) => {
-                      const fileKey = Object.keys(fileItem)[0];
-                      const fileLabel = fileItem[fileKey];
-                      return (
-                        <FileUploader
-                          label={fileLabel}
-                          titulo={fileKey}
-                          key={fileIndex}
-                          arquivo=""
-                          onchange={() => {}}
-                        />
-                      );
-                    })}
-                  </TabsContent>
-                );
-              })}
-            </div>
-          </Tabs>
-        </TabsContent>
-        <TabsContent value="historico">
-          <h2 className="text-lg text-center font-bold mb-4">Histórico</h2>
-          <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
-            <ul className="m-4">
-              {history.map((item, index) => (
-                <li key={index} className="m-4">
-                  <span> {item.date}</span>
-                  <h3 className="text-lg font-bold">{item.title}</h3>
-                  <p>{item.status}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </TabsContent>
-        <TabsContent value="anexos">
-          <Attachments />
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
