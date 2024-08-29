@@ -13,7 +13,7 @@ export const fileSchema = z
   })
   .refine((file) => {
     return !file || file.size <= MAX_UPLOAD_SIZE;
-  }, "Seu arquivo precisa ser de no máximo 3MB")
+  }, "Seu arquivo precisa ser de no máximo 10MB")
   .refine((file) => {
     return ACCEPTED_FILE_TYPES.includes(file.type);
   }, "Insira somente arquivos em PDF, JPEG ou JPG");
@@ -74,19 +74,9 @@ export const DocInputSchema = z.object({
 });
 
 export const DocSchema = z.object({
-  docId: z.string(),
-  docTitle: z.string(),
-  docContent: z.string(),
-  docStatus: z.union([
-    z.literal("ok"),
-    z.literal("pending"),
-    z.literal("error"),
-    z.literal(null),
-  ]),
-  docDate: z.string(),
-  docDialogTitle: z.string(),
-  docDialogDescription: z.string(),
-  docDialogContent: z.string(),
+  mockInputFiles: z.array(
+    z.record(z.string(), z.array(z.record(z.string(), fileSchema)))
+  ),
 });
 
 export const EditalSchema = z.object({
