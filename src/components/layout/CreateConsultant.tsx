@@ -69,7 +69,7 @@ export default function CreateConsultant() {
     const uniqueId = nanoid();
     console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
     cadastrarConsultor({ ...data, id: uniqueId });
-    // resetConsultantForm();
+    resetConsultantForm();
   }
 
   return (
