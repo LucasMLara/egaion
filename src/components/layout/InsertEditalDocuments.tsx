@@ -7,66 +7,60 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { fileSchema, IFile } from "@/types/types";
+import { DocSchema } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
+
 export default function InsertEditalDocuments() {
-  const form = useForm<IFile>({
-    resolver: zodResolver(fileSchema),
+  const form = useForm({
+    resolver: zodResolver(DocSchema),
   });
 
+  const onSubmit = (data: any) => console.log(data);
+  console.log(form.formState.errors);
+
   return (
-    <>
+    <div className="grid place-content-center mx-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           {mockInputsEmpresa.map((item, index) => {
             const categoryKey = Object.keys(item)[0];
             const filesArray = item[categoryKey];
+
             return (
               <div key={index}>
-                <h1>{categoryKey}</h1>
-                {filesArray.map((file, index) => {
-                  return (
+                <h2 className="text-lg text-center font-bold mb-4">
+                  {categoryKey}
+                </h2>
+                {filesArray.map((field, fieldIndex) =>
+                  Object.entries(field).map(([fieldName, label]) => (
                     <FormField
-                      key={index}
+                      key={`${fieldName}-${fieldIndex}`}
                       control={form.control}
-                      name={file.name as "name"}
+                      name={`mockInputFiles[${index}][${categoryKey}][${fieldIndex}][${fieldName}].file`}
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{file.label}</FormLabel>
+                        <FormItem className="m-2">
+                          <FormLabel>{label}</FormLabel>
                           <FormControl>
-                            <Input
-                              {...field}
-                              value={String(field.value)}
-                              className="transition-all"
-                            />
+                            <Input type="file" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  );
-                })}
+                  ))
+                )}
               </div>
             );
           })}
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input {...field} className="transition-all" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Button className="bg-gradient-primary w-full" type="submit">
+            Preparar Documentos
+          </Button>
         </form>
       </Form>
-    </>
+    </div>
   );
 }
