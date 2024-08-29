@@ -3,11 +3,10 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { currentDate } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FileUploader from "@/components/myCustomInputs/FileUploader";
 import { mockInputsEmpresa, history } from "@/mocks";
-import { FileTextIcon, ClipboardIcon, CheckCircleIcon } from "lucide-react";
 import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
+import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
 
 export default function EditalId({
@@ -43,55 +42,7 @@ export default function EditalId({
             defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
             className="w-auto"
           >
-            <TabsList className={`grid w-full grid-cols-3`}>
-              {mockInputsEmpresa.map((item, index) => {
-                const categoryKey = Object.keys(item)[0];
-                return (
-                  <TabsTrigger
-                    key={index}
-                    value={categoryKey}
-                    className="text-center"
-                  >
-                    <span className="hidden md:inline">{categoryKey}</span>
-                    {categoryKey.match(/jurídica/i) && (
-                      <FileTextIcon className="inline md:hidden" />
-                    )}
-                    {categoryKey.match(/regularidade/i) && (
-                      <ClipboardIcon className="inline md:hidden" />
-                    )}
-                    {categoryKey.match(/qualifica/i) && (
-                      <CheckCircleIcon className="inline md:hidden" />
-                    )}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-            <div>
-              {mockInputsEmpresa.map((item, index) => {
-                const categoryKey = Object.keys(item)[0];
-                const filesArray = item[categoryKey];
-                return (
-                  <TabsContent key={index} value={categoryKey}>
-                    <h2 className="text-lg text-center font-bold mb-4">
-                      {categoryKey}
-                    </h2>
-                    {filesArray.map((fileItem, fileIndex) => {
-                      const fileKey = Object.keys(fileItem)[0];
-                      const fileLabel = fileItem[fileKey];
-                      return (
-                        <FileUploader
-                          label={fileLabel}
-                          titulo={fileKey}
-                          key={fileIndex}
-                          arquivo=""
-                          onchange={(e) => console.log(e)}
-                        />
-                      );
-                    })}
-                  </TabsContent>
-                );
-              })}
-            </div>
+            <InsertEditalDocuments />
           </Tabs>
         </TabsContent>
         <TabsContent value="cadastroConsultor">
