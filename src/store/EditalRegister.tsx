@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { IConsultant } from "@/types/types";
 import { persist } from "zustand/middleware";
 
-type Documents = {
+export type Documents = {
   title: string;
   blob: string;
   id: string;
@@ -29,6 +29,7 @@ type editalActions = {
   removerConsultor: (consultorId: string) => void;
   permissaoDeEnvio: boolean;
   alterarPermissao: (permitir: boolean) => void;
+  cadastrarDocumento: (documento: Documents[]) => void;
 };
 
 const initialState = {
@@ -43,6 +44,13 @@ const initialState = {
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
+      cadastrarDocumento: (documento) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Documentos: [...documento],
+          },
+        })),
       editalData: {
         Consultores: get()?.editalData?.Consultores ?? [],
         Documentos: get()?.editalData?.Documentos ?? [],
