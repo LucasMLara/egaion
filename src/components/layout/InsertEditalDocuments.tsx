@@ -57,7 +57,9 @@ export default function InsertEditalDocuments() {
   const { errors } = form.formState;
 
   useEffect(() => {
-    Object.keys(errors).length > 0
+    Object.keys(errors).length > 0 ||
+    editalData.Documentos.length == 0 ||
+    editalData.Consultores.length == 0
       ? alterarPermissao(true)
       : alterarPermissao(false);
   }, [errors]);
