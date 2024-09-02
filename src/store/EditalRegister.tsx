@@ -30,6 +30,7 @@ type editalActions = {
   permissaoDeEnvio: boolean;
   alterarPermissao: (permitir: boolean) => void;
   cadastrarDocumento: (documento: Documents[]) => void;
+  limparDocumentos: () => void;
 };
 
 const initialState = {
@@ -60,6 +61,13 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       reset: () => {
         set(initialState);
       },
+      limparDocumentos: () =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Documentos: [],
+          },
+        })),
       alterarPermissao: (permitir) => set({ permissaoDeEnvio: permitir }),
       permissaoDeEnvio: false,
       removerConsultor: (consultorId) =>
