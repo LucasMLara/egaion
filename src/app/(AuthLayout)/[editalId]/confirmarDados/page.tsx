@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { EyeIcon } from "lucide-react";
 
 export default function ConfirmaDados() {
   const { editalData } = useEditalStore();
@@ -19,9 +21,13 @@ export default function ConfirmaDados() {
   const router = useRouter();
 
   return (
-    <div className="rounded w-1/2 bg-neutral-500 flex flex-col items-center content-center mx-auto mt-14 p-5">
-      <h1>Confirmação de Dados</h1>
-      <h2>Consultores</h2>
+    <div className="rounded w-full md:w-1/2 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+        Confirmação de Dados
+      </h3>
+      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+        Consultores
+      </h4>
       <ul>
         {Consultores.map((consultor) => (
           <li key={consultor.id}>
@@ -29,7 +35,7 @@ export default function ConfirmaDados() {
           </li>
         ))}
       </ul>
-      <h2>Documentos</h2>
+      <h4 className="text-xl font-semibold tracking-tight">Documentos</h4>
       <ul>
         {Documentos.map((documento) => (
           <li key={documento.id}>
@@ -53,9 +59,11 @@ export default function ConfirmaDados() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button type="submit" className="bg-gradient-primary">
-                Confirmar
-              </Button>
+              <Link href="/edital/cadastroRealizado">
+                <Button type="submit" className="bg-gradient-primary">
+                  Confirmar
+                </Button>
+              </Link>
             </DialogFooter>
           </DialogContent>
         </Dialog>
