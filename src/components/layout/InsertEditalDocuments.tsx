@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
 import { Documents, useEditalStore } from "@/store/EditalRegister";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function InsertEditalDocuments() {
   const [submitted, setSubmitted] = useState(false);
@@ -22,7 +22,8 @@ export default function InsertEditalDocuments() {
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
-  const { cadastrarDocumento, editalData, limparDocumentos } = useEditalStore();
+  const { cadastrarDocumento, editalData, limparDocumentos, alterarPermissao } =
+    useEditalStore();
 
   const handleReupload = () => {
     limparDocumentos();
@@ -53,10 +54,18 @@ export default function InsertEditalDocuments() {
     form.reset();
   };
 
+  const { errors } = form.formState;
+
+  useEffect(() => {
+    Object.keys(errors).length > 0
+      ? alterarPermissao(true)
+      : alterarPermissao(false);
+  }, [errors]);
+
   return (
-    <div className="grid place-content-center mx-auto">
+    <div className="grid place-content-center mx-auto text-center">
       {submitted || editalData.Documentos.length > 0 ? (
-        <div className="widescreen-card bg-gray-100 p-4 rounded-lg shadow-md">
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4">Documentos Submetidos</h2>
           <ul>
             {editalData.Documentos.map((doc) => (
@@ -97,6 +106,7 @@ export default function InsertEditalDocuments() {
                             <FormLabel>{label}</FormLabel>
                             <FormControl>
                               <Input
+                                accept="application/pdf, image/jpeg, image/jpg"
                                 type="file"
                                 onChange={(e) => {
                                   field.onChange(e.target.files?.[0]);
@@ -112,7 +122,11 @@ export default function InsertEditalDocuments() {
                 </div>
               );
             })}
-            <Button className="bg-gradient-primary w-full" type="submit">
+            <Button
+              className="bg-gradient-primary w-full"
+              type="submit"
+              disabled={Object.keys(errors).length > 0}
+            >
               Preparar Documentos
             </Button>
           </form>
