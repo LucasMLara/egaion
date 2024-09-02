@@ -273,17 +273,18 @@ export default function EditalId({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Link
-          href="/[editalId]/confirmarDados"
-          as={`/${params.editalId}/confirmarDados`}
+        <Button
+          className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
+          disabled={permissaoDeEnvio}
+          onClick={() => console.log(editalData)}
         >
-          <Button
-            className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
-            disabled={permissaoDeEnvio}
+          <Link
+            href="/[editalId]/confirmarDados"
+            as={`/${params.editalId}/confirmarDados`}
           >
             Confirmar Dados de Cadastro
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </section>
   );
