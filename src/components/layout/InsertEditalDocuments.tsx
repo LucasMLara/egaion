@@ -11,16 +11,18 @@ import { Button } from "../ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { DocSchema } from "@/types/types";
+import { DocSchema, IEditalDoc } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
 
 export default function InsertEditalDocuments() {
-  const form = useForm({
+  const form = useForm<IEditalDoc>({
     resolver: zodResolver(DocSchema),
+    defaultValues: { mockInputFiles: [] },
   });
 
-  const onSubmit = (data: any) => console.log(data);
-  console.log(form.formState.errors);
+  const onSubmit = (data: IEditalDoc) => {
+    console.log(data);
+  };
 
   return (
     <div className="grid place-content-center mx-auto">
@@ -40,12 +42,17 @@ export default function InsertEditalDocuments() {
                     <FormField
                       key={`${fieldName}-${fieldIndex}`}
                       control={form.control}
-                      name={`mockInputFiles[${index}][${categoryKey}][${fieldIndex}][${fieldName}].file`}
+                      name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
                       render={({ field }) => (
                         <FormItem className="m-2">
                           <FormLabel>{label}</FormLabel>
                           <FormControl>
-                            <Input type="file" {...field} />
+                            <Input
+                              type="file"
+                              onChange={(e) => {
+                                field.onChange(e.target.files?.[0]);
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -18,6 +18,22 @@ export const fileSchema = z
     return ACCEPTED_FILE_TYPES.includes(file.type);
   }, "Insira somente arquivos em PDF, JPEG ou JPG");
 
+export const DocSchema = z.object({
+  mockInputFiles: z.array(
+    z.record(
+      z.string(),
+      z.array(
+        z.record(
+          z.string(),
+          z.object({
+            file: fileSchema,
+          })
+        )
+      )
+    )
+  ),
+});
+
 export const consultantSchema = z.object({
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
@@ -73,12 +89,6 @@ export const DocInputSchema = z.object({
   accept: z.string().optional(),
 });
 
-export const DocSchema = z.object({
-  mockInputFiles: z.array(
-    z.record(z.string(), z.array(z.record(z.string(), fileSchema)))
-  ),
-});
-
 export const EditalSchema = z.object({
   status: z.union([
     z.literal("ok"),
@@ -125,3 +135,4 @@ export type ISignUp = z.infer<typeof SignUpSchema>;
 export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
 export type IConsultant = z.infer<typeof consultantSchema>;
 export type IFile = z.infer<typeof fileSchema>;
+export type IEditalDoc = z.infer<typeof DocSchema>;
