@@ -8,6 +8,7 @@ import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
+import Link from "next/link";
 
 export default function EditalId({
   params,
@@ -16,7 +17,7 @@ export default function EditalId({
     editalId: string;
   };
 }) {
-  const { permissaoDeEnvio } = useEditalStore();
+  const { permissaoDeEnvio, editalData } = useEditalStore();
   return (
     <section className="h-full">
       <Tabs defaultValue="documents" className="w-auto m-4">
@@ -272,12 +273,17 @@ export default function EditalId({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Button
-          className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
-          disabled={permissaoDeEnvio}
+        <Link
+          href="/[editalId]/confirmarDados"
+          as={`/${params.editalId}/confirmarDados`}
         >
-          Cadastrar
-        </Button>
+          <Button
+            className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
+            disabled={permissaoDeEnvio}
+          >
+            Confirmar Dados de Cadastro
+          </Button>
+        </Link>
       </div>
     </section>
   );
