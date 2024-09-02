@@ -271,13 +271,6 @@ export default function CreateConsultant() {
               >
                 Cadastrar Consultor
               </Button>
-              <Button
-                onClick={() => reset()}
-                className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
-                type="button"
-              >
-                Resetar estado edital
-              </Button>
             </div>
           </div>
         </form>
