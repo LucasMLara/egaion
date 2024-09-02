@@ -68,11 +68,18 @@ export default function InsertEditalDocuments() {
     <div className="grid place-content-center mx-auto text-center">
       {submitted || editalData.Documentos.length > 0 ? (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">Documentos Submetidos</h2>
+          <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+            Documentos Submetidos
+          </h2>
           <ul>
             {editalData.Documentos.map((doc) => (
-              <li key={doc.id} className="mb-2">
-                <a href={doc.blob} target="_blank" rel="noopener noreferrer">
+              <li key={doc.id} className="my-2">
+                <a
+                  href={doc.blob}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="leading-7 [&:not(:first-child)]:mt-6"
+                >
                   {doc.title}
                 </a>
               </li>
