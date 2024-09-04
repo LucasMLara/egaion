@@ -8,7 +8,6 @@ import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 export default function EditalId({
   params,
@@ -21,7 +20,7 @@ export default function EditalId({
   const { permissaoDeEnvio, editalData } = useEditalStore();
   return (
     <section className="h-full">
-      <Tabs defaultValue="documents" className="w-auto m-4">
+      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
