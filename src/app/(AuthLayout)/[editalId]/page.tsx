@@ -9,7 +9,7 @@ import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 export default function EditalId({
   params,
 }: {
@@ -17,6 +17,7 @@ export default function EditalId({
     editalId: string;
   };
 }) {
+  const router = useRouter();
   const { permissaoDeEnvio, editalData } = useEditalStore();
   return (
     <section className="h-full">
@@ -273,22 +274,16 @@ export default function EditalId({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Link
-          href={permissaoDeEnvio ? "#" : `/${params.editalId}/confirmarDados`}
-          passHref
+        <Button
+          className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
+          disabled={permissaoDeEnvio}
+          onClick={() => {
+            router.push(`/${params.editalId}/confirmarDados`);
+            console.log(editalData);
+          }}
         >
-          <Button
-            className="float-end bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-            disabled={permissaoDeEnvio}
-            onClick={() => {
-              if (!permissaoDeEnvio) {
-                console.log(editalData);
-              }
-            }}
-          >
-            Confirmar Dados de Cadastro
-          </Button>
-        </Link>
+          Confirmar Dados de Cadastro
+        </Button>
       </div>
     </section>
   );
