@@ -13,7 +13,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { EyeIcon } from "lucide-react";
 
 export default function ConfirmaDados() {
   const { editalData } = useEditalStore();
