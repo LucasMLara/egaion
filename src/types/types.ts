@@ -127,9 +127,25 @@ export type ConsultantRowDisplay = {
   contato: string;
 };
 
+export const MockDocCardSchema = z.object({
+  docId: z.string(),
+  docTitle: z.string(),
+  docContent: z.string(),
+  docStatus: z.union([
+    z.literal("ok"),
+    z.literal("pending"),
+    z.literal("error"),
+    z.literal(null),
+  ]),
+  docDate: z.string(),
+  docDialogTitle: z.string(),
+  docDialogDescription: z.string(),
+  docDialogContent: z.string(),
+});
+
 export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
-export type IDocCard = z.infer<typeof DocSchema>;
+export type IDocCard = z.infer<typeof MockDocCardSchema>;
 export type IDocInput = z.infer<typeof DocInputSchema>;
 export type ISignUp = z.infer<typeof SignUpSchema>;
 export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
