@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { consultantSchema, IConsultant } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { nanoid } from "nanoid";
+
 import {
   Form,
   FormControl,
@@ -16,10 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef } from "react";
 import ConsultantCard from "./ConsultantCard";
+import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
-  const { cadastrarConsultor, editalData, reset, alterarPermissao } =
-    useEditalStore();
+  const { cadastrarConsultor, editalData, alterarPermissao } = useEditalStore();
 
   const form = useForm<IConsultant>({
     resolver: zodResolver(consultantSchema),
@@ -60,7 +61,9 @@ export default function CreateConsultant() {
   } = form;
 
   useEffect(() => {
-    Object.keys(errors).length > 0 || editalData.Consultores.length == 0
+    Object.keys(errors).length > 0 ||
+    editalData.Documentos.length == 0 ||
+    editalData.Consultores.length == 0
       ? alterarPermissao(true)
       : alterarPermissao(false);
   }, [errors]);
@@ -100,13 +103,18 @@ export default function CreateConsultant() {
             <FormField
               control={form.control}
               name="CPF"
-              render={({ field }) => (
+              render={({ field: { onChange, ...props } }) => (
                 <FormItem>
                   <FormLabel>CPF</FormLabel>
                   <FormControl>
                     <Input
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        e.target.value = formatCpf(value) ?? "";
+                        onChange(e);
+                      }}
                       placeholder="Insira CPF do consultor"
-                      {...field}
+                      {...props}
                       className="transition-all"
                     />
                   </FormControl>
@@ -151,13 +159,18 @@ export default function CreateConsultant() {
             <FormField
               control={form.control}
               name="contato"
-              render={({ field }) => (
+              render={({ field: { onChange, ...props } }) => (
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
                     <Input
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        e.target.value = formatPhone(value) ?? "";
+                        onChange(e);
+                      }}
                       placeholder="Insira o telefone para contato do consultor"
-                      {...field}
+                      {...props}
                       className="transition-all"
                     />
                   </FormControl>
