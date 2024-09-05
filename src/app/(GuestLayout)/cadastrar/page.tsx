@@ -20,6 +20,7 @@ import Link from "next/link";
 
 import { ISignUp, SignUpSchema } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
+import { formatCnpj, formatPhone } from "@/lib/formatters";
 
 export default function Cadastro() {
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
@@ -110,13 +111,18 @@ export default function Cadastro() {
             <FormField
               control={form.control}
               name="CNPJ"
-              render={({ field }) => (
+              render={({ field: { onChange, ...props } }) => (
                 <FormItem>
                   <FormLabel>CNPJ</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="00000000000000"
-                      {...field}
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        e.target.value = formatCnpj(value) ?? "";
+                        onChange(e);
+                      }}
+                      placeholder="12.345.678/0001-90"
+                      {...props}
                       className="transition-all"
                     />
                   </FormControl>
@@ -127,13 +133,18 @@ export default function Cadastro() {
             <FormField
               control={form.control}
               name="telefone"
-              render={({ field }) => (
+              render={({ field: { onChange, ...props } }) => (
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
                     <Input
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        e.target.value = formatPhone(value) ?? "";
+                        onChange(e);
+                      }}
                       placeholder="27999999999"
-                      {...field}
+                      {...props}
                       className="transition-all"
                     />
                   </FormControl>
