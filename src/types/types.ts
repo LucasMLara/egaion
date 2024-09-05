@@ -37,7 +37,24 @@ export const DocSchema = z.object({
 export const consultantSchema = z.object({
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
-  CPF: z.string().min(11, "CPF deve ter no mínimo 11 caracteres"),
+  CPF: z
+    .string()
+    .refine(
+      (doc) => {
+        const replaceDoc = doc.replace(/\D/g, "");
+        return replaceDoc.length === 11;
+      },
+      { message: "CPF deve ter 11 caracteres" }
+    )
+    .refine(
+      (doc) => {
+        const replacedDoc = doc.replace(/\D/g, "");
+        return !!+replacedDoc;
+      },
+      {
+        message: "CPF deve conter apenas números",
+      }
+    ),
   email: z
     .object({
       email: z.string().email("Email inválido"),
@@ -47,7 +64,24 @@ export const consultantSchema = z.object({
       message: "Os emails não são iguais",
       path: ["emailConfirmation"],
     }),
-  contato: z.string().min(10, "Telefone deve ter no mínimo 10 caracteres"),
+  contato: z
+    .string()
+    .refine(
+      (doc) => {
+        const replaceDoc = doc.replace(/\D/g, "");
+        return replaceDoc.length === 11;
+      },
+      { message: "O telefone deve ter 11 caracteres" }
+    )
+    .refine(
+      (doc) => {
+        const replacedDoc = doc.replace(/\D/g, "");
+        return !!+replacedDoc;
+      },
+      {
+        message: "O telefone deve conter apenas números",
+      }
+    ),
   consultantCPF: fileSchema,
   comprovanteVinculoCNPJ: fileSchema,
   comprovanteFormacaoAcademica: fileSchema,
@@ -76,8 +110,42 @@ export const SignUpSchema = z.object({
       message: "Suas senhas não coincidem",
       path: ["passwordConfirmation"],
     }),
-  CNPJ: z.string().min(14, "O CNPJ deve ter 14 caracteres"),
-  telefone: z.string().min(11, "O telefone deve ter 11 caracteres"),
+  CNPJ: z
+    .string()
+    .refine(
+      (doc) => {
+        const replaceDoc = doc.replace(/\D/g, "");
+        return replaceDoc.length === 14;
+      },
+      { message: "CNPJ deve ter 14 caracteres" }
+    )
+    .refine(
+      (doc) => {
+        const replacedDoc = doc.replace(/\D/g, "");
+        return !!+replacedDoc;
+      },
+      {
+        message: "CNPJ deve conter apenas números",
+      }
+    ),
+  telefone: z
+    .string()
+    .refine(
+      (doc) => {
+        const replaceDoc = doc.replace(/\D/g, "");
+        return replaceDoc.length === 11;
+      },
+      { message: "O telefone deve ter 11 caracteres" }
+    )
+    .refine(
+      (doc) => {
+        const replacedDoc = doc.replace(/\D/g, "");
+        return !!+replacedDoc;
+      },
+      {
+        message: "O telefone deve conter apenas números",
+      }
+    ),
 });
 
 export const DocInputSchema = z.object({
