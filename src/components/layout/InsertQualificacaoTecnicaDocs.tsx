@@ -309,7 +309,7 @@ export default function InsertQualificacaoTecnicaDocs() {
             Vincular Consultor(es)
           </Button>
         </DialogTrigger>
-        <DialogContent className="h-5/6 w-screen">
+        <DialogContent className="h-5/6 lg:max-w-4xl overflow-auto">
           <DialogTitle>Insira seu consultor</DialogTitle>
           <CreateConsultant />
         </DialogContent>
