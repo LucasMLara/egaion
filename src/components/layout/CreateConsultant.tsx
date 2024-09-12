@@ -16,7 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef } from "react";
-import ConsultantCard from "./ConsultantCard";
+
 import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
@@ -276,7 +276,7 @@ export default function CreateConsultant() {
                 </FormItem>
               )}
             />
-            <div className="flex justify-end mt-3">
+            <div className="flex place-content-center mt-3">
               <Button
                 className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
                 type="submit"
