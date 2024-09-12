@@ -59,10 +59,17 @@ export default function InsertEditalDocuments() {
   useEffect(() => {
     Object.keys(errors).length > 0 ||
     editalData.Documentos.length == 0 ||
-    editalData.Consultores.length == 0
+    editalData.Consultores.length == 0 ||
+    editalData.Qualificacao.areas.length == 0 ||
+    editalData.Qualificacao.naturezaPrestacao === ""
       ? alterarPermissao(true)
       : alterarPermissao(false);
-  }, [errors]);
+  }, [
+    errors,
+    editalData.Consultores,
+    editalData.Qualificacao,
+    editalData.Documentos,
+  ]);
 
   return (
     <div className="grid place-content-center mx-auto text-center">
