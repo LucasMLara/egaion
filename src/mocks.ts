@@ -4,6 +4,15 @@ type mockInputFiles = {
   }[];
 };
 
+export const mockQualificacaoTecnica: mockInputFiles[] = [
+  {
+    "Documentos Obrigatórios": [
+      { reLatoDeExperiencia: "Relato de Experiência" },
+      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+    ],
+  },
+];
+
 export const mockInputsEmpresa: mockInputFiles[] = [
   {
     "Habilitacão Jurídica": [
@@ -51,13 +60,6 @@ export const mockInputsEmpresa: mockInputFiles[] = [
           "Comprovante de Regularidade Fazenda Municipal",
       },
       { comprovanteRegularidadeFGTS: "Comprovante de Regularidade FGTS" },
-    ],
-  },
-  {
-    "Qualificacão Técnica": [
-      { reLatoDeExperiencia: "Relato de Experiência" },
-      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
-      { certificado: "Certificados" },
     ],
   },
 ];
