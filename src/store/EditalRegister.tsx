@@ -43,6 +43,7 @@ type editalActions = {
   inserirArea: (area: string) => void;
   removerArea: (area: string) => void;
   indicarNaturezaPrestacao: (natureza: string) => void;
+  removerNaturezaPrestacao: (natureza: string) => void;
 };
 
 const initialState = {
@@ -62,6 +63,16 @@ const initialState = {
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set) => ({
+      removerNaturezaPrestacao: () =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              naturezaPrestacao: "",
+            },
+          },
+        })),
       indicarNaturezaPrestacao: (natureza) =>
         set((state) => ({
           editalData: {
