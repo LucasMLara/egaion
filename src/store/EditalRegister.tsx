@@ -14,10 +14,17 @@ type History = {
   description: string;
 };
 
+export type Qualificacao = {
+  naturezaPrestacao: string;
+  areas: string[];
+  documentosDaEmpresa: Documents[];
+};
+
 type IEditalStore = {
   editalData: {
     Consultores: IConsultant[];
     Documentos: Documents[];
+    Qualificacao: Qualificacao;
     Historico: History[];
     Anexos: Documents[];
   };
@@ -30,7 +37,12 @@ type editalActions = {
   permissaoDeEnvio: boolean;
   alterarPermissao: (permitir: boolean) => void;
   cadastrarDocumento: (documento: Documents[]) => void;
+  cadastrarDocumentoQualificacao: (documento: Documents[]) => void;
   limparDocumentos: () => void;
+  limparDocumentosTecnicos: () => void;
+  inserirArea: (area: string) => void;
+  removerArea: (area: string) => void;
+  indicarNaturezaPrestacao: (natureza: string) => void;
 };
 
 const initialState = {
@@ -39,12 +51,27 @@ const initialState = {
     Documentos: [],
     Historico: [],
     Anexos: [],
+    Qualificacao: {
+      naturezaPrestacao: "",
+      areas: [],
+      documentosDaEmpresa: [],
+    },
   },
 };
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set) => ({
+      indicarNaturezaPrestacao: (natureza) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              naturezaPrestacao: natureza,
+            },
+          },
+        })),
       cadastrarDocumento: (documento) =>
         set((state) => ({
           editalData: {
@@ -52,7 +79,22 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
             Documentos: [...documento],
           },
         })),
+      cadastrarDocumentoQualificacao: (documento) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              documentosDaEmpresa: [...documento],
+            },
+          },
+        })),
       editalData: {
+        Qualificacao: {
+          naturezaPrestacao: "",
+          areas: [],
+          documentosDaEmpresa: [],
+        },
         Consultores: [],
         Documentos: [],
         Historico: [],
@@ -68,8 +110,40 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
             Documentos: [],
           },
         })),
+      limparDocumentosTecnicos: () =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              documentosDaEmpresa: [],
+            },
+          },
+        })),
       alterarPermissao: (permitir) => set({ permissaoDeEnvio: permitir }),
       permissaoDeEnvio: false,
+      inserirArea: (area) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              areas: [...state.editalData.Qualificacao.areas, area],
+            },
+          },
+        })),
+      removerArea: (area) =>
+        set((state) => ({
+          editalData: {
+            ...state.editalData,
+            Qualificacao: {
+              ...state.editalData.Qualificacao,
+              areas: state.editalData.Qualificacao.areas.filter(
+                (a) => a !== area
+              ),
+            },
+          },
+        })),
       removerConsultor: (consultorId) =>
         set((state) => ({
           editalData: {
