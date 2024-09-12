@@ -6,7 +6,6 @@ interface IEdital {
   status: string;
 }
 
-// TODO - Add the missing fields on the interface from documents form
 interface IHavilitacaoJuridica {
   "Comprovante de Inscrição e de Situação Cadastral do CNPJ": string;
 }
