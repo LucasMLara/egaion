@@ -12,12 +12,25 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useMyEditals } from "@/store/useMyEditals";
+import { nanoid } from "nanoid";
 
 export default function ConfirmaDados() {
   const { editalData } = useEditalStore();
+  const { setMyEdital } = useMyEditals();
   const { Consultores, Documentos } = editalData;
   const router = useRouter();
+  //TODO VERIFICAR SE O NANO ID É DIFERENTE A CADA CADASTRO - SÓ PARA NAO DAR PROBLEMA NO MOCK
+  function cadastrarEdital() {
+    setMyEdital({
+      date: new Date(),
+      description: "Descrição Teste",
+      id: nanoid(),
+      status: null,
+      title: "Edital Teste",
+    });
+    router.push("cadastroRealizado");
+  }
 
   return (
     <div className="rounded w-full md:w-1/2 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
@@ -58,11 +71,13 @@ export default function ConfirmaDados() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Link href="/edital/cadastroRealizado">
-                <Button type="submit" className="bg-gradient-primary">
-                  Confirmar
-                </Button>
-              </Link>
+              <Button
+                type="submit"
+                className="bg-gradient-primary"
+                onClick={cadastrarEdital}
+              >
+                Confirmar
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
