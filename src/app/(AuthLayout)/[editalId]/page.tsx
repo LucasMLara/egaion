@@ -3,12 +3,13 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { currentDate } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockInputsEmpresa, history } from "@/mocks";
+import { history } from "@/mocks";
 import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
 import { useRouter } from "next/navigation";
+import InsertQualificacaoTecnicaDocs from "@/components/layout/InsertQualificacaoTecnicaDocs";
 export default function EditalId({
   params,
 }: {
@@ -20,7 +21,7 @@ export default function EditalId({
   const { permissaoDeEnvio, editalData } = useEditalStore();
   return (
     <section className="h-full">
-      <Tabs defaultValue="cadastroConsultor" className="w-auto m-4">
+      <Tabs defaultValue="qualificacaotecnica" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" className="text-center">
             Edital
@@ -28,8 +29,8 @@ export default function EditalId({
           <TabsTrigger value="documents" className="text-center">
             Documentos
           </TabsTrigger>
-          <TabsTrigger value="cadastroConsultor" className="text-center">
-            Consultor
+          <TabsTrigger value="qualificacaotecnica" className="text-center">
+            Qualificaçoes Técnicas
           </TabsTrigger>
           <TabsTrigger value="anexos" className="text-center">
             Anexos
@@ -39,18 +40,10 @@ export default function EditalId({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="documents">
-          <Tabs
-            defaultValue={`${Object.keys(mockInputsEmpresa[0])[0]}`}
-            className="w-auto"
-          >
-            <InsertEditalDocuments />
-          </Tabs>
+          <InsertEditalDocuments />
         </TabsContent>
-        <TabsContent value="cadastroConsultor">
-          <h2 className="text-lg text-center font-bold mb-4">
-            Cadastrar Consultores
-          </h2>
-          <CreateConsultant />
+        <TabsContent value="qualificacaotecnica">
+          <InsertQualificacaoTecnicaDocs />
         </TabsContent>
         <TabsContent value="historico">
           <h2 className="text-lg text-center font-bold mb-4">Histórico</h2>
