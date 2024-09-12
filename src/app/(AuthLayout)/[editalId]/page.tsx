@@ -271,7 +271,6 @@ export default function EditalId({
           disabled={permissaoDeEnvio}
           onClick={() => {
             router.push(`/${params.editalId}/confirmarDados`);
-            console.log(editalData);
           }}
         >
           Confirmar Dados de Cadastro
