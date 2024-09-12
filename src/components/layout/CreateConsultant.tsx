@@ -288,19 +288,6 @@ export default function CreateConsultant() {
           </div>
         </form>
       </Form>
-      {editalData.Consultores.length > 0 && (
-        <section className="flex flex-wrap gap-5 place-content-center p-4 m-4">
-          {editalData.Consultores.map((consultor) => (
-            <ConsultantCard
-              email={consultor.email.email}
-              id={consultor.id}
-              name={consultor.nome}
-              telefone={consultor.contato}
-              key={consultor.id}
-            />
-          ))}
-        </section>
-      )}
     </>
   );
 }
