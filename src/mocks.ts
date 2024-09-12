@@ -3,7 +3,18 @@ type mockInputFiles = {
     [key: string]: string;
   }[];
 };
-
+export const mockDocumentosAreaConsultor: mockInputFiles[] = [
+  {
+    "Documentos da Área 1": [
+      { relatoDeExperiencia: "Relato de Experiência" },
+      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+    ],
+    "Documentos da Área 2": [
+      { relatoDeExperiencia: "Relato de Experiência" },
+      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+    ],
+  },
+];
 export const mockQualificacaoTecnica: mockInputFiles[] = [
   {
     "Documentos Obrigatórios": [
