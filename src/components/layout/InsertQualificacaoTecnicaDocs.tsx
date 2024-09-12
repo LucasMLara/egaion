@@ -12,10 +12,10 @@ import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc } from "@/types/types";
-import { mockInputsEmpresa, mockQualificacaoTecnica } from "@/mocks";
+import { mockQualificacaoTecnica } from "@/mocks";
 import { Documents, useEditalStore } from "@/store/EditalRegister";
 import { useEffect, useState } from "react";
-
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -82,6 +82,10 @@ export default function InsertQualificacaoTecnicaDocs() {
     editalData,
     limparDocumentosTecnicos,
     alterarPermissao,
+    removerArea,
+    inserirArea,
+    removerNaturezaPrestacao,
+    indicarNaturezaPrestacao,
   } = useEditalStore();
   const [submitted, setSubmitted] = useState(false);
 
@@ -90,6 +94,22 @@ export default function InsertQualificacaoTecnicaDocs() {
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
+  const { errors } = form.formState;
+
+  useEffect(() => {
+    Object.keys(errors).length > 0 ||
+    editalData.Documentos.length == 0 ||
+    editalData.Consultores.length == 0 ||
+    editalData.Qualificacao.areas.length == 0 ||
+    editalData.Qualificacao.naturezaPrestacao === ""
+      ? alterarPermissao(true)
+      : alterarPermissao(false);
+  }, [
+    errors,
+    editalData.Consultores,
+    editalData.Qualificacao,
+    editalData.Documentos,
+  ]);
 
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
@@ -123,9 +143,14 @@ export default function InsertQualificacaoTecnicaDocs() {
 
   return (
     <div className="flex flex-col gap-2 mx-auto text-center">
-      <Select>
+      <Select
+        onValueChange={(value) => {
+          inserirArea(value);
+        }}
+      >
         <SelectTrigger>
-          <SelectValue placeholder="Selecione a área correspondente" />
+          Selecione a área correspondente
+          {/* <SelectValue placeholder="Selecione a área correspondente" /> */}
         </SelectTrigger>
         <SelectContent>
           {areas.map((area, areaIndex) => (
@@ -147,6 +172,61 @@ export default function InsertQualificacaoTecnicaDocs() {
           ))}
         </SelectContent>
       </Select>
+      {editalData.Qualificacao.areas.length > 0 && (
+        <div>
+          <h2 className="text-lg text-center font-bold mb-4">
+            Áreas Selecionadas
+          </h2>
+          <ul className="flex flex-wrap">
+            {editalData.Qualificacao.areas.map((area, index) => (
+              <li key={index}>
+                <Badge
+                  className="cursor-pointer m-2 hover:bg-auxiliary-error-400"
+                  variant="secondary"
+                  onClick={() => removerArea(area)}
+                >
+                  {area}
+                </Badge>{" "}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {editalData.Qualificacao.naturezaPrestacao ? (
+        <div>
+          Natureza da Prestação de Serviços:{" "}
+          {editalData.Qualificacao.naturezaPrestacao}
+          <Button
+            variant="ghost"
+            className="ml-2"
+            onClick={() =>
+              removerNaturezaPrestacao(
+                editalData.Qualificacao.naturezaPrestacao
+              )
+            }
+          >
+            X
+          </Button>
+        </div>
+      ) : (
+        <Select
+          onValueChange={(naturezaPrestacao) =>
+            indicarNaturezaPrestacao(naturezaPrestacao)
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Natureza da Prestação de Serviços" />
+          </SelectTrigger>
+          <SelectContent>
+            {naturezaprestacaocontas.map((natureza, index) => (
+              <SelectItem key={index} value={natureza}>
+                {natureza}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       {submitted || editalData.Qualificacao.documentosDaEmpresa.length > 0 ? (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
@@ -230,6 +310,7 @@ export default function InsertQualificacaoTecnicaDocs() {
           </Button>
         </DialogTrigger>
         <DialogContent className="h-5/6 w-screen">
+          <DialogTitle>Insira seu consultor</DialogTitle>
           <CreateConsultant />
         </DialogContent>
       </Dialog>
