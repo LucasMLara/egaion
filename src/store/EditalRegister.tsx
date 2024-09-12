@@ -44,7 +44,7 @@ const initialState = {
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       cadastrarDocumento: (documento) =>
         set((state) => ({
           editalData: {
@@ -53,10 +53,10 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           },
         })),
       editalData: {
-        Consultores: get()?.editalData?.Consultores ?? [],
-        Documentos: get()?.editalData?.Documentos ?? [],
-        Historico: get()?.editalData?.Historico ?? [],
-        Anexos: get()?.editalData?.Anexos ?? [],
+        Consultores: [],
+        Documentos: [],
+        Historico: [],
+        Anexos: [],
       },
       reset: () => {
         set(initialState);
