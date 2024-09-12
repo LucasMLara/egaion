@@ -20,7 +20,6 @@ export default function ConfirmaDados() {
   const { setMyEdital } = useMyEditals();
   const { Consultores, Documentos } = editalData;
   const router = useRouter();
-  //TODO VERIFICAR SE O NANO ID É DIFERENTE A CADA CADASTRO - SÓ PARA NAO DAR PROBLEMA NO MOCK
   function cadastrarEdital() {
     setMyEdital({
       date: new Date(),
@@ -33,22 +32,34 @@ export default function ConfirmaDados() {
   }
 
   return (
-    <div className="rounded w-full md:w-1/2 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
+    <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Confirmação de Dados
       </h3>
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
         Consultores
       </h4>
-      <ul>
+      <ul className="flex gap-3 my-1">
         {Consultores.map((consultor) => (
           <li key={consultor.id}>
             <Label>{consultor.nome}</Label>
           </li>
         ))}
       </ul>
+      <h4>Areas</h4>
+      <ul className="flex gap-3 my-1">
+        {editalData.Qualificacao.areas.map((area) => (
+          <li key={area}>
+            <Label>{area}</Label>
+          </li>
+        ))}
+      </ul>
+      <h4>Natureza da Prestação</h4>
+      <Label className="flex gap-3 my-1">
+        {editalData.Qualificacao.naturezaPrestacao}
+      </Label>
       <h4 className="text-xl font-semibold tracking-tight">Documentos</h4>
-      <ul>
+      <ul className="grid xl:grid-cols-2 gap-2 p-2">
         {Documentos.map((documento) => (
           <li key={documento.id}>
             <Label>{documento.title}</Label>
