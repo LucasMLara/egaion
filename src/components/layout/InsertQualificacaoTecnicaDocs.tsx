@@ -1,4 +1,4 @@
-import AccreditationForm from "./AccreditationForm";
+import AccreditationForm from "./SelectAreaForm";
 import { accreditationData } from "@/mocks";
 import AreaCard from "./AreaCard";
 import { useEditalStore } from "@/store/EditalRegister";
