@@ -3,23 +3,54 @@ type mockInputFiles = {
     [key: string]: string;
   }[];
 };
+
 export const mockDocumentosAreaConsultor: mockInputFiles[] = [
   {
-    "Documentos da Área 1": [
-      { relatoDeExperiencia: "Relato de Experiência" },
-      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
-    ],
-    "Documentos da Área 2": [
+    Documentos: [
       { relatoDeExperiencia: "Relato de Experiência" },
       { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
     ],
   },
 ];
-export const mockQualificacaoTecnica: mockInputFiles[] = [
+
+export const accreditationData = [
   {
-    "Documentos Obrigatórios": [
-      { reLatoDeExperiencia: "Relato de Experiência" },
-      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+    id: 1,
+    name: "Area 1",
+    subLevels: [
+      {
+        id: 2,
+        name: "Sub-Area 1",
+        subLevels: [],
+      },
+      {
+        id: 3,
+        name: "Sub-Area 2",
+        subLevels: [
+          {
+            id: 4,
+            name: "Sub-Sub-Area 1",
+            subLevels: [
+              {
+                id: 5,
+                name: "Sub-Sub-Sub-Area 1",
+                subLevels: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 5,
+    name: "Area 2",
+    subLevels: [
+      {
+        id: 6,
+        name: "Sub-Area 3",
+        subLevels: [],
+      },
     ],
   },
 ];
