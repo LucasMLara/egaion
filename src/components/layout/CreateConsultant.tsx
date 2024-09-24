@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef } from "react";
@@ -20,7 +21,7 @@ import { useEffect, useRef } from "react";
 import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
-  const { cadastrarConsultor, alterarPermissao, Qualificacao } =
+  const { cadastrarConsultor, alterarPermissao, Qualificacao, activeArea } =
     useEditalStore();
 
   const form = useForm<IConsultant>({
@@ -38,6 +39,7 @@ export default function CreateConsultant() {
       contato: "",
       CPF: "",
       id: "",
+      areaId: "",
     },
   });
 
@@ -71,26 +73,25 @@ export default function CreateConsultant() {
 
   function onSubmit(data: IConsultant) {
     const uniqueId = nanoid();
-    console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
+    console.log("Dados do consultor na submissao", {
+      ...data,
+      id: uniqueId,
+      areaId: activeArea,
+    });
 
-    // Ensure that Qualificacao[0] exists and has the correct areaId
-    if (Qualificacao.length > 0 && Qualificacao[0].areaId) {
-      console.log("Qualificação Area ID", Qualificacao[0].areaId);
-      cadastrarConsultor({ ...data, id: uniqueId }, Qualificacao[0].areaId);
+    if (Qualificacao.length > 0 && activeArea) {
+      cadastrarConsultor(
+        { ...data, id: uniqueId, areaId: activeArea },
+        activeArea
+      );
+      toast.success("Consultor cadastrado com sucesso");
     } else {
-      console.error("Qualificação or areaId is missing");
+      toast.error("Area não designada para esse consultor");
     }
 
-    resetConsultantForm();
+    // resetConsultantForm();
   }
 
-  // function onSubmit(data: IConsultant) {
-  //   const uniqueId = nanoid();
-  //   console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
-  //   console.log("Qualificação", Qualificacao[0].areaId);
-  //   cadastrarConsultor({ ...data, id: uniqueId }, Qualificacao[0].areaId);
-  //   resetConsultantForm();
-  // }
   //TODO INSERIR UM DIALOG PARA INSERIR DOCUMENTOS ESPECÍFICOS DE AREA PARA QUE A VALIDAÇÃO DO FORM NO ZOD FUNCIONE DE FORMA INDENPENDENTE DE ACORD COM O mockDocumentosAreaConsultor NO ARQUIVO DE MOCKS
   return (
     <>
