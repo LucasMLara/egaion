@@ -22,7 +22,7 @@ export default function InsertEditalDocuments() {
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
-  const { cadastrarDocumento, editalData, limparDocumentos, alterarPermissao } =
+  const { cadastrarDocumento, limparDocumentos, Documentos, alterarPermissao } =
     useEditalStore();
 
   const handleReupload = () => {
@@ -56,30 +56,30 @@ export default function InsertEditalDocuments() {
 
   const { errors } = form.formState;
 
-  useEffect(() => {
-    Object.keys(errors).length > 0 ||
-    editalData.Documentos.length == 0 ||
-    editalData.Consultores.length == 0 ||
-    editalData.Qualificacao.areas.length == 0 ||
-    editalData.Qualificacao.naturezaPrestacao === ""
-      ? alterarPermissao(true)
-      : alterarPermissao(false);
-  }, [
-    errors,
-    editalData.Consultores,
-    editalData.Qualificacao,
-    editalData.Documentos,
-  ]);
+  // useEffect(() => {
+  //   Object.keys(errors).length > 0 ||
+  //   editalData.Documentos.length == 0 ||
+  //   editalData.Consultores.length == 0 ||
+  //   editalData.Qualificacao.areas.length == 0 ||
+  //   editalData.Qualificacao.naturezaPrestacao === ""
+  //     ? alterarPermissao(true)
+  //     : alterarPermissao(false);
+  // }, [
+  //   errors,
+  //   editalData.Consultores,
+  //   editalData.Qualificacao,
+  //   editalData.Documentos,
+  // ]);
 
   return (
     <div className="grid place-content-center mx-auto text-center">
-      {submitted || editalData.Documentos.length > 0 ? (
+      {submitted || Documentos.length > 0 ? (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
           <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
             Documentos Submetidos
           </h2>
           <ul>
-            {editalData.Documentos.map((doc) => (
+            {Documentos.map((doc) => (
               <li key={doc.id} className="my-2">
                 <a
                   href={doc.blob}
