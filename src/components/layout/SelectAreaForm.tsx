@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
+import { toast } from "sonner";
 import { nanoid } from "nanoid";
 
 interface Level {
@@ -45,7 +46,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       inserirArea(novaArea);
       setSelectedAreas([]); // Reset selections after confirmation
     } else {
-      console.error("Nenhuma área foi selecionada");
+      toast.error("Nenhuma área foi selecionada");
     }
   };
 
