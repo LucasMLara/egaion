@@ -77,8 +77,9 @@ export default function AreaCard({
     setSubmitted(true);
     form.reset();
   };
-  const { removerArea, Qualificacao } = useEditalStore();
+  const { removerArea, Qualificacao, setActiveArea } = useEditalStore();
   console.log(Qualificacao);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -98,7 +99,9 @@ export default function AreaCard({
         <DialogFooter>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Inserir Dados</Button>
+              <Button onClick={() => setActiveArea(areaId)}>
+                Inserir Dados
+              </Button>
             </DialogTrigger>
             <DialogContent className="min-w-[700px] overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
@@ -117,29 +120,24 @@ export default function AreaCard({
                     <CreateConsultant />
                   </DialogContent>
                 </Dialog>
-                {/* {Qualificacao.filter((area) => area.areaId === area.areaId).map(
-                  (area) => {
-                    return (
-                      <>
-                        <h3>{area.name}</h3>
-                        <ul>
-                          {area.Consultores.map((consultor) => {
-                            return (
-                              <li key={consultor.id}>
-                                <ConsultantCard
-                                  email={consultor.email.email}
-                                  id={consultor.id}
-                                  name={consultor.nome}
-                                  telefone={consultor.contato}
-                                />
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </>
-                    );
-                  }
-                )} */}
+                {Qualificacao.map((area) => (
+                  <div
+                    key={area.areaId}
+                    className="flex flex-wrap place-content-center gap-5 m-2"
+                  >
+                    {area.Consultores.filter(
+                      (consultor) => consultor.areaId === areaId
+                    ).map((consultor) => (
+                      <ConsultantCard
+                        key={consultor.id}
+                        email={consultor.email.email}
+                        id={consultor.id}
+                        name={consultor.nome}
+                        telefone={consultor.contato}
+                      />
+                    ))}
+                  </div>
+                ))}
               </DialogDescription>
               <DialogFooter>
                 <Button onClick={() => console.log(Qualificacao)}>
