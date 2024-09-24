@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { currentDate } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { history } from "@/mocks";
-import CreateConsultant from "@/components/layout/CreateConsultant";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
@@ -18,7 +17,7 @@ export default function EditalId({
   };
 }) {
   const router = useRouter();
-  const { permissaoDeEnvio, editalData } = useEditalStore();
+  const { permissaoDeEnvio } = useEditalStore();
   return (
     <section className="h-full">
       <Tabs defaultValue="qualificacaotecnica" className="w-auto m-4">
