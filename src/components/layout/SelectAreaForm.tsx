@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
+import { nanoid } from "nanoid";
 
 interface Level {
   id: number;
@@ -21,13 +22,7 @@ interface SelectAreaProps {
 
 const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   const [selectedAreas, setSelectedAreas] = useState<Level[]>([]);
-  const [selectedStoreAreas] = useState<string[]>([]);
-  const {
-    editalData: {
-      Qualificacao: { areas },
-    },
-    inserirArea,
-  } = useEditalStore();
+  const { inserirArea, reset } = useEditalStore();
 
   const handleSelect = (levelId: number, name: string, depth: number) => {
     const newSelection = [...selectedAreas];
@@ -37,9 +32,20 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
 
   const setAreaOnStore = (): void => {
     const ultimaAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
-    setSelectedAreas([]);
+    const uniqueId = nanoid();
     if (ultimaAreaSelecionada) {
-      inserirArea(ultimaAreaSelecionada);
+      const novaArea = {
+        naturezaPrestacao: "",
+        name: ultimaAreaSelecionada,
+        areaId: uniqueId,
+        Consultores: [],
+        AreaDocuments: [],
+      };
+      console.log("Nova área:", novaArea);
+      inserirArea(novaArea);
+      setSelectedAreas([]); // Reset selections after confirmation
+    } else {
+      console.error("Nenhuma área foi selecionada");
     }
   };
 
@@ -58,7 +64,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
         >
           <SelectTrigger>
             <SelectValue
-              placeholder={`Selecione sua ${depth === 0 ? "Area" : "Subarea"}`}
+              placeholder={`Selecione sua ${depth === 0 ? "Área" : "Subárea"}`}
             />
           </SelectTrigger>
           <SelectContent>
@@ -70,6 +76,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
           </SelectContent>
         </Select>
 
+        {/* Render sublevels if available */}
         {selectedAreas[depth] &&
           selectedAreas[depth].id &&
           (
@@ -93,9 +100,17 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       {renderSelects(data)}
       <Button
         className="m-5 bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-        onClick={() => setAreaOnStore()}
+        onClick={setAreaOnStore}
+        disabled={selectedAreas.length === 0} // Disable button if no area selected
       >
         Confirmar Seleção
+      </Button>
+
+      <Button
+        className="m-5 bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
+        onClick={() => reset()}
+      >
+        LIMPA
       </Button>
     </div>
   );

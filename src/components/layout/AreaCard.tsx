@@ -36,7 +36,13 @@ import CreateConsultant from "./CreateConsultant";
 import { Input } from "../ui/input";
 import ConsultantCard from "./ConsultantCard";
 
-export default function AreaCard({ area }: { area: string }) {
+export default function AreaCard({
+  area,
+  areaId,
+}: {
+  area: string;
+  areaId: string;
+}) {
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm<IEditalDoc>({
@@ -66,17 +72,13 @@ export default function AreaCard({ area }: { area: string }) {
       });
     });
 
-    // cadastrarDocumento(documentos);
-
     console.log("Submitted Data:", data);
     console.log("Documentos Added to Store:", documentos);
     setSubmitted(true);
     form.reset();
   };
-  const {
-    removerArea,
-    editalData: { Consultores },
-  } = useEditalStore();
+  const { removerArea, Qualificacao } = useEditalStore();
+  console.log(Qualificacao);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -115,22 +117,34 @@ export default function AreaCard({ area }: { area: string }) {
                     <CreateConsultant />
                   </DialogContent>
                 </Dialog>
-                {Consultores.length > 0 && (
-                  <div className="grid grid-cols-3 gap-4 my-5">
-                    {Consultores.map(({ nome, id, contato, email }) => (
-                      <ConsultantCard
-                        key={id}
-                        email={email.email}
-                        id={id}
-                        name={nome}
-                        telefone={contato}
-                      />
-                    ))}
-                  </div>
-                )}
+                {/* {Qualificacao.filter((area) => area.areaId === area.areaId).map(
+                  (area) => {
+                    return (
+                      <>
+                        <h3>{area.name}</h3>
+                        <ul>
+                          {area.Consultores.map((consultor) => {
+                            return (
+                              <li key={consultor.id}>
+                                <ConsultantCard
+                                  email={consultor.email.email}
+                                  id={consultor.id}
+                                  name={consultor.nome}
+                                  telefone={consultor.contato}
+                                />
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </>
+                    );
+                  }
+                )} */}
               </DialogDescription>
               <DialogFooter>
-                <Button>Salvar</Button>
+                <Button onClick={() => console.log(Qualificacao)}>
+                  Salvar
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -146,9 +160,7 @@ export default function AreaCard({ area }: { area: string }) {
               <DialogFooter>
                 <Button
                   variant="destructive"
-                  onClick={() => {
-                    removerArea(area);
-                  }}
+                  onClick={() => removerArea(areaId)}
                 >
                   Sim, Tenho certeza. Remover Area!
                 </Button>

@@ -15,161 +15,120 @@ type History = {
 };
 
 export type Qualificacao = {
+  name: string;
+  areaId: string;
   naturezaPrestacao: string;
-  areas: string[];
-  documentosDaEmpresa: Documents[];
+  Consultores: IConsultant[];
+  AreaDocuments: Documents[];
 };
 
 type IEditalStore = {
-  editalData: {
-    Consultores: IConsultant[];
-    Documentos: Documents[];
-    Qualificacao: Qualificacao;
-    Historico: History[];
-    Anexos: Documents[];
-  };
+  Documentos: Documents[];
+  Qualificacao: Qualificacao[];
+  Historico: History[];
+  Anexos: Documents[];
+  permissaoDeEnvio: boolean;
 };
 
 type editalActions = {
-  cadastrarConsultor: (consultor: IConsultant) => void;
+  cadastrarConsultor: (consultor: IConsultant, areaId: string) => void;
   reset: () => void;
   removerConsultor: (consultorId: string) => void;
-  permissaoDeEnvio: boolean;
   alterarPermissao: (permitir: boolean) => void;
   cadastrarDocumento: (documento: Documents[]) => void;
-  cadastrarDocumentoQualificacao: (documento: Documents[]) => void;
+  cadastrarDocumentosTecnicos: (areaId: string, documento: Documents[]) => void;
   limparDocumentos: () => void;
   limparDocumentosTecnicos: () => void;
-  inserirArea: (area: string) => void;
-  removerArea: (area: string) => void;
-  indicarNaturezaPrestacao: (natureza: string) => void;
-  removerNaturezaPrestacao: (natureza: string) => void;
+  inserirArea: (area: Qualificacao) => void;
+  removerArea: (areaId: string) => void;
 };
 
-const initialState = {
-  editalData: {
-    Consultores: [],
-    Documentos: [],
-    Historico: [],
-    Anexos: [],
-    Qualificacao: {
-      naturezaPrestacao: "",
-      areas: [],
-      documentosDaEmpresa: [],
-    },
-  },
+const initialState: IEditalStore = {
+  Documentos: [],
+  Historico: [],
+  Anexos: [],
+  Qualificacao: [],
+  permissaoDeEnvio: false,
 };
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set) => ({
-      removerNaturezaPrestacao: () =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              naturezaPrestacao: "",
-            },
-          },
-        })),
-      indicarNaturezaPrestacao: (natureza) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              naturezaPrestacao: natureza,
-            },
-          },
-        })),
-      cadastrarDocumento: (documento) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Documentos: [...documento],
-          },
-        })),
-      cadastrarDocumentoQualificacao: (documento) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              documentosDaEmpresa: [...documento],
-            },
-          },
-        })),
-      editalData: {
-        Qualificacao: {
-          naturezaPrestacao: "",
-          areas: [],
-          documentosDaEmpresa: [],
-        },
-        Consultores: [],
-        Documentos: [],
-        Historico: [],
-        Anexos: [],
-      },
+      ...initialState,
+      alterarPermissao: (permitir) => set({ permissaoDeEnvio: permitir }),
+
       reset: () => {
         set(initialState);
       },
-      limparDocumentos: () =>
+
+      cadastrarDocumento: (documento) =>
         set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Documentos: [],
-          },
+          Documentos: [...state.Documentos, ...documento],
         })),
-      limparDocumentosTecnicos: () =>
+
+      limparDocumentos: () => set({ Documentos: [] }),
+
+      cadastrarConsultor: (consultor, areaId) => {
+        set((state) => {
+          const updatedQualificacao = state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.areaId === areaId) {
+              return {
+                ...qualificacao,
+                Consultores: [...qualificacao.Consultores, consultor],
+              };
+            }
+            return qualificacao;
+          });
+
+          console.log("Qualificação atualizada:", updatedQualificacao);
+          return { Qualificacao: updatedQualificacao };
+        });
+      },
+
+      removerConsultor: (consultorId) => {
         set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              documentosDaEmpresa: [],
-            },
-          },
-        })),
-      alterarPermissao: (permitir) => set({ permissaoDeEnvio: permitir }),
-      permissaoDeEnvio: false,
-      inserirArea: (area) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              areas: [...state.editalData.Qualificacao.areas, area],
-            },
-          },
-        })),
-      removerArea: (area) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Qualificacao: {
-              ...state.editalData.Qualificacao,
-              areas: state.editalData.Qualificacao.areas.filter(
-                (a) => a !== area
-              ),
-            },
-          },
-        })),
-      removerConsultor: (consultorId) =>
-        set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Consultores: state.editalData.Consultores.filter(
+          Qualificacao: state.Qualificacao.map((qualificacao) => ({
+            ...qualificacao,
+            Consultores: qualificacao.Consultores.filter(
               (consultor) => consultor.id !== consultorId
             ),
-          },
-        })),
-      cadastrarConsultor: (consultor) =>
+          })),
+        }));
+      },
+
+      cadastrarDocumentosTecnicos: (areaId, documento) => {
         set((state) => ({
-          editalData: {
-            ...state.editalData,
-            Consultores: [...state.editalData.Consultores, consultor],
-          },
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.name === areaId) {
+              return {
+                ...qualificacao,
+                AreaDocuments: [...qualificacao.AreaDocuments, ...documento],
+              };
+            }
+            return qualificacao;
+          }),
+        }));
+      },
+
+      limparDocumentosTecnicos: () => {
+        set((state) => ({
+          Qualificacao: state.Qualificacao.map((qualificacao) => ({
+            ...qualificacao,
+            AreaDocuments: [],
+          })),
+        }));
+      },
+
+      inserirArea: (area) =>
+        set((state) => ({
+          Qualificacao: [...state.Qualificacao, area],
+        })),
+
+      removerArea: (areaId) =>
+        set((state) => ({
+          Qualificacao: state.Qualificacao.filter(
+            (qualificacao) => qualificacao.areaId !== areaId
+          ),
         })),
     }),
     { name: "editalStorage" }

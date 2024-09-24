@@ -20,7 +20,8 @@ import { useEffect, useRef } from "react";
 import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
-  const { cadastrarConsultor, editalData, alterarPermissao } = useEditalStore();
+  const { cadastrarConsultor, alterarPermissao, Qualificacao } =
+    useEditalStore();
 
   const form = useForm<IConsultant>({
     resolver: zodResolver(consultantSchema),
@@ -60,20 +61,36 @@ export default function CreateConsultant() {
     formState: { errors },
   } = form;
 
-  useEffect(() => {
-    Object.keys(errors).length > 0 ||
-    editalData.Documentos.length == 0 ||
-    editalData.Consultores.length == 0
-      ? alterarPermissao(true)
-      : alterarPermissao(false);
-  }, [errors]);
+  // useEffect(() => {
+  //   Object.keys(errors).length > 0 ||
+  //   editalData.Documentos.length == 0 ||
+  //   editalData.Consultores.length == 0
+  //     ? alterarPermissao(true)
+  //     : alterarPermissao(false);
+  // }, [errors]);
 
   function onSubmit(data: IConsultant) {
     const uniqueId = nanoid();
     console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
-    cadastrarConsultor({ ...data, id: uniqueId });
+
+    // Ensure that Qualificacao[0] exists and has the correct areaId
+    if (Qualificacao.length > 0 && Qualificacao[0].areaId) {
+      console.log("Qualificação Area ID", Qualificacao[0].areaId);
+      cadastrarConsultor({ ...data, id: uniqueId }, Qualificacao[0].areaId);
+    } else {
+      console.error("Qualificação or areaId is missing");
+    }
+
     resetConsultantForm();
   }
+
+  // function onSubmit(data: IConsultant) {
+  //   const uniqueId = nanoid();
+  //   console.log("Dados do consultor na submissao", { ...data, id: uniqueId });
+  //   console.log("Qualificação", Qualificacao[0].areaId);
+  //   cadastrarConsultor({ ...data, id: uniqueId }, Qualificacao[0].areaId);
+  //   resetConsultantForm();
+  // }
   //TODO INSERIR UM DIALOG PARA INSERIR DOCUMENTOS ESPECÍFICOS DE AREA PARA QUE A VALIDAÇÃO DO FORM NO ZOD FUNCIONE DE FORMA INDENPENDENTE DE ACORD COM O mockDocumentosAreaConsultor NO ARQUIVO DE MOCKS
   return (
     <>
