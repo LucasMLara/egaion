@@ -35,6 +35,7 @@ export const DocSchema = z.object({
 });
 
 export const consultantSchema = z.object({
+  areaId: z.string(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
   CPF: z
