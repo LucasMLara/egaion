@@ -16,9 +16,8 @@ import { useMyEditals } from "@/store/useMyEditals";
 import { nanoid } from "nanoid";
 
 export default function ConfirmaDados() {
-  const { editalData } = useEditalStore();
+  const { Documentos, Qualificacao } = useEditalStore();
   const { setMyEdital } = useMyEditals();
-  const { Consultores, Documentos } = editalData;
   const router = useRouter();
   function cadastrarEdital() {
     setMyEdital({
@@ -39,26 +38,16 @@ export default function ConfirmaDados() {
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
         Consultores
       </h4>
-      <ul className="flex gap-3 my-1">
-        {Consultores.map((consultor) => (
-          <li key={consultor.id}>
-            <Label>{consultor.nome}</Label>
-          </li>
-        ))}
-      </ul>
-      <h4>Areas</h4>
-      <ul className="flex gap-3 my-1">
-        {editalData.Qualificacao.areas.map((area) => (
-          <li key={area}>
-            <Label>{area}</Label>
-          </li>
-        ))}
-      </ul>
-      <h4>Natureza da Prestação</h4>
-      <Label className="flex gap-3 my-1">
-        {editalData.Qualificacao.naturezaPrestacao}
-      </Label>
+      {Qualificacao.map((area) =>
+        area.Consultores.map((consultor) => (
+          <p key={consultor.id}>
+            {consultor.nome} - Area: {area.name}
+          </p>
+        ))
+      )}
+
       <h4 className="text-xl font-semibold tracking-tight">Documentos</h4>
+
       <ul className="grid xl:grid-cols-2 gap-2 p-2">
         {Documentos.map((documento) => (
           <li key={documento.id}>
