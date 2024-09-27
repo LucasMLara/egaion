@@ -8,7 +8,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useEditalStore, Documents } from "@/store/EditalRegister";
-
+import { mockDocumentosAreaConsultor } from "@/mocks";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +30,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc } from "@/types/types";
-import { mockDocumentosAreaConsultor } from "@/mocks";
 import { useState } from "react";
 import CreateConsultant from "./CreateConsultant";
 import { Input } from "../ui/input";
@@ -44,6 +43,15 @@ export default function AreaCard({
   areaId: string;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const {
+    removerArea,
+    Qualificacao,
+    setActiveArea,
+    cadastrarDocumentosTecnicos,
+    Documentos,
+    activeArea,
+    limparDocumentosTecnicos,
+  } = useEditalStore();
 
   const form = useForm<IEditalDoc>({
     resolver: zodResolver(DocSchema),
@@ -51,9 +59,10 @@ export default function AreaCard({
   });
 
   const handleReupload = () => {
-    // limparDocumentos();
+    limparDocumentosTecnicos();
     setSubmitted(false);
   };
+
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
     data.mockInputFiles.forEach((category) => {
@@ -65,6 +74,7 @@ export default function AreaCard({
                 title: `${categoryKey}-${fileKey}`,
                 blob: URL.createObjectURL(fileData.file),
                 id: `${categoryKey}-${fileKey}-${Date.now()}`,
+                areaId: activeArea,
               });
             }
           });
@@ -72,14 +82,14 @@ export default function AreaCard({
       });
     });
 
-    console.log("Submitted Data:", data);
-    console.log("Documentos Added to Store:", documentos);
+    cadastrarDocumentosTecnicos(activeArea, documentos);
+    // console.log("Submitted Data:", data);
+    // console.log("Documentos Added to Store:", documentos);
     setSubmitted(true);
     form.reset();
   };
-  const { removerArea, Qualificacao, setActiveArea } = useEditalStore();
   console.log(Qualificacao);
-
+  console.log(Documentos);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -106,8 +116,89 @@ export default function AreaCard({
             <DialogContent className="min-w-[700px] overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
-                <Input type="file" />
-                <Input type="file" />
+                {submitted ? (
+                  <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                      Documentos Submetidos
+                    </h2>
+                    <ul>
+                      {Qualificacao.map((area) =>
+                        area.AreaDocuments.filter(
+                          (doc) => doc.areaId === areaId
+                        ).map((doc) => (
+                          <li key={doc.id} className="my-2">
+                            <a
+                              href={doc.blob}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="leading-7 [&:not(:first-child)]:mt-6"
+                            >
+                              {doc.title}
+                            </a>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                    <Button
+                      className="bg-gradient-primary w-full mt-4"
+                      onClick={handleReupload}
+                    >
+                      Recadastrar Documentos
+                    </Button>
+                  </div>
+                ) : (
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                      {mockDocumentosAreaConsultor.map((item, index) => {
+                        const categoryKey = Object.keys(item)[0];
+                        const filesArray = item[categoryKey];
+
+                        return (
+                          <div key={index}>
+                            <h2 className="text-lg text-center font-bold mb-4">
+                              {categoryKey}
+                            </h2>
+                            {filesArray.map((field, fieldIndex) =>
+                              Object.entries(field).map(
+                                ([fieldName, label]) => (
+                                  <FormField
+                                    key={`${fieldName}-${fieldIndex}`}
+                                    control={form.control}
+                                    name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
+                                    render={({ field }) => (
+                                      <FormItem className="m-2">
+                                        <FormLabel>{label}</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            accept="application/pdf, image/jpeg, image/jpg"
+                                            type="file"
+                                            onChange={(e) => {
+                                              field.onChange(
+                                                e.target.files?.[0]
+                                              );
+                                            }}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                )
+                              )
+                            )}
+                          </div>
+                        );
+                      })}
+                      <Button
+                        className="bg-gradient-primary w-full"
+                        type="submit"
+                        // disabled={Object.keys(errors).length > 0}
+                      >
+                        Preparar Documentos
+                      </Button>
+                    </form>
+                  </Form>
+                )}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="my-4">Adicionar Consultor</Button>
