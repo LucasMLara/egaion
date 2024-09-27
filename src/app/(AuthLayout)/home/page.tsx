@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import EditalCard from "@/components/layout/EditalCard";
+
+import MyEditalCard from "@/components/layout/MyEditalCard";
 import { generateEditalCardData } from "@/lib/utils";
 
 import { useMyEditals } from "@/store/useMyEditals";
@@ -12,6 +13,17 @@ export default function Home() {
   useEffect(() => {
     setListMyEditals(myEditals);
   }, []);
+
+  // useEffect(() => {
+  //   setListMyEditals(
+  //     generateEditalCardData().map((edital): any => ({
+  //       id: edital.editalId,
+  //       date: new Date(edital.editalCardDate),
+  //       title: edital.editalCardTitle,
+  //       description: edital.editalCardContent,
+  //     }))
+  //   );
+  // }, []);
 
   return myEditals.length === 0 ? (
     <div className="flex flex-col h-full items-center justify-center">
@@ -28,7 +40,7 @@ export default function Home() {
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
         {myEditals.map((card) => (
-          <EditalCard
+          <MyEditalCard
             key={card.id}
             status={card.status}
             editalCardContent={card.description}
