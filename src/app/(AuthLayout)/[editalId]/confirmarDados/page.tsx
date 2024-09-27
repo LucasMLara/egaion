@@ -41,7 +41,7 @@ export default function ConfirmaDados() {
       {Qualificacao.map((area) =>
         area.Consultores.map((consultor) => (
           <p key={consultor.id}>
-            {consultor.nome} - Area: {area.name}
+            {consultor.nome} - {area.name}
           </p>
         ))
       )}
