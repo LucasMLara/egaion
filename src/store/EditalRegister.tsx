@@ -6,6 +6,7 @@ export type Documents = {
   title: string;
   blob: string;
   id: string;
+  areaId?: string;
 };
 
 type History = {
@@ -103,7 +104,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       cadastrarDocumentosTecnicos: (areaId, documento) => {
         set((state) => ({
           Qualificacao: state.Qualificacao.map((qualificacao) => {
-            if (qualificacao.name === areaId) {
+            if (qualificacao.areaId === areaId) {
               return {
                 ...qualificacao,
                 AreaDocuments: [...qualificacao.AreaDocuments, ...documento],
