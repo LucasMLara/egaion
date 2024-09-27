@@ -19,6 +19,7 @@ export const fileSchema = z
   }, "Insira somente arquivos em PDF, JPEG ou JPG");
 
 export const DocSchema = z.object({
+  areaId: z.string().optional(),
   mockInputFiles: z.array(
     z.record(
       z.string(),
