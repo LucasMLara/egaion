@@ -47,9 +47,6 @@ export default function InsertEditalDocuments() {
       });
     });
     cadastrarDocumento(documentos);
-
-    console.log("Submitted Data:", data);
-    console.log("Documentos Added to Store:", documentos);
     setSubmitted(true);
     form.reset();
   };
