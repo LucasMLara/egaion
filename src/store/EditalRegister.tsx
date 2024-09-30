@@ -30,6 +30,7 @@ type IEditalStore = {
   Anexos: Documents[];
   permissaoDeEnvio: boolean;
   activeArea: string;
+  currentEditalId: string;
 };
 
 type editalActions = {
@@ -45,6 +46,7 @@ type editalActions = {
   removerArea: (areaId: string) => void;
   setActiveArea: (areaId: string) => void;
   clearActiveArea: () => void;
+  setEditalId: (editalId: string) => void;
 };
 
 const initialState: IEditalStore = {
@@ -54,6 +56,7 @@ const initialState: IEditalStore = {
   Qualificacao: [],
   permissaoDeEnvio: false,
   activeArea: "",
+  currentEditalId: "",
 };
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
@@ -70,9 +73,8 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
         set((state) => ({
           Documentos: [...state.Documentos, ...documento],
         })),
-
+      setEditalId: (editalId) => set({ currentEditalId: editalId }),
       limparDocumentos: () => set({ Documentos: [] }),
-
       cadastrarConsultor: (consultor, areaId) => {
         set((state) => {
           const updatedQualificacao = state.Qualificacao.map((qualificacao) => {
