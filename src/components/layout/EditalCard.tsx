@@ -93,6 +93,10 @@ export default function EditalCard({
                 <DialogDescription>
                   Você está prestes a abrir um novo edital. Deseja continuar?
                 </DialogDescription>
+
+                <DialogDescription>
+                  Caso você continue, todos os dados preenchidos serão perdidos.
+                </DialogDescription>
                 <DialogFooter>
                   <Link href={`/${editalId}`}>
                     <Button
@@ -106,13 +110,6 @@ export default function EditalCard({
                       Sim
                     </Button>
                   </Link>
-                  <Button
-                    variant="secondary"
-                    className="hover:shadow-md transition-all"
-                    onClick={() => setAvisoDeReset(false)}
-                  >
-                    Não
-                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
