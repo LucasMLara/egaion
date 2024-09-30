@@ -106,13 +106,6 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       >
         Confirmar Seleção
       </Button>
-
-      <Button
-        className="m-5 bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-        onClick={() => reset()}
-      >
-        LIMPA
-      </Button>
     </div>
   );
 };
