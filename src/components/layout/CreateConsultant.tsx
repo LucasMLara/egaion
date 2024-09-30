@@ -36,6 +36,7 @@ export default function CreateConsultant() {
       comprovanteFormacaoAcademica: undefined,
       comprovanteVinculoCNPJ: undefined,
       registroProfissionalClasse: undefined,
+      arquivosTecnicos: [],
       contato: "",
       CPF: "",
       id: "",
@@ -47,9 +48,10 @@ export default function CreateConsultant() {
   const comprovanteVinculoCNPJRef = useRef<HTMLInputElement | null>(null);
   const comprovanteFormacaoAcademicaRef = useRef<HTMLInputElement | null>(null);
   const registroProfissionalClasseRef = useRef<HTMLInputElement | null>(null);
-
+  const arquivosTecnicos = useRef<HTMLInputElement | null>(null);
   function resetConsultantForm() {
     form.reset();
+    if (arquivosTecnicos.current) arquivosTecnicos.current.value = "";
     if (consultantCPFRef.current) consultantCPFRef.current.value = "";
     if (comprovanteVinculoCNPJRef.current)
       comprovanteVinculoCNPJRef.current.value = "";
@@ -89,10 +91,9 @@ export default function CreateConsultant() {
       toast.error("Area não designada para esse consultor");
     }
 
-    // resetConsultantForm();
+    resetConsultantForm();
   }
 
-  //TODO INSERIR UM DIALOG PARA INSERIR DOCUMENTOS ESPECÍFICOS DE AREA PARA QUE A VALIDAÇÃO DO FORM NO ZOD FUNCIONE DE FORMA INDENPENDENTE DE ACORD COM O mockDocumentosAreaConsultor NO ARQUIVO DE MOCKS
   return (
     <>
       <Form {...form}>
@@ -287,6 +288,28 @@ export default function CreateConsultant() {
                         if (e.target.files && e.target.files[0]) {
                           field.onChange(e.target.files[0]);
                         }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="arquivosTecnicos"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Arquivos Técnicos</FormLabel>
+                  <FormControl>
+                    <Input
+                      multiple
+                      accept="application/pdf, image/jpeg, image/jpg"
+                      type="file"
+                      ref={arquivosTecnicos}
+                      className="transition-all"
+                      onChange={(e) => {
+                        const filesArray = Array.from(e.target.files || []);
+                        field.onChange(filesArray);
                       }}
                     />
                   </FormControl>
