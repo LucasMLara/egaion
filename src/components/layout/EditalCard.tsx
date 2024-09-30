@@ -18,6 +18,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { currentDate } from "@/lib/utils";
 import { IEditalCard } from "@/types/types";
+import { useEditalStore } from "@/store/EditalRegister";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const statusClasses = {
   ok: "bg-auxiliary-success-400 text-neutral-600",
@@ -36,10 +39,25 @@ export default function EditalCard({
   editalId,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
+  const [avisoDeReset, setAvisoDeReset] = useState(false);
+  const { currentEditalId, setEditalId, reset } = useEditalStore();
+
+  function validateEditalId(id: string) {
+    if (id !== currentEditalId && currentEditalId !== "") {
+      toast.warning("Abrindo um novo edital");
+      setAvisoDeReset(true);
+    } else {
+      setEditalId(id);
+      setAvisoDeReset(false);
+      toast.success("Abrindo edital");
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Card
+          onClick={() => validateEditalId(editalId)}
           className={`size-64 cursor-pointer hover:shadow-xl transition-all ${statusClass}`}
         >
           <CardHeader>
@@ -59,16 +77,59 @@ export default function EditalCard({
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
-        <DialogFooter>
-          <Link href={`/${editalId}`}>
-            <Button
-              type="submit"
-              className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
-            >
-              Ver Detalhes
-            </Button>
-          </Link>
-        </DialogFooter>
+        {avisoDeReset ? (
+          <DialogFooter>
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
+                  onClick={() => setEditalId(editalId)}
+                >
+                  Preencher Dados de outro edital?
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Atenção!</DialogTitle>
+                <DialogDescription>
+                  Você está prestes a abrir um novo edital. Deseja continuar?
+                </DialogDescription>
+                <DialogFooter>
+                  <Link href={`/${editalId}`}>
+                    <Button
+                      variant="destructive"
+                      className="hover:shadow-md transition-all"
+                      onClick={() => {
+                        reset();
+                        setEditalId(editalId);
+                      }}
+                    >
+                      Sim
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="secondary"
+                    className="hover:shadow-md transition-all"
+                    onClick={() => setAvisoDeReset(false)}
+                  >
+                    Não
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </DialogFooter>
+        ) : (
+          <DialogFooter>
+            <Link href={`/${editalId}`}>
+              <Button
+                type="submit"
+                onClick={() => setEditalId(editalId)}
+                className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
+              >
+                Ver Detalhes
+              </Button>
+            </Link>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
