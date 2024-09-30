@@ -13,6 +13,19 @@ export const mockDocumentosAreaConsultor: mockInputFiles[] = [
   },
 ];
 
+export const naturezasPrestacao = [
+  {
+    label: "Consultoria",
+    value: "consultoria",
+    id: 1,
+  },
+  {
+    label: "Instrutoria",
+    value: "instrutoria",
+    id: 2,
+  },
+];
+
 export const accreditationData = [
   {
     id: 1,
