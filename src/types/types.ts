@@ -88,6 +88,9 @@ export const consultantSchema = z.object({
   comprovanteVinculoCNPJ: fileSchema,
   comprovanteFormacaoAcademica: fileSchema,
   registroProfissionalClasse: fileSchema,
+  arquivosTecnicos: z
+    .array(fileSchema)
+    .min(1, "Insira ao menos um documento técnico"),
 });
 
 export const SignUpSchema = z.object({
