@@ -93,6 +93,12 @@ export const consultantSchema = z.object({
     .min(1, "Insira ao menos um documento técnico"),
 });
 
+export const NaturezaSchema = z.object({
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "Selecione pelo menos um item.",
+  }),
+});
+
 export const SignUpSchema = z.object({
   razaoSocial: z.string().min(3, "Campo obrigatório"),
   email: z
@@ -225,3 +231,4 @@ export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
 export type IConsultant = z.infer<typeof consultantSchema>;
 export type IFile = z.infer<typeof fileSchema>;
 export type IEditalDoc = z.infer<typeof DocSchema>;
+export type INatureza = z.infer<typeof NaturezaSchema>;
