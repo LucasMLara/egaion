@@ -17,12 +17,12 @@ export const naturezasPrestacao = [
   {
     label: "Consultoria",
     value: "consultoria",
-    id: 1,
+    id: "1",
   },
   {
     label: "Instrutoria",
     value: "instrutoria",
-    id: 2,
+    id: "2",
   },
 ];
 
