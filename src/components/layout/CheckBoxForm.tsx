@@ -16,7 +16,6 @@ import {
 import { NaturezaSchema, INatureza } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { naturezasPrestacao } from "@/mocks";
-import { useEffect, useState } from "react";
 
 export default function CheckboxFormMultiplo() {
   const {
@@ -33,37 +32,14 @@ export default function CheckboxFormMultiplo() {
   });
 
   function onSubmit({ naturezas }: INatureza) {
-    console.log(naturezas);
     setNaturezaPrestacao(naturezas, activeArea);
   }
 
-  // useEffect(() => {
-
-  //   const selectedArea = Qualificacao.find(
-  //     (area) => area.areaId === activeArea
-  //   );
-
-  //   form.reset({
-  //     naturezas: Array.isArray(selectedArea?.naturezaPrestacao)
-  //       ? selectedArea.naturezaPrestacao.map((np) => np.label)
-  //       : [],
-  //   });
-
-  // }, [activeArea, Qualificacao, form]);
-
   function handleReset() {
-    console.log("xhama", activeArea);
     clearNaturezaPrestacao(activeArea);
     form.reset();
   }
 
-  // console.log(
-  //   Qualificacao.map((area) =>
-  //     area.naturezaPrestacao
-  //       .filter((natureza) => natureza.areaId === activeArea)
-  //       .map((natureza) => natureza.label)
-  //   )
-  // );
   const currentArea = Qualificacao.find((area) => area.areaId === activeArea);
   const temNaturezas = currentArea
     ? currentArea.naturezaPrestacao.length > 0
@@ -73,11 +49,6 @@ export default function CheckboxFormMultiplo() {
     <div className="flex flex-col gap-4">
       <h2>Naturezas Selecionadas: </h2>
       <ul>
-        {/* {Qualificacao.map((area) =>
-          area.naturezaPrestacao
-            .filter((natureza) => natureza.areaId === activeArea)
-            .map((natureza) => <li key={natureza.id}>{natureza.label}</li>)
-        )} */}
         {Qualificacao.map(
           (area) =>
             area.naturezaPrestacao?.length > 0 &&
