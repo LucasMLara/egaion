@@ -14,11 +14,17 @@ type History = {
   title: string;
   description: string;
 };
+export type NaturezaPrestacao = {
+  label: string;
+  value: string;
+  id: string;
+  areaId: string;
+};
 
 export type Qualificacao = {
   name: string;
   areaId: string;
-  naturezaPrestacao: string;
+  naturezaPrestacao: NaturezaPrestacao[];
   Consultores: IConsultant[];
   AreaDocuments: Documents[];
 };
@@ -47,6 +53,8 @@ type editalActions = {
   setActiveArea: (areaId: string) => void;
   clearActiveArea: () => void;
   setEditalId: (editalId: string) => void;
+  setNaturezaPrestacao: (naturezaPrestacao: string[], areaId: string) => void;
+  clearNaturezaPrestacao: (areaId: string) => void;
 };
 
 const initialState: IEditalStore = {
@@ -68,6 +76,33 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       clearActiveArea: () => set({ activeArea: "" }),
       reset: () => {
         set(initialState);
+      },
+      setNaturezaPrestacao: (naturezaPrestacao, areaId) => {
+        set((state) => ({
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.areaId === areaId) {
+              return {
+                ...qualificacao,
+                naturezaPrestacao: naturezaPrestacao.map((np) => ({
+                  label: np,
+                  value: np,
+                  id: np,
+                  areaId: areaId,
+                })),
+              };
+            }
+            return qualificacao;
+          }),
+        }));
+      },
+      clearNaturezaPrestacao: (areaId: string) => {
+        set((state) => ({
+          Qualificacao: state.Qualificacao.map((qualificacao) =>
+            qualificacao.areaId === areaId
+              ? { ...qualificacao, naturezaPrestacao: [] }
+              : qualificacao
+          ),
+        }));
       },
       cadastrarDocumento: (documento) =>
         set((state) => ({
