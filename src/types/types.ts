@@ -94,7 +94,7 @@ export const consultantSchema = z.object({
 });
 
 export const NaturezaSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+  naturezas: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "Selecione pelo menos um item.",
   }),
 });
