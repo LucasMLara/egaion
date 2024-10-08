@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -18,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   Form,
   FormControl,
@@ -33,6 +31,7 @@ import { DocSchema, IEditalDoc } from "@/types/types";
 import { useState } from "react";
 import CreateConsultant from "./CreateConsultant";
 import { Input } from "../ui/input";
+import CheckboxFormMultiplo from "./CheckBoxForm";
 import ConsultantCard from "./ConsultantCard";
 
 export default function AreaCard({
@@ -43,19 +42,19 @@ export default function AreaCard({
   areaId: string;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const [open, setOpen] = useState(false);
   const {
     removerArea,
     Qualificacao,
     setActiveArea,
     cadastrarDocumentosTecnicos,
-    Documentos,
     activeArea,
     limparDocumentosTecnicos,
   } = useEditalStore();
 
-  const form = useForm<IEditalDoc>({
+  const form = useForm<IEditalDoc & { natureza: string[] }>({
     resolver: zodResolver(DocSchema),
-    defaultValues: { mockInputFiles: [] },
+    defaultValues: { mockInputFiles: [], natureza: [] },
   });
 
   const handleReupload = () => {
@@ -83,15 +82,12 @@ export default function AreaCard({
     });
 
     cadastrarDocumentosTecnicos(activeArea, documentos);
-    // console.log("Submitted Data:", data);
-    // console.log("Documentos Added to Store:", documentos);
+
     setSubmitted(true);
     form.reset();
   };
-  console.log(Qualificacao);
-  console.log(Documentos);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Card className="size-52 cursor-pointer hover:shadow-xl transition-all ">
           <CardHeader>
@@ -139,10 +135,7 @@ export default function AreaCard({
                         ))
                       )}
                     </ul>
-                    <Button
-                      className="bg-gradient-primary w-full mt-4"
-                      onClick={handleReupload}
-                    >
+                    <Button className="w-full mt-4" onClick={handleReupload}>
                       Recadastrar Documentos
                     </Button>
                   </div>
@@ -152,53 +145,57 @@ export default function AreaCard({
                       {mockDocumentosAreaConsultor.map((item, index) => {
                         const categoryKey = Object.keys(item)[0];
                         const filesArray = item[categoryKey];
-
                         return (
-                          <div key={index}>
-                            <h2 className="text-lg text-center font-bold mb-4">
-                              {categoryKey}
-                            </h2>
-                            {filesArray.map((field, fieldIndex) =>
-                              Object.entries(field).map(
-                                ([fieldName, label]) => (
-                                  <FormField
-                                    key={`${fieldName}-${fieldIndex}`}
-                                    control={form.control}
-                                    name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
-                                    render={({ field }) => (
-                                      <FormItem className="m-2">
-                                        <FormLabel>{label}</FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            accept="application/pdf, image/jpeg, image/jpg"
-                                            type="file"
-                                            onChange={(e) => {
-                                              field.onChange(
-                                                e.target.files?.[0]
-                                              );
-                                            }}
-                                          />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
+                          <>
+                            <div key={index}>
+                              <h2 className="text-lg text-center font-bold mb-4">
+                                {categoryKey}
+                              </h2>
+                              {filesArray.map((field, fieldIndex) =>
+                                Object.entries(field).map(
+                                  ([fieldName, label]) => (
+                                    <FormField
+                                      key={`${fieldName}-${fieldIndex}`}
+                                      control={form.control}
+                                      name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
+                                      render={({ field }) => (
+                                        <FormItem className="m-2">
+                                          <FormLabel>{label}</FormLabel>
+                                          <FormControl>
+                                            <Input
+                                              accept="application/pdf, image/jpeg, image/jpg"
+                                              type="file"
+                                              onChange={(e) => {
+                                                field.onChange(
+                                                  e.target.files?.[0]
+                                                );
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  )
                                 )
-                              )
-                            )}
-                          </div>
+                              )}
+                            </div>
+                          </>
                         );
                       })}
                       <Button
                         className="bg-gradient-primary w-full"
                         type="submit"
-                        // disabled={Object.keys(errors).length > 0}
+                        disabled={Object.keys(form.formState.errors).length > 0}
                       >
                         Preparar Documentos
                       </Button>
                     </form>
                   </Form>
                 )}
+                <div className="flex gap-2 justify-evenly m-2 ">
+                  <CheckboxFormMultiplo />
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="my-4">Adicionar Consultor</Button>
@@ -230,11 +227,17 @@ export default function AreaCard({
                   </div>
                 ))}
               </DialogDescription>
-              <DialogFooter>
-                <Button onClick={() => console.log(Qualificacao)}>
+              {/* <DialogFooter>
+                <Button
+                  onClick={() => {
+                    // console.log(form.getValues("natureza"));
+                    handleNaturezaPrestacao(form.getValues("natureza")[0]);
+                    // setOpen(false);
+                  }}
+                >
                   Salvar
                 </Button>
-              </DialogFooter>
+              </DialogFooter> */}
             </DialogContent>
           </Dialog>
           <Dialog>
