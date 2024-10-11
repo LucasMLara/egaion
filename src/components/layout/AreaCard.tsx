@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEditalStore, Documents } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor } from "@/mocks";
+import ConsultantTable from "../ConsultantTable/ConsultantTable";
 import {
   Dialog,
   DialogContent,
@@ -109,7 +110,7 @@ export default function AreaCard({
                 Inserir Dados
               </Button>
             </DialogTrigger>
-            <DialogContent className="min-w-[700px] overflow-auto h-5/6">
+            <DialogContent className="min-w-[1080px] overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
                 {submitted ? (
@@ -200,6 +201,9 @@ export default function AreaCard({
                   <DialogTrigger asChild>
                     <Button className="my-4">Adicionar Consultor</Button>
                   </DialogTrigger>
+                  <div className="flex gap-2 justify-evenly m-2 ">
+                    <ConsultantTable />
+                  </div>
                   <DialogContent>
                     <DialogTitle>Adicionar Consultor</DialogTitle>
                     <DialogDescription>
