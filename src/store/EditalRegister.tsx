@@ -121,8 +121,6 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
             }
             return qualificacao;
           });
-
-          console.log("Qualificação atualizada:", updatedQualificacao);
           return { Qualificacao: updatedQualificacao };
         });
       },
