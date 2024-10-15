@@ -1,17 +1,29 @@
-import React from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { getData } from "@/components/ConsultantTable/ConsultantTable";
 import { maskCpf } from "@/lib/utils";
+import { ConsultantRowDisplay } from "@/types/types";
 
-export default async function TeamMember({
-  params,
-}: {
-  params: { userId: string };
-}) {
+import { LoaderIcon } from "lucide-react";
+
+export default function TeamMember({ params }: { params: { userId: string } }) {
   const { userId } = params;
-  const member = await getData(userId);
+  const [member, setMember] = useState<ConsultantRowDisplay[]>([]);
+
+  useEffect(() => {
+    const data = getData(userId);
+    setMember(data as ConsultantRowDisplay[]);
+  }, [userId]);
+
+  if (member.length === 0)
+    return (
+      <div className="text-lg flex flex-wrap gap-2 items-center justify-center h-full">
+        <LoaderIcon className="animate-spin size-14 text-primary-400" />
+      </div>
+    );
 
   return (
     <section className="my-6">
@@ -25,10 +37,10 @@ export default async function TeamMember({
             <Input
               className="transition-all w-full"
               id="nome"
-              type="nome"
+              type="text"
               required
               name="nome"
-              defaultValue={member[0].nome}
+              defaultValue={member[0]?.nome}
             />
           </div>
           <div className="flex flex-col gap-2 my-2 flex-grow">
@@ -38,9 +50,8 @@ export default async function TeamMember({
               id="email"
               type="email"
               name="email"
-              placeholder="egaion@pentago.com.br"
               disabled
-              defaultValue={member[0].email}
+              defaultValue={member[0]?.email || ""}
             />
           </div>
           <div className="flex flex-col gap-2 my-2 flex-grow">
@@ -49,9 +60,9 @@ export default async function TeamMember({
               className="transition-all w-full"
               id="CPF"
               disabled
-              type="CPF"
-              defaultValue={maskCpf(member[0].CPF)}
+              type="text"
               name="CPF"
+              defaultValue={maskCpf(member[0]?.CPF || "")}
             />
           </div>
           <div className="flex flex-col gap-2 my-2 flex-grow">
@@ -61,7 +72,7 @@ export default async function TeamMember({
               id="contato"
               type="text"
               name="contato"
-              defaultValue={member[0].contato}
+              defaultValue={member[0]?.contato || ""}
             />
           </div>
         </div>
