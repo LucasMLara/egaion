@@ -217,8 +217,8 @@ export default function AreaCard({
                     key={area.areaId}
                     className="flex flex-wrap place-content-center gap-5 m-2"
                   >
-                    {area.Consultores.filter(
-                      (consultor) => consultor.areaId === areaId
+                    {area.Consultores.filter((consultor) =>
+                      consultor.areaId?.includes(areaId)
                     ).map((consultor) => (
                       <ConsultantCard
                         key={consultor.id}
