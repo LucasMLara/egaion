@@ -22,13 +22,13 @@ export default function InsertEditalDocuments() {
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
-  const { cadastrarDocumento, limparDocumentos, Documentos, alterarPermissao } =
-    useEditalStore();
+  const { cadastrarDocumento, limparDocumentos, Documentos } = useEditalStore();
 
   const handleReupload = () => {
     limparDocumentos();
     setSubmitted(false);
   };
+
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
     data.mockInputFiles.forEach((category) => {
@@ -52,21 +52,6 @@ export default function InsertEditalDocuments() {
   };
 
   const { errors } = form.formState;
-
-  // useEffect(() => {
-  //   Object.keys(errors).length > 0 ||
-  //   editalData.Documentos.length == 0 ||
-  //   editalData.Consultores.length == 0 ||
-  //   editalData.Qualificacao.areas.length == 0 ||
-  //   editalData.Qualificacao.naturezaPrestacao === ""
-  //     ? alterarPermissao(true)
-  //     : alterarPermissao(false);
-  // }, [
-  //   errors,
-  //   editalData.Consultores,
-  //   editalData.Qualificacao,
-  //   editalData.Documentos,
-  // ]);
 
   return (
     <div className="grid place-content-center mx-auto text-center">
