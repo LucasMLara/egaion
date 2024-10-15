@@ -36,7 +36,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
     const uniqueId = nanoid();
     if (ultimaAreaSelecionada) {
       const novaArea = {
-        naturezaPrestacao: "",
+        naturezaPrestacao: [],
         name: ultimaAreaSelecionada,
         areaId: uniqueId,
         Consultores: [],
