@@ -1,3 +1,4 @@
+import { MultipleCheckBoxOptions } from "@/types/types";
 type mockInputFiles = {
   [key: string]: {
     [key: string]: string;
@@ -13,7 +14,7 @@ export const mockDocumentosAreaConsultor: mockInputFiles[] = [
   },
 ];
 
-export const naturezasPrestacao = [
+export const naturezasPrestacao: MultipleCheckBoxOptions[] = [
   {
     label: "Consultoria",
     value: "consultoria",
