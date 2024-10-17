@@ -30,10 +30,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc } from "@/types/types";
 import { useState } from "react";
-import CreateConsultant from "./CreateConsultant";
 import { Input } from "../ui/input";
 import CheckboxFormMultiplo from "./CheckBoxForm";
-import ConsultantCard from "./ConsultantCard";
 
 export default function AreaCard({
   area,
@@ -197,51 +195,7 @@ export default function AreaCard({
                 <div className="flex gap-2 justify-evenly m-2 ">
                   <CheckboxFormMultiplo />
                 </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="my-4">Adicionar Consultor</Button>
-                  </DialogTrigger>
-                  <div className="flex gap-2 justify-evenly m-2 ">
-                    <ConsultantTable />
-                  </div>
-                  <DialogContent>
-                    <DialogTitle>Adicionar Consultor</DialogTitle>
-                    <DialogDescription>
-                      Preencha os dados do consultor
-                    </DialogDescription>
-                    <CreateConsultant />
-                  </DialogContent>
-                </Dialog>
-                {Qualificacao.map((area) => (
-                  <div
-                    key={area.areaId}
-                    className="flex flex-wrap place-content-center gap-5 m-2"
-                  >
-                    {area.Consultores.filter((consultor) =>
-                      consultor.areaId?.includes(areaId)
-                    ).map((consultor) => (
-                      <ConsultantCard
-                        key={consultor.id}
-                        email={consultor.email.email}
-                        id={consultor.id}
-                        name={consultor.nome}
-                        telefone={consultor.contato}
-                      />
-                    ))}
-                  </div>
-                ))}
               </DialogDescription>
-              {/* <DialogFooter>
-                <Button
-                  onClick={() => {
-                    // console.log(form.getValues("natureza"));
-                    handleNaturezaPrestacao(form.getValues("natureza")[0]);
-                    // setOpen(false);
-                  }}
-                >
-                  Salvar
-                </Button>
-              </DialogFooter> */}
             </DialogContent>
           </Dialog>
           <Dialog>
