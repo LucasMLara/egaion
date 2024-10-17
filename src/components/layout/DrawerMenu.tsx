@@ -35,18 +35,6 @@ export default function DrawerMenu() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href="/team">
-              <UsersIcon className="size-6 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all" />
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Equipe Técnica</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
     </div>
   );
 }
