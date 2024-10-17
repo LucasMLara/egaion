@@ -93,8 +93,8 @@ export const consultantSchema = z.object({
     .min(1, "Insira ao menos um documento técnico"),
 });
 
-export const NaturezaSchema = z.object({
-  naturezas: z.array(z.string()).refine((value) => value.some((item) => item), {
+export const MultipleFormSchema = z.object({
+  options: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "Selecione pelo menos um item.",
   }),
 });
@@ -231,4 +231,10 @@ export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
 export type IConsultant = z.infer<typeof consultantSchema>;
 export type IFile = z.infer<typeof fileSchema>;
 export type IEditalDoc = z.infer<typeof DocSchema>;
-export type INatureza = z.infer<typeof NaturezaSchema>;
+export type IMultipleForm = z.infer<typeof MultipleFormSchema>;
+
+export type MultipleCheckBoxOptions = {
+  label: string;
+  value: string;
+  id: string;
+};
