@@ -20,29 +20,9 @@ export default function ConsultantTable() {
   const data = getData();
 
   return (
-    <section className="flex flex-wrap flex-col gap-6 justify-center place-content-center">
-      <h1 className="text-2xl font-bold text-neutral-700 text-center m-9">
-        Equipe Técnica{" "}
-      </h1>
-      <div className="m-auto">
-        <h1 className="text-xl font-bold">Para alterar:</h1>
-        <ol>
-          {/* <li>
-            no team/id. colocar os documentos COMUNS inseridos junto com os
-            dados cadastrados.
-          </li> */}
-          <li>
-            Alterar Consultores para que fiquem numa tabela separada , vinculada
-            a cada area
-          </li>
-          <li>
-            preciso mexer no editalstorage na tipagem de qualificacao para
-            remover os consultores de la e por em relaçao ao ID da area da
-            qualificacao
-          </li>
-        </ol>
-      </div>
-      <div className="flex w-flex-wrap gap-6 place-content-center w-full">
+    <section className="w-full">
+      <h2 className="text-2xl font-bold text-center my-10">Consultores</h2>
+      <div className=" flex justify-center">
         <DataTable columns={columns} data={data} />
       </div>
     </section>
