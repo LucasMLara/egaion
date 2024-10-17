@@ -9,6 +9,7 @@ import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
 import { useRouter } from "next/navigation";
 import InsertQualificacaoTecnicaDocs from "@/components/layout/InsertQualificacaoTecnicaDocs";
+import ConsultantsArea from "@/components/layout/ConsultantsArea";
 export default function EditalId({
   params,
 }: {
@@ -21,7 +22,7 @@ export default function EditalId({
   return (
     <section className="h-full">
       <Tabs defaultValue="qualificacaotecnica" className="w-auto m-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="content" className="text-center">
             Edital
           </TabsTrigger>
@@ -31,6 +32,9 @@ export default function EditalId({
           <TabsTrigger value="qualificacaotecnica" className="text-center">
             Qualificaçoes Técnicas
           </TabsTrigger>
+          <TabsTrigger value="consultants" className="text-center">
+            Consultores
+          </TabsTrigger>
           <TabsTrigger value="anexos" className="text-center">
             Anexos
           </TabsTrigger>
@@ -38,6 +42,9 @@ export default function EditalId({
             Histórico
           </TabsTrigger>
         </TabsList>
+        <TabsContent value="consultants">
+          <ConsultantsArea />
+        </TabsContent>
         <TabsContent value="documents">
           <InsertEditalDocuments />
         </TabsContent>
@@ -264,7 +271,7 @@ export default function EditalId({
           </div>
         </TabsContent>
       </Tabs>
-      <div className="flex justify-end p-5">
+      {/* <div className="flex justify-end p-5">
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={permissaoDeEnvio}
@@ -274,7 +281,7 @@ export default function EditalId({
         >
           Confirmar Dados de Cadastro
         </Button>
-      </div>
+      </div> */}
     </section>
   );
 }
