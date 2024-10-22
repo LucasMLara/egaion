@@ -18,18 +18,17 @@ import {
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRef } from "react";
 
 interface IMultipleAreaInputs {
-  onSubmit?: (data: any) => void;
-  onReset?: () => void;
+  onFormSubmit?: (data: any) => void;
+  onFormReset?: () => void;
   areas?: MultipleCheckBoxOptions[];
   consultantId?: string;
 }
 //TODO - Implementar a lógica de MultipleAreaInputs para que renderize por area selecioanda, um input multiplo de file para e vincule todos esses arquivos a uma areaId e ao id do Consultor
 export default function MultipleAreaInputs({
-  onReset,
-  onSubmit,
+  onFormReset,
+  onFormSubmit,
   areas,
   consultantId,
 }: IMultipleAreaInputs) {
@@ -39,10 +38,34 @@ export default function MultipleAreaInputs({
     defaultValues: { areaId: "", consultantId: "", arquivosTecnicos: [] },
   });
 
+  const handleSubmit = (data: IArquivosTecnicos) => {
+    const hasFilesForAllAreas = areas?.every(
+      (area) => console.log(data.arquivosTecnicos, area)
+
+      // data.arquivosTecnicos.some((file) => file.areaId === area.id)
+    );
+
+    if (!hasFilesForAllAreas) {
+      toast.error("Please upload at least one file for each area.");
+      return;
+    }
+
+    if (onFormSubmit) {
+      onFormSubmit(data);
+    }
+  };
+
+  const handleReset = () => {
+    form.reset();
+    if (onFormReset) {
+      onFormReset();
+    }
+  };
+
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           {areas?.map((area) => (
             <FormField
               key={area.id}
@@ -58,7 +81,16 @@ export default function MultipleAreaInputs({
                       onChange={(e) => {
                         const files = e.target.files;
                         if (files) {
-                          form.setValue("arquivosTecnicos", Array.from(files));
+                          const updatedFiles = Array.from(files).map(
+                            (file) => ({
+                              file,
+                              areaId: area.id,
+                            })
+                          );
+                          form.setValue("arquivosTecnicos", [
+                            ...field.value,
+                            ...updatedFiles,
+                          ]);
                         }
                       }}
                     />
@@ -70,6 +102,21 @@ export default function MultipleAreaInputs({
               )}
             />
           ))}
+          <div className="flex gap-4 mt-4">
+            <Button type="submit" className="w-full">
+              Prepara Documentos
+            </Button>
+            <Button type="button" className="w-full" onClick={handleReset}>
+              Recadastrar
+            </Button>
+            <Button
+              type="button"
+              className="w-full"
+              onClick={() => console.log(form.formState.errors)}
+            >
+              Logar
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
