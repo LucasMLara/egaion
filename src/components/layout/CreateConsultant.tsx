@@ -16,13 +16,12 @@ import {
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
-  const { cadastrarConsultor, alterarPermissao, Qualificacao, activeArea } =
-    useEditalStore();
+  const { cadastrarConsultor } = useEditalStore();
 
   const form = useForm<IConsultant>({
     resolver: zodResolver(consultantSchema),
@@ -36,11 +35,10 @@ export default function CreateConsultant() {
       comprovanteFormacaoAcademica: undefined,
       comprovanteVinculoCNPJ: undefined,
       registroProfissionalClasse: undefined,
-      arquivosTecnicos: [],
       contato: "",
       CPF: "",
       id: "",
-      areaId: "",
+      areaId: [],
     },
   });
 
@@ -49,6 +47,7 @@ export default function CreateConsultant() {
   const comprovanteFormacaoAcademicaRef = useRef<HTMLInputElement | null>(null);
   const registroProfissionalClasseRef = useRef<HTMLInputElement | null>(null);
   const arquivosTecnicos = useRef<HTMLInputElement | null>(null);
+
   function resetConsultantForm() {
     form.reset();
     if (arquivosTecnicos.current) arquivosTecnicos.current.value = "";
@@ -65,37 +64,17 @@ export default function CreateConsultant() {
     formState: { errors },
   } = form;
 
-  // useEffect(() => {
-  //   Object.keys(errors).length > 0 ||
-  //   editalData.Documentos.length == 0 ||
-  //   editalData.Consultores.length == 0
-  //     ? alterarPermissao(true)
-  //     : alterarPermissao(false);
-  // }, [errors]);
-
   function onSubmit(data: IConsultant) {
     const uniqueId = nanoid();
-    console.log("Dados do consultor na submissao", {
-      ...data,
-      id: uniqueId,
-      areaId: activeArea,
-    });
 
-    if (Qualificacao.length > 0 && activeArea) {
-      cadastrarConsultor(
-        { ...data, id: uniqueId, areaId: activeArea },
-        activeArea
-      );
-      toast.success("Consultor cadastrado com sucesso");
-    } else {
-      toast.error("Area não designada para esse consultor");
-    }
+    cadastrarConsultor({ ...data, id: uniqueId });
+    toast.success("Consultor cadastrado com sucesso!");
 
     resetConsultantForm();
   }
 
   return (
-    <>
+    <div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -295,7 +274,7 @@ export default function CreateConsultant() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               name="arquivosTecnicos"
               render={({ field }) => (
                 <FormItem>
@@ -316,7 +295,7 @@ export default function CreateConsultant() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <div className="flex place-content-center mt-3">
               <Button
                 className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
@@ -329,6 +308,6 @@ export default function CreateConsultant() {
           </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 }
