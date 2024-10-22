@@ -88,9 +88,14 @@ export const consultantSchema = z.object({
   comprovanteVinculoCNPJ: fileSchema,
   comprovanteFormacaoAcademica: fileSchema,
   registroProfissionalClasse: fileSchema,
+});
+
+export const ArquivosTecnicosSchema = z.object({
   arquivosTecnicos: z
     .array(fileSchema)
     .min(1, "Insira ao menos um documento técnico"),
+  areaId: z.string(),
+  consultantId: z.string(),
 });
 
 export const MultipleFormSchema = z.object({
@@ -222,6 +227,7 @@ export const MockDocCardSchema = z.object({
   docDialogContent: z.string(),
 });
 
+export type IArquivosTecnicos = z.infer<typeof ArquivosTecnicosSchema>;
 export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
 export type IDocCard = z.infer<typeof MockDocCardSchema>;
