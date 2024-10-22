@@ -28,7 +28,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DocSchema, IEditalDoc } from "@/types/types";
+import { DocSchema, IEditalDoc, MultipleCheckBoxOptions } from "@/types/types";
 import CheckboxFormMultiplo from "./CheckBoxForm";
 import { useEditalStore, Documents } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
@@ -42,7 +42,9 @@ export default function AreaCard({
 }) {
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedNaturezas, setSelectedNaturezas] = useState<string[]>([]);
+  const [selectedNaturezas, setSelectedNaturezas] = useState<
+    MultipleCheckBoxOptions[]
+  >([]);
 
   const {
     removerArea,
@@ -58,7 +60,7 @@ export default function AreaCard({
     defaultValues: { mockInputFiles: [], natureza: [] },
   });
 
-  const handleNaturezaSubmit = (naturezas: string[]) => {
+  const handleNaturezaSubmit = (naturezas: MultipleCheckBoxOptions[]) => {
     setSelectedNaturezas(naturezas);
   };
 
@@ -119,7 +121,7 @@ export default function AreaCard({
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="min-w-[1080px] overflow-auto h-5/6">
+            <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
                 {submitted ? (
