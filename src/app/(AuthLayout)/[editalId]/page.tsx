@@ -21,7 +21,7 @@ export default function EditalId({
   const { permissaoDeEnvio } = useEditalStore();
   return (
     <section className="h-full">
-      <Tabs defaultValue="qualificacaotecnica" className="w-auto m-4">
+      <Tabs defaultValue="consultants" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="content" className="text-center">
             Edital
