@@ -120,7 +120,6 @@ export default function AreaCard({
                 Inserir Dados
               </Button>
             </DialogTrigger>
-
             <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
