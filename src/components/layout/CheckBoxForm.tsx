@@ -13,93 +13,99 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { NaturezaSchema, INatureza } from "@/types/types";
-import { useEditalStore } from "@/store/EditalRegister";
-import { naturezasPrestacao } from "@/mocks";
+import {
+  IMultipleForm,
+  MultipleFormSchema,
+  MultipleCheckBoxOptions,
+} from "@/types/types";
+import MultipleAreaInputs from "./MultipleAreaInputs";
 
-export default function CheckboxFormMultiplo() {
-  const {
-    setNaturezaPrestacao,
-    activeArea,
-    Qualificacao,
-    clearNaturezaPrestacao,
-  } = useEditalStore();
-  const form = useForm<INatureza>({
-    resolver: zodResolver(NaturezaSchema),
+interface CheckboxFormMultiploProps {
+  opcoes: MultipleCheckBoxOptions[];
+  onSubmit: (opcoes: string[]) => void;
+  onReset: () => void;
+  opcoesSelecionadas: string[];
+  labelSelecionados: string;
+  listagem?: boolean;
+}
+
+export default function CheckboxFormMultiplo({
+  opcoes,
+  onSubmit,
+  onReset,
+  opcoesSelecionadas,
+  labelSelecionados,
+  listagem,
+}: CheckboxFormMultiploProps) {
+  const form = useForm<IMultipleForm>({
+    resolver: zodResolver(MultipleFormSchema),
     defaultValues: {
-      naturezas: [],
+      options: opcoesSelecionadas,
     },
   });
 
-  function onSubmit({ naturezas }: INatureza) {
-    setNaturezaPrestacao(naturezas, activeArea);
+  function handleSubmit(data: IMultipleForm) {
+    onSubmit(data.options);
   }
 
-  function handleReset() {
-    clearNaturezaPrestacao(activeArea);
-    form.reset();
-  }
+  const temOpcoes = opcoesSelecionadas.length > 0;
 
-  const currentArea = Qualificacao.find((area) => area.areaId === activeArea);
-  const temNaturezas = currentArea
-    ? currentArea.naturezaPrestacao.length > 0
-    : false;
-
-  return temNaturezas ? (
+  return temOpcoes ? (
     <div className="flex flex-col gap-4">
-      <h2>Naturezas Selecionadas: </h2>
-      <ul>
-        {Qualificacao.map(
-          (area) =>
-            area.naturezaPrestacao?.length > 0 &&
-            area.naturezaPrestacao
-              .filter((np) => np.areaId === activeArea)
-              .map((natureza) => <li key={natureza.id}>{natureza.label}</li>)
-        )}
-      </ul>
-      <Button onClick={handleReset}>Trocar</Button>
+      {listagem ? (
+        <>
+          <h2>{labelSelecionados}</h2>
+          <ul>
+            {opcoesSelecionadas.map((opcao) => (
+              <li key={opcao}>{opcao}</li>
+            ))}
+          </ul>
+          <Button onClick={onReset}>Selecionar Novamente</Button>
+        </>
+      ) : (
+        <>
+          <MultipleAreaInputs />
+        </>
+
+        //TODO aqui eu tenho que inserir um input multiplo de arquivos para cada area selecionada e vincular ao ID da area
+      )}
     </div>
   ) : (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="naturezas"
+          name="options"
           render={() => (
             <FormItem>
               <FormDescription>Selecione pelo menos uma opção:</FormDescription>
               <div className="flex flex-wrap gap-2">
-                {naturezasPrestacao.map((item) => (
+                {opcoes.map((item) => (
                   <FormField
                     key={item.id}
                     control={form.control}
-                    name="naturezas"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.label)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.label])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.label
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            {item.label}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
+                    name="options"
+                    render={({ field }) => (
+                      <FormItem className="flex gap-3 items-center justify-center">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(item.label)}
+                            onCheckedChange={(checked) =>
+                              checked
+                                ? field.onChange([...field.value, item.label])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.label
+                                    )
+                                  )
+                            }
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {item.label}
+                        </FormLabel>
+                      </FormItem>
+                    )}
                   />
                 ))}
               </div>

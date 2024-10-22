@@ -1,14 +1,15 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
-import { useEditalStore, Documents } from "@/store/EditalRegister";
-import { mockDocumentosAreaConsultor } from "@/mocks";
-import ConsultantTable from "../ConsultantTable/ConsultantTable";
 import {
   Dialog,
   DialogContent,
@@ -26,12 +27,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
 import { DocSchema, IEditalDoc } from "@/types/types";
-import { useState } from "react";
-import { Input } from "../ui/input";
 import CheckboxFormMultiplo from "./CheckBoxForm";
+import { useEditalStore, Documents } from "@/store/EditalRegister";
+import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 
 export default function AreaCard({
   area,
@@ -42,6 +42,8 @@ export default function AreaCard({
 }) {
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedNaturezas, setSelectedNaturezas] = useState<string[]>([]);
+
   const {
     removerArea,
     Qualificacao,
@@ -56,13 +58,19 @@ export default function AreaCard({
     defaultValues: { mockInputFiles: [], natureza: [] },
   });
 
-  const handleReupload = () => {
+  const handleNaturezaSubmit = (naturezas: string[]) => {
+    setSelectedNaturezas(naturezas);
+  };
+
+  const handleReset = () => {
+    setSelectedNaturezas([]);
     limparDocumentosTecnicos();
     setSubmitted(false);
   };
 
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
+
     data.mockInputFiles.forEach((category) => {
       Object.entries(category).forEach(([categoryKey, filesArray]) => {
         filesArray.forEach((fileObject) => {
@@ -81,26 +89,28 @@ export default function AreaCard({
     });
 
     cadastrarDocumentosTecnicos(activeArea, documentos);
-
     setSubmitted(true);
     form.reset();
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Card className="size-52 cursor-pointer hover:shadow-xl transition-all ">
+        <Card className="size-52 cursor-pointer hover:shadow-xl transition-all">
           <CardHeader>
             <CardTitle>{area}</CardTitle>
             <CardDescription>Area description</CardDescription>
           </CardHeader>
         </Card>
       </DialogTrigger>
+
       <DialogContent>
         <DialogTitle className="my-3">{area}</DialogTitle>
         <DialogHeader className="my-3">
           Prossiga para a inserção dos dados necessários da área correspondente
           ou remova a área caso tenha inserido por engano.
         </DialogHeader>
+
         <DialogFooter>
           <Dialog>
             <DialogTrigger asChild>
@@ -108,12 +118,13 @@ export default function AreaCard({
                 Inserir Dados
               </Button>
             </DialogTrigger>
+
             <DialogContent className="min-w-[1080px] overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
                 {submitted ? (
                   <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-                    <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                    <h2 className="text-3xl font-semibold border-b pb-2">
                       Documentos Submetidos
                     </h2>
                     <ul>
@@ -126,7 +137,6 @@ export default function AreaCard({
                               href={doc.blob}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="leading-7 [&:not(:first-child)]:mt-6"
                             >
                               {doc.title}
                             </a>
@@ -134,7 +144,7 @@ export default function AreaCard({
                         ))
                       )}
                     </ul>
-                    <Button className="w-full mt-4" onClick={handleReupload}>
+                    <Button className="w-full mt-4" onClick={handleReset}>
                       Recadastrar Documentos
                     </Button>
                   </div>
@@ -144,42 +154,41 @@ export default function AreaCard({
                       {mockDocumentosAreaConsultor.map((item, index) => {
                         const categoryKey = Object.keys(item)[0];
                         const filesArray = item[categoryKey];
+
                         return (
-                          <>
-                            <div key={index}>
-                              <h2 className="text-lg text-center font-bold mb-4">
-                                {categoryKey}
-                              </h2>
-                              {filesArray.map((field, fieldIndex) =>
-                                Object.entries(field).map(
-                                  ([fieldName, label]) => (
-                                    <FormField
-                                      key={`${fieldName}-${fieldIndex}`}
-                                      control={form.control}
-                                      name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
-                                      render={({ field }) => (
-                                        <FormItem className="m-2">
-                                          <FormLabel>{label}</FormLabel>
-                                          <FormControl>
-                                            <Input
-                                              accept="application/pdf, image/jpeg, image/jpg"
-                                              type="file"
-                                              onChange={(e) => {
-                                                field.onChange(
-                                                  e.target.files?.[0]
-                                                );
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  )
+                          <div key={index}>
+                            <h2 className="text-lg text-center font-bold mb-4">
+                              {categoryKey}
+                            </h2>
+                            {filesArray.map((field, fieldIndex) =>
+                              Object.entries(field).map(
+                                ([fieldName, label]) => (
+                                  <FormField
+                                    key={`${fieldName}-${fieldIndex}`}
+                                    control={form.control}
+                                    name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
+                                    render={({ field }) => (
+                                      <FormItem className="m-2">
+                                        <FormLabel>{label}</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            accept="application/pdf, image/jpeg, image/jpg"
+                                            type="file"
+                                            onChange={(e) =>
+                                              field.onChange(
+                                                e.target.files?.[0]
+                                              )
+                                            }
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
                                 )
-                              )}
-                            </div>
-                          </>
+                              )
+                            )}
+                          </div>
                         );
                       })}
                       <Button
@@ -192,18 +201,25 @@ export default function AreaCard({
                     </form>
                   </Form>
                 )}
-                <div className="flex gap-2 justify-evenly m-2 ">
-                  <CheckboxFormMultiplo />
+                <div className="flex gap-2 justify-evenly m-2">
+                  <CheckboxFormMultiplo
+                    listagem
+                    labelSelecionados="Natureza da Prestação"
+                    opcoes={naturezasPrestacao}
+                    onSubmit={handleNaturezaSubmit}
+                    onReset={handleReset}
+                    opcoesSelecionadas={selectedNaturezas}
+                  />
                 </div>
               </DialogDescription>
             </DialogContent>
           </Dialog>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost">Remover Area</Button>
+              <Button variant="ghost">Remover Área</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogTitle>Remover Area</DialogTitle>
+              <DialogTitle>Remover Área</DialogTitle>
               <DialogDescription>
                 Tem certeza que deseja remover a área?
               </DialogDescription>
@@ -212,7 +228,7 @@ export default function AreaCard({
                   variant="destructive"
                   onClick={() => removerArea(areaId)}
                 >
-                  Sim, Tenho certeza. Remover Area!
+                  Sim, Tenho certeza. Remover Área!
                 </Button>
               </DialogFooter>
             </DialogContent>
