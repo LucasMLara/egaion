@@ -7,6 +7,7 @@ export type Documents = {
   blob: string;
   id: string;
   areaId?: string;
+  consultorId?: string;
 };
 
 type History = {
@@ -25,11 +26,12 @@ export type Qualificacao = {
   name: string;
   areaId: string;
   naturezaPrestacao: NaturezaPrestacao[];
-  Consultores: IConsultant[];
   AreaDocuments: Documents[];
+  Consultores: IConsultant[];
 };
 
 type IEditalStore = {
+  Consultores: IConsultant[];
   Documentos: Documents[];
   Qualificacao: Qualificacao[];
   Historico: History[];
@@ -40,7 +42,7 @@ type IEditalStore = {
 };
 
 type editalActions = {
-  cadastrarConsultor: (consultor: IConsultant, areaId: string) => void;
+  cadastrarConsultor: (consultor: IConsultant) => void;
   reset: () => void;
   removerConsultor: (consultorId: string) => void;
   alterarPermissao: (permitir: boolean) => void;
@@ -55,6 +57,8 @@ type editalActions = {
   setEditalId: (editalId: string) => void;
   setNaturezaPrestacao: (naturezaPrestacao: string[], areaId: string) => void;
   clearNaturezaPrestacao: (areaId: string) => void;
+  vincularAreaConsultor: (areaId: string, consultorId: string) => void;
+  desvincularAreaConsultor: (areaId: string, consultorId: string) => void;
 };
 
 const initialState: IEditalStore = {
@@ -65,6 +69,7 @@ const initialState: IEditalStore = {
   permissaoDeEnvio: false,
   activeArea: "",
   currentEditalId: "",
+  Consultores: [],
 };
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
@@ -76,6 +81,43 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       clearActiveArea: () => set({ activeArea: "" }),
       reset: () => {
         set(initialState);
+      },
+
+      vincularAreaConsultor: (areaId, consultorId) => {
+        set((state) => ({
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.areaId === areaId) {
+              const consultor = state.Consultores.find(
+                (consultor) => consultor.id === consultorId
+              );
+
+              if (consultor) {
+                return {
+                  ...qualificacao,
+
+                  Consultores: [...qualificacao.Consultores, consultor],
+                };
+              }
+            }
+
+            return qualificacao;
+          }),
+        }));
+      },
+      desvincularAreaConsultor: (areaId, consultorId) => {
+        set((state) => ({
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.areaId === areaId) {
+              return {
+                ...qualificacao,
+                Consultores: qualificacao.Consultores.filter(
+                  (consultor) => consultor.id !== consultorId
+                ),
+              };
+            }
+            return qualificacao;
+          }),
+        }));
       },
       setNaturezaPrestacao: (naturezaPrestacao, areaId) => {
         set((state) => ({
@@ -110,29 +152,16 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
         })),
       setEditalId: (editalId) => set({ currentEditalId: editalId }),
       limparDocumentos: () => set({ Documentos: [] }),
-      cadastrarConsultor: (consultor, areaId) => {
-        set((state) => {
-          const updatedQualificacao = state.Qualificacao.map((qualificacao) => {
-            if (qualificacao.areaId === areaId) {
-              return {
-                ...qualificacao,
-                Consultores: [...qualificacao.Consultores, consultor],
-              };
-            }
-            return qualificacao;
-          });
-          return { Qualificacao: updatedQualificacao };
-        });
+      cadastrarConsultor: (consultor) => {
+        set((state) => ({
+          Consultores: [...state.Consultores, consultor],
+        }));
       },
-
       removerConsultor: (consultorId) => {
         set((state) => ({
-          Qualificacao: state.Qualificacao.map((qualificacao) => ({
-            ...qualificacao,
-            Consultores: qualificacao.Consultores.filter(
-              (consultor) => consultor.id !== consultorId
-            ),
-          })),
+          Consultores: state.Consultores.filter(
+            (consultor) => consultor.id !== consultorId
+          ),
         }));
       },
 
