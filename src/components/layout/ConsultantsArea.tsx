@@ -2,7 +2,11 @@ import CreateConsultant from "./CreateConsultant";
 import ConsultantTable from "../ConsultantTable/ConsultantTable";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IMultipleForm, MultipleFormSchema } from "@/types/types";
+import {
+  IMultipleForm,
+  MultipleCheckBoxOptions,
+  MultipleFormSchema,
+} from "@/types/types";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +27,9 @@ import { Button } from "@/components/ui/button";
 import CheckboxFormMultiplo from "./CheckBoxForm";
 import { useState } from "react";
 export default function ConsultantsArea() {
-  const [areasSelecionadas, setAreasSelecionadas] = useState<string[]>([]);
+  const [areasSelecionadas, setAreasSelecionadas] = useState<
+    MultipleCheckBoxOptions[]
+  >([]);
   const { Consultores, Qualificacao } = useEditalStore();
   const areasPreSelecionadas = Qualificacao.map(({ name, areaId }) => ({
     value: name,
@@ -31,7 +37,7 @@ export default function ConsultantsArea() {
     id: areaId,
   }));
 
-  function handleAreasSubmit(areas: string[]) {
+  function handleAreasSubmit(areas: MultipleCheckBoxOptions[]) {
     setAreasSelecionadas(areas);
   }
 
@@ -42,7 +48,7 @@ export default function ConsultantsArea() {
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
     defaultValues: {
-      options: areasSelecionadas,
+      options: areasSelecionadas.map((area) => area.value),
     },
   });
 
@@ -63,6 +69,7 @@ export default function ConsultantsArea() {
             selecionadas
           </DialogDescription>
           <CheckboxFormMultiplo
+            listagem
             labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
             opcoes={areasPreSelecionadas}
             onSubmit={handleAreasSubmit}
