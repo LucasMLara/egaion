@@ -128,7 +128,7 @@ export default function AreaCard({
                     <h2 className="text-3xl font-semibold border-b pb-2">
                       Documentos Submetidos
                     </h2>
-                    <ul>
+                    <ul className="list-disc list-inside mt-4">
                       {Qualificacao.map((area) =>
                         area.AreaDocuments.filter(
                           (doc) => doc.areaId === areaId
@@ -138,6 +138,7 @@ export default function AreaCard({
                               href={doc.blob}
                               target="_blank"
                               rel="noopener noreferrer"
+                              className="text-blue-500 underline"
                             >
                               {doc.title}
                             </a>
