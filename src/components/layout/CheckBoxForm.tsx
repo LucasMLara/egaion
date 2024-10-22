@@ -70,10 +70,8 @@ export default function CheckboxFormMultiplo({
         </>
       ) : (
         <>
-          <MultipleAreaInputs />
+          <MultipleAreaInputs areas={opcoesSelecionadas} />
         </>
-
-        //TODO aqui eu tenho que inserir um input multiplo de arquivos para cada area selecionada e vincular ao ID da area
       )}
     </div>
   ) : (
