@@ -22,9 +22,9 @@ import MultipleAreaInputs from "./MultipleAreaInputs";
 
 interface CheckboxFormMultiploProps {
   opcoes: MultipleCheckBoxOptions[];
-  onSubmit: (opcoes: string[]) => void;
+  onSubmit: (opcoes: MultipleCheckBoxOptions[]) => void;
   onReset: () => void;
-  opcoesSelecionadas: string[];
+  opcoesSelecionadas: MultipleCheckBoxOptions[];
   labelSelecionados: string;
   listagem?: boolean;
 }
@@ -40,12 +40,18 @@ export default function CheckboxFormMultiplo({
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
     defaultValues: {
-      options: opcoesSelecionadas,
+      options: opcoesSelecionadas.map((opcao) => opcao.label),
     },
   });
 
   function handleSubmit(data: IMultipleForm) {
-    onSubmit(data.options);
+    onSubmit(
+      data.options
+        .map((label) => opcoes.find((o) => o.label === label))
+        .filter(
+          (opcao): opcao is MultipleCheckBoxOptions => opcao !== undefined
+        )
+    );
   }
 
   const temOpcoes = opcoesSelecionadas.length > 0;
@@ -57,7 +63,7 @@ export default function CheckboxFormMultiplo({
           <h2>{labelSelecionados}</h2>
           <ul>
             {opcoesSelecionadas.map((opcao) => (
-              <li key={opcao}>{opcao}</li>
+              <li key={opcao.id}>{opcao.label}</li>
             ))}
           </ul>
           <Button onClick={onReset}>Selecionar Novamente</Button>
