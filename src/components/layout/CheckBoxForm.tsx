@@ -71,6 +71,9 @@ export default function CheckboxFormMultiplo({
       ) : (
         <>
           <MultipleAreaInputs areas={opcoesSelecionadas} />
+          <Button onClick={onReset} variant="ghost">
+            Selecionar Novamente
+          </Button>
         </>
       )}
     </div>
