@@ -91,11 +91,12 @@ export const consultantSchema = z.object({
 });
 
 export const ArquivosTecnicosSchema = z.object({
-  arquivosTecnicos: z
-    .array(fileSchema)
-    .min(1, "Insira ao menos um documento técnico"),
-  areaId: z.string(),
-  consultantId: z.string(),
+  inputs: z.array(
+    z.object({
+      label: z.string(),
+      files: z.array(z.instanceof(File)).min(1, "Insira ao menos um documento"),
+    })
+  ),
 });
 
 export const MultipleFormSchema = z.object({
