@@ -1,54 +1,48 @@
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  ArquivosTecnicosSchema,
-  IArquivosTecnicos,
-  MultipleCheckBoxOptions,
-} from "@/types/types";
-import { useEditalStore } from "@/store/EditalRegister";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
 import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { fileInputSchema, FileInputForm } from "@/types/types";
 
-interface IMultipleAreaInputs {
-  onFormSubmit?: (data: any) => void;
+interface MultipleAreaInputsProps {
+  areas: { id: string; label: string }[];
+  onFormSubmit?: (data: FileInputForm) => void;
   onFormReset?: () => void;
-  areas?: MultipleCheckBoxOptions[];
-  consultantId?: string;
 }
-//TODO - Implementar a lógica de MultipleAreaInputs para que renderize por area selecioanda, um input multiplo de file para e vincule todos esses arquivos a uma areaId e ao id do Consultor
-export default function MultipleAreaInputs({
-  onFormReset,
-  onFormSubmit,
+
+const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
   areas,
-  consultantId,
-}: IMultipleAreaInputs) {
-  // Eses tipos estao todos errados, preciso corrigir
-  const form = useForm<IArquivosTecnicos>({
-    resolver: zodResolver(ArquivosTecnicosSchema),
-    defaultValues: { areaId: "", consultantId: "", arquivosTecnicos: [] },
+  onFormSubmit,
+  onFormReset,
+}) => {
+  const [submittedData, setSubmittedData] = useState<FileInputForm | null>(
+    null
+  );
+
+  const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
+    resolver: zodResolver(fileInputSchema),
+    defaultValues: {
+      arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [] })),
+    },
   });
 
-  const handleSubmit = (data: IArquivosTecnicos) => {
-    const hasFilesForAllAreas = areas?.every(
-      (area) => console.log(data.arquivosTecnicos, area)
+  const { errors } = formState;
 
-      // data.arquivosTecnicos.some((file) => file.areaId === area.id)
+  const onSubmit = (data: FileInputForm) => {
+    const hasFilesForAllAreas = data.arquivosTecnicos.every(
+      (input) => input.files.length > 0
     );
 
     if (!hasFilesForAllAreas) {
-      toast.error("Please upload at least one file for each area.");
+      toast.error("Por favor, insira um arquivo para cada área selecionada!");
       return;
     }
+
+    console.log("Form submitted:", data);
+    setSubmittedData(data);
 
     if (onFormSubmit) {
       onFormSubmit(data);
@@ -56,7 +50,8 @@ export default function MultipleAreaInputs({
   };
 
   const handleReset = () => {
-    form.reset();
+    reset();
+    setSubmittedData(null);
     if (onFormReset) {
       onFormReset();
     }
@@ -64,61 +59,75 @@ export default function MultipleAreaInputs({
 
   return (
     <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          {areas?.map((area) => (
-            <FormField
-              key={area.id}
-              control={form.control}
-              name="arquivosTecnicos"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{area.label}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      multiple
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        if (files) {
-                          const updatedFiles = Array.from(files).map(
-                            (file) => ({
-                              file,
-                              areaId: area.id,
-                            })
-                          );
-                          form.setValue("arquivosTecnicos", [
-                            ...field.value,
-                            ...updatedFiles,
-                          ]);
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage>
-                    {form.formState.errors.arquivosTecnicos?.message}
-                  </FormMessage>
-                </FormItem>
+      {submittedData ? (
+        <div>
+          {submittedData.arquivosTecnicos.map((area) => (
+            <div key={area.areaId} className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">
+                {areas.find((a) => a.id === area.areaId)?.label}
+              </h3>
+              <ul className="list-disc list-inside">
+                {area.files.map((file, index) => (
+                  <li key={index} className="text-blue-500 underline">
+                    <a
+                      href={URL.createObjectURL(file)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {file.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          <Button type="button" onClick={handleReset} className="m-1 w-full">
+            Recadastrar Arquivos
+          </Button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {areas.map((area, index) => (
+            <div key={area.id} className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {area.label}
+              </label>
+              <Controller
+                control={control}
+                name={`arquivosTecnicos.${index}.files`}
+                render={({ field }) => (
+                  <Input
+                    type="file"
+                    multiple
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files) {
+                        field.onChange(Array.from(files));
+                      }
+                    }}
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
+                  />
+                )}
+              />
+              {errors.arquivosTecnicos?.[index]?.files && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.arquivosTecnicos[index].files.message}
+                </p>
               )}
-            />
+            </div>
           ))}
           <div className="flex gap-4 mt-4">
             <Button type="submit" className="w-full">
-              Prepara Documentos
+              Preparar Arquivos
             </Button>
             <Button type="button" className="w-full" onClick={handleReset}>
-              Recadastrar
-            </Button>
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => console.log(form.formState.errors)}
-            >
-              Logar
+              Reset
             </Button>
           </div>
         </form>
-      </Form>
+      )}
     </div>
   );
-}
+};
+
+export default MultipleAreaInputs;
