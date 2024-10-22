@@ -14,14 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import CheckboxFormMultiplo from "./CheckBoxForm";
@@ -45,13 +38,6 @@ export default function ConsultantsArea() {
     setAreasSelecionadas([]);
   }
 
-  const form = useForm<IMultipleForm>({
-    resolver: zodResolver(MultipleFormSchema),
-    defaultValues: {
-      options: areasSelecionadas.map((area) => area.value),
-    },
-  });
-
   return (
     <div>
       <Dialog>
@@ -69,7 +55,6 @@ export default function ConsultantsArea() {
             selecionadas
           </DialogDescription>
           <CheckboxFormMultiplo
-            listagem
             labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
             opcoes={areasPreSelecionadas}
             onSubmit={handleAreasSubmit}
