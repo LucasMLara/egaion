@@ -1,12 +1,7 @@
 import CreateConsultant from "./CreateConsultant";
 import ConsultantTable from "../ConsultantTable/ConsultantTable";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IMultipleForm,
-  MultipleCheckBoxOptions,
-  MultipleFormSchema,
-} from "@/types/types";
+
+import { MultipleCheckBoxOptions } from "@/types/types";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +18,8 @@ export default function ConsultantsArea() {
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
   >([]);
-  const { Consultores, Qualificacao } = useEditalStore();
+  const { Consultores, Qualificacao, permissaoDeCadastroConsultor } =
+    useEditalStore();
   const areasPreSelecionadas = Qualificacao.map(({ name, areaId }) => ({
     value: name,
     label: name,
@@ -64,7 +60,10 @@ export default function ConsultantsArea() {
           <Dialog>
             {areasSelecionadas.length > 0 && (
               <DialogTrigger asChild>
-                <Button className="w-full flex items-center">
+                <Button
+                  className="w-full flex items-center"
+                  disabled={permissaoDeCadastroConsultor}
+                >
                   Adicionar Consultor
                 </Button>
               </DialogTrigger>
