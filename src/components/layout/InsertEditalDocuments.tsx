@@ -54,7 +54,7 @@ export default function InsertEditalDocuments() {
   const { errors } = form.formState;
 
   return (
-    <div className="grid place-content-center mx-auto text-center">
+    <div className="grid place-content-center text-center">
       {submitted || Documentos.length > 0 ? (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
           <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
@@ -87,7 +87,6 @@ export default function InsertEditalDocuments() {
             {mockInputsEmpresa.map((item, index) => {
               const categoryKey = Object.keys(item)[0];
               const filesArray = item[categoryKey];
-
               return (
                 <div key={index}>
                   <h2 className="text-lg text-center font-bold mb-4">
@@ -121,7 +120,7 @@ export default function InsertEditalDocuments() {
               );
             })}
             <Button
-              className="bg-gradient-primary w-full"
+              className="bg-gradient-primary w-full mb-5"
               type="submit"
               disabled={Object.keys(errors).length > 0}
             >
