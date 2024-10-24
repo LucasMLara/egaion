@@ -34,6 +34,18 @@ export default function ConsultantsArea() {
     setAreasSelecionadas([]);
   }
 
+  if (Qualificacao.length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-md">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-4">
+          Não há áreas cadastradas
+        </h1>
+        <p className="text-lg text-gray-600 text-center">
+          Por favor, cadastre as áreas antes de adicionar consultores
+        </p>
+      </div>
+    );
+
   return (
     <div>
       <Dialog>
