@@ -11,12 +11,6 @@ import { useRouter } from "next/navigation";
 import InsertQualificacaoTecnicaDocs from "@/components/layout/InsertQualificacaoTecnicaDocs";
 import ConsultantsArea from "@/components/layout/ConsultantsArea";
 import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export default function EditalId({
   params,
@@ -31,79 +25,30 @@ export default function EditalId({
     <section className="h-full">
       <Tabs defaultValue="consultants" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-6">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="content" className="text-center">
-                  <span className="hidden lg:inline">Edital</span>
-                  <FileText className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edital</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="documents" className="text-center">
-                  <span className="hidden lg:inline">Documentos</span>
-                  <File className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Documentos</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger
-                  value="qualificacaotecnica"
-                  className="text-center"
-                >
-                  <span className="hidden lg:inline">
-                    Qualificaçoes Técnicas
-                  </span>
-                  <UserCheck className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Qualificaçoes Técnicas</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="consultants" className="text-center">
-                  <span className="hidden lg:inline">Consultores</span>
-                  <UserCheck className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Consultores</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="anexos" className="text-center">
-                  <span className="hidden lg:inline">Anexos</span>
-                  <Paperclip className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Anexos</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <TabsTrigger value="historico" className="text-center">
-                  <span className="hidden lg:inline">Histórico</span>
-                  <History className="inline lg:hidden w-6 h-6" />
-                </TabsTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Histórico</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <TabsTrigger value="content" className="text-center">
+            <span className="hidden lg:inline">Edital</span>
+            <FileText className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="documents" className="text-center">
+            <span className="hidden lg:inline">Documentos</span>
+            <File className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="qualificacaotecnica" className="text-center">
+            <span className="hidden lg:inline">Qualificaçoes Técnicas</span>
+            <UserCheck className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="consultants" className="text-center">
+            <span className="hidden lg:inline">Consultores</span>
+            <UserCheck className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="anexos" className="text-center">
+            <span className="hidden lg:inline">Anexos</span>
+            <Paperclip className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="historico" className="text-center">
+            <span className="hidden lg:inline">Histórico</span>
+            <History className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="consultants">
           <ConsultantsArea />
@@ -334,17 +279,17 @@ export default function EditalId({
           </div>
         </TabsContent>
       </Tabs>
-      {/* <div className="flex justify-end p-5">
+      <div className="flex justify-end p-5">
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-          disabled={permissaoDeEnvio}
+          // disabled={permissaoDeEnvio}
           onClick={() => {
             router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro
         </Button>
-      </div> */}
+      </div>
     </section>
   );
 }
