@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { fileInputSchema, FileInputForm } from "@/types/types";
+import { useEditalStore } from "@/store/EditalRegister";
 
 interface MultipleAreaInputsProps {
   areas: { id: string; label: string }[];
@@ -22,6 +22,8 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     null
   );
 
+  const { alterarPermissaoConsultor } = useEditalStore();
+
   const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
     resolver: zodResolver(fileInputSchema),
     defaultValues: {
@@ -30,6 +32,12 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
   });
 
   const { errors } = formState;
+
+  useEffect(() => {
+    Object.keys(errors).length > 0 || !submittedData
+      ? alterarPermissaoConsultor(true)
+      : alterarPermissaoConsultor(false);
+  }, [errors, alterarPermissaoConsultor, submittedData]);
 
   const onSubmit = (data: FileInputForm) => {
     const hasFilesForAllAreas = data.arquivosTecnicos.every(
@@ -119,9 +127,6 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
           <div className="flex gap-4 mt-4">
             <Button type="submit" className="w-full">
               Preparar Arquivos
-            </Button>
-            <Button type="button" className="w-full" onClick={handleReset}>
-              Reset
             </Button>
           </div>
         </form>
