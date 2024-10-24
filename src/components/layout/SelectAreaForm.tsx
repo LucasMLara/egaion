@@ -35,7 +35,6 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
     const ultimaAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
     const uniqueId = nanoid();
     if (ultimaAreaSelecionada) {
-      // Check if the area already exists
       const areaExists = Qualificacao.some(
         (area) => area.name === ultimaAreaSelecionada
       );
@@ -85,7 +84,6 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
           </SelectContent>
         </Select>
 
-        {/* Render sublevels if available */}
         {selectedAreas[depth] &&
           selectedAreas[depth].id &&
           (
@@ -110,7 +108,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       <Button
         className="m-5 bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
         onClick={setAreaOnStore}
-        disabled={selectedAreas.length === 0} // Disable button if no area selected
+        disabled={selectedAreas.length === 0}
       >
         Confirmar Seleção
       </Button>
