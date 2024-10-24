@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -54,7 +54,7 @@ export default function AreaCard({
     activeArea,
     limparDocumentosTecnicos,
   } = useEditalStore();
-
+  useEditalStore.subscribe((state) => console.log(state.Qualificacao));
   const form = useForm<IEditalDoc & { natureza: string[] }>({
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [], natureza: [] },
@@ -69,6 +69,18 @@ export default function AreaCard({
     limparDocumentosTecnicos();
     setSubmitted(false);
   };
+
+  useEffect(() => {
+    const areaHasFiles = Qualificacao.some(
+      (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
+    );
+
+    if (areaHasFiles) {
+      setSubmitted(true);
+    } else {
+      setSubmitted(false);
+    }
+  }, [Qualificacao, activeArea, setSubmitted]);
 
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
