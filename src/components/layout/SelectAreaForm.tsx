@@ -23,7 +23,7 @@ interface SelectAreaProps {
 
 const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   const [selectedAreas, setSelectedAreas] = useState<Level[]>([]);
-  const { inserirArea, reset } = useEditalStore();
+  const { inserirArea } = useEditalStore();
 
   const handleSelect = (levelId: number, name: string, depth: number) => {
     const newSelection = [...selectedAreas];
