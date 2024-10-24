@@ -42,9 +42,8 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
         Consultores: [],
         AreaDocuments: [],
       };
-      // console.log("Nova área:", novaArea);
       inserirArea(novaArea);
-      setSelectedAreas([]); // Reset selections after confirmation
+      setSelectedAreas([]);
     } else {
       toast.error("Nenhuma área foi selecionada");
     }
