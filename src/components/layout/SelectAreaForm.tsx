@@ -23,7 +23,7 @@ interface SelectAreaProps {
 
 const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   const [selectedAreas, setSelectedAreas] = useState<Level[]>([]);
-  const { inserirArea } = useEditalStore();
+  const { inserirArea, Qualificacao } = useEditalStore();
 
   const handleSelect = (levelId: number, name: string, depth: number) => {
     const newSelection = [...selectedAreas];
@@ -35,15 +35,24 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
     const ultimaAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
     const uniqueId = nanoid();
     if (ultimaAreaSelecionada) {
-      const novaArea = {
-        naturezaPrestacao: [],
-        name: ultimaAreaSelecionada,
-        areaId: uniqueId,
-        Consultores: [],
-        AreaDocuments: [],
-      };
-      inserirArea(novaArea);
-      setSelectedAreas([]);
+      // Check if the area already exists
+      const areaExists = Qualificacao.some(
+        (area) => area.name === ultimaAreaSelecionada
+      );
+
+      if (areaExists) {
+        toast.error("A área selecionada já está inclusa");
+      } else {
+        const novaArea = {
+          naturezaPrestacao: [],
+          name: ultimaAreaSelecionada,
+          areaId: uniqueId,
+          Consultores: [],
+          AreaDocuments: [],
+        };
+        inserirArea(novaArea);
+        setSelectedAreas([]);
+      }
     } else {
       toast.error("Nenhuma área foi selecionada");
     }
