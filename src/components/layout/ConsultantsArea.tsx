@@ -12,7 +12,7 @@ import {
 
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
-import CheckboxFormMultiplo from "./CheckBoxForm";
+import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
 import { useState } from "react";
 export default function ConsultantsArea() {
   const [areasSelecionadas, setAreasSelecionadas] = useState<
