@@ -57,7 +57,10 @@ type editalActions = {
   setActiveArea: (areaId: string) => void;
   clearActiveArea: () => void;
   setEditalId: (editalId: string) => void;
-  setNaturezaPrestacao: (naturezaPrestacao: string[], areaId: string) => void;
+  setNaturezaPrestacao: (
+    naturezaPrestacao: NaturezaPrestacao[],
+    areaId: string
+  ) => void;
   clearNaturezaPrestacao: (areaId: string) => void;
   vincularAreaConsultor: (areaId: string, consultorId: string) => void;
   desvincularAreaConsultor: (areaId: string, consultorId: string) => void;
@@ -132,9 +135,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
               return {
                 ...qualificacao,
                 naturezaPrestacao: naturezaPrestacao.map((np) => ({
-                  label: np,
-                  value: np,
-                  id: np,
+                  ...np,
                   areaId: areaId,
                 })),
               };
