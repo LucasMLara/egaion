@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DocSchema, IEditalDoc, MultipleCheckBoxOptions } from "@/types/types";
-import CheckboxFormMultiplo from "./CheckBoxForm";
+import CheckboxFormMultiplo from "./CheckBoxNaturezasForm";
 import { useEditalStore, Documents } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 
