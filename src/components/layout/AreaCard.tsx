@@ -40,7 +40,7 @@ export default function AreaCard({
   area: string;
   areaId: string;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedFiles, setSubmittedFiles] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedNaturezas, setSelectedNaturezas] = useState<
     MultipleCheckBoxOptions[]
@@ -53,8 +53,10 @@ export default function AreaCard({
     cadastrarDocumentosTecnicos,
     activeArea,
     limparDocumentosTecnicos,
+    setNaturezaPrestacao,
+    clearNaturezaPrestacao,
   } = useEditalStore();
-  useEditalStore.subscribe((state) => console.log(state.Qualificacao));
+
   const form = useForm<IEditalDoc & { natureza: string[] }>({
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [], natureza: [] },
@@ -62,12 +64,16 @@ export default function AreaCard({
 
   const handleNaturezaSubmit = (naturezas: MultipleCheckBoxOptions[]) => {
     setSelectedNaturezas(naturezas);
+    const naturezaPrestacao = naturezas.map((natureza) => ({
+      ...natureza,
+      areaId: activeArea,
+    }));
+    setNaturezaPrestacao(naturezaPrestacao, activeArea);
   };
 
-  const handleReset = () => {
+  const handleResetNaturezas = () => {
     setSelectedNaturezas([]);
-    limparDocumentosTecnicos();
-    setSubmitted(false);
+    clearNaturezaPrestacao(activeArea);
   };
 
   useEffect(() => {
@@ -76,11 +82,11 @@ export default function AreaCard({
     );
 
     if (areaHasFiles) {
-      setSubmitted(true);
+      setSubmittedFiles(true);
     } else {
-      setSubmitted(false);
+      setSubmittedFiles(false);
     }
-  }, [Qualificacao, activeArea, setSubmitted]);
+  }, [Qualificacao, activeArea, submittedFiles]);
 
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Documents[] = [];
@@ -103,8 +109,13 @@ export default function AreaCard({
     });
 
     cadastrarDocumentosTecnicos(activeArea, documentos);
-    setSubmitted(true);
+    setSubmittedFiles(true);
     form.reset();
+  };
+
+  const handleResetDocuments = () => {
+    setSelectedNaturezas([]);
+    limparDocumentosTecnicos();
   };
 
   return (
@@ -124,7 +135,6 @@ export default function AreaCard({
           Prossiga para a inserção dos dados necessários da área correspondente
           ou remova a área caso tenha inserido por engano.
         </DialogHeader>
-
         <DialogFooter>
           <Dialog>
             <DialogTrigger asChild>
@@ -135,7 +145,7 @@ export default function AreaCard({
             <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="flex flex-col">
-                {submitted ? (
+                {submittedFiles ? (
                   <div className="bg-gray-100 p-4 rounded-lg shadow-md">
                     <h2 className="text-3xl font-semibold border-b pb-2">
                       Documentos Submetidos
@@ -158,7 +168,10 @@ export default function AreaCard({
                         ))
                       )}
                     </ul>
-                    <Button className="w-full mt-4" onClick={handleReset}>
+                    <Button
+                      className="w-full mt-4"
+                      onClick={handleResetDocuments}
+                    >
                       Recadastrar Documentos
                     </Button>
                   </div>
@@ -168,7 +181,6 @@ export default function AreaCard({
                       {mockDocumentosAreaConsultor.map((item, index) => {
                         const categoryKey = Object.keys(item)[0];
                         const filesArray = item[categoryKey];
-
                         return (
                           <div key={index}>
                             <h2 className="text-lg text-center font-bold mb-4">
@@ -221,7 +233,7 @@ export default function AreaCard({
                     labelSelecionados="Natureza da Prestação"
                     opcoes={naturezasPrestacao}
                     onSubmit={handleNaturezaSubmit}
-                    onReset={handleReset}
+                    onReset={handleResetNaturezas}
                     opcoesSelecionadas={selectedNaturezas}
                   />
                 </div>
