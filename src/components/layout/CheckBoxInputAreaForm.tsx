@@ -26,7 +26,6 @@ interface CheckboxFormMultiploProps {
   onReset: () => void;
   opcoesSelecionadas: MultipleCheckBoxOptions[];
   labelSelecionados: string;
-  listagem?: boolean;
 }
 
 export default function CheckboxFormMultiplo({
@@ -34,8 +33,6 @@ export default function CheckboxFormMultiplo({
   onSubmit,
   onReset,
   opcoesSelecionadas,
-  labelSelecionados,
-  listagem,
 }: CheckboxFormMultiploProps) {
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
@@ -58,24 +55,10 @@ export default function CheckboxFormMultiplo({
 
   return temOpcoes ? (
     <div className="flex flex-col gap-4">
-      {listagem ? (
-        <>
-          <h2>{labelSelecionados}</h2>
-          <ul>
-            {opcoesSelecionadas.map((opcao) => (
-              <li key={opcao.id}>{opcao.label}</li>
-            ))}
-          </ul>
-          <Button onClick={onReset}>Selecionar Novamente</Button>
-        </>
-      ) : (
-        <>
-          <MultipleAreaInputs areas={opcoesSelecionadas} />
-          <Button onClick={onReset} variant="ghost">
-            Selecionar Novamente
-          </Button>
-        </>
-      )}
+      <MultipleAreaInputs areas={opcoesSelecionadas} />
+      <Button onClick={onReset} variant="ghost">
+        Selecionar Novamente
+      </Button>
     </div>
   ) : (
     <Form {...form}>
