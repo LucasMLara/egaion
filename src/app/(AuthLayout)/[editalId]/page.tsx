@@ -20,7 +20,7 @@ export default function EditalId({
   };
 }) {
   const router = useRouter();
-  const { Qualificacao, Consultores } = useEditalStore();
+  const { permissaoDeCadastroEdital } = useEditalStore();
   return (
     <section className="h-full">
       <Tabs defaultValue="consultants" className="w-auto m-4">
@@ -282,7 +282,7 @@ export default function EditalId({
       <div className="flex justify-end p-5">
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-          // disabled={permissaoDeEnvio}
+          disabled={!permissaoDeCadastroEdital}
           onClick={() => {
             router.push(`/${params.editalId}/confirmarDados`);
           }}
