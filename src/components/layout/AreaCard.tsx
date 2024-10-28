@@ -41,6 +41,7 @@ export default function AreaCard({
   areaId: string;
 }) {
   const [submittedFiles, setSubmittedFiles] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [selectedNaturezas, setSelectedNaturezas] = useState<
     MultipleCheckBoxOptions[]
