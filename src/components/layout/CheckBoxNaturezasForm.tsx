@@ -18,24 +18,21 @@ import {
   MultipleFormSchema,
   MultipleCheckBoxOptions,
 } from "@/types/types";
-import MultipleAreaInputs from "./MultipleAreaInputs";
-
+import { useEditalStore } from "@/store/EditalRegister";
+import { useState } from "react";
 interface CheckboxFormMultiploProps {
   opcoes: MultipleCheckBoxOptions[];
   onSubmit: (opcoes: MultipleCheckBoxOptions[]) => void;
   onReset: () => void;
   opcoesSelecionadas: MultipleCheckBoxOptions[];
   labelSelecionados: string;
-  listagem?: boolean;
 }
-
 export default function CheckboxFormMultiplo({
   opcoes,
   onSubmit,
   onReset,
   opcoesSelecionadas,
   labelSelecionados,
-  listagem,
 }: CheckboxFormMultiploProps) {
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
@@ -43,6 +40,10 @@ export default function CheckboxFormMultiplo({
       options: opcoesSelecionadas.map((opcao) => opcao.label),
     },
   });
+
+  useEditalStore.subscribe((state) =>
+    console.log("Mudando qualificacao", state.Qualificacao)
+  );
 
   function handleSubmit(data: IMultipleForm) {
     onSubmit(
@@ -58,24 +59,13 @@ export default function CheckboxFormMultiplo({
 
   return temOpcoes ? (
     <div className="flex flex-col gap-4">
-      {listagem ? (
-        <>
-          <h2>{labelSelecionados}</h2>
-          <ul>
-            {opcoesSelecionadas.map((opcao) => (
-              <li key={opcao.id}>{opcao.label}</li>
-            ))}
-          </ul>
-          <Button onClick={onReset}>Selecionar Novamente</Button>
-        </>
-      ) : (
-        <>
-          <MultipleAreaInputs areas={opcoesSelecionadas} />
-          <Button onClick={onReset} variant="ghost">
-            Selecionar Novamente
-          </Button>
-        </>
-      )}
+      <h2>{labelSelecionados}</h2>
+      <ul>
+        {opcoesSelecionadas.map((opcao) => (
+          <li key={opcao.id}>{opcao.label}</li>
+        ))}
+      </ul>
+      <Button onClick={onReset}>Selecionar Novamente</Button>
     </div>
   ) : (
     <Form {...form}>
