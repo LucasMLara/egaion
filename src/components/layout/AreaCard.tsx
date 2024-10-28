@@ -229,7 +229,6 @@ export default function AreaCard({
                 )}
                 <div className="flex gap-2 justify-evenly m-2">
                   <CheckboxFormMultiplo
-                    listagem
                     labelSelecionados="Natureza da Prestação"
                     opcoes={naturezasPrestacao}
                     onSubmit={handleNaturezaSubmit}
