@@ -41,10 +41,6 @@ export default function CheckboxFormMultiplo({
     },
   });
 
-  useEditalStore.subscribe((state) =>
-    console.log("Mudando qualificacao", state.Qualificacao)
-  );
-
   function handleSubmit(data: IMultipleForm) {
     onSubmit(
       data.options
