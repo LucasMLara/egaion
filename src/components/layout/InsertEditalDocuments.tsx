@@ -22,7 +22,12 @@ export default function InsertEditalDocuments() {
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
-  const { cadastrarDocumento, limparDocumentos, Documentos } = useEditalStore();
+  const {
+    cadastrarDocumento,
+    limparDocumentos,
+    Documentos,
+    alterarPermissaoEdital,
+  } = useEditalStore();
 
   const handleReupload = () => {
     limparDocumentos();
@@ -52,6 +57,11 @@ export default function InsertEditalDocuments() {
   };
 
   const { errors } = form.formState;
+  useEffect(() => {
+    Object.keys(errors).length > 0 || Documentos.length === 0
+      ? alterarPermissaoEdital(false)
+      : alterarPermissaoEdital(true);
+  }, [errors, alterarPermissaoEdital, Documentos]);
 
   return (
     <div className="grid place-content-center text-center">
