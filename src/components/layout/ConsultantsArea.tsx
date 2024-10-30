@@ -13,11 +13,12 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 export default function ConsultantsArea() {
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
   >([]);
+
   const {
     Consultores,
     Qualificacao,
@@ -34,6 +35,9 @@ export default function ConsultantsArea() {
   function handleAreasSubmit(areas: MultipleCheckBoxOptions[]) {
     setAreasSelecionadas(areas);
   }
+  const handleConsultantAreas = useMemo(() => {
+    return areasSelecionadas.map(({ id }) => id);
+  }, [areasSelecionadas]);
 
   function handleReset() {
     setAreasSelecionadas([]);
@@ -121,7 +125,7 @@ export default function ConsultantsArea() {
               <DialogDescription>
                 Atente-se aos dados inseridos antes de submeter as informações
               </DialogDescription>
-              <CreateConsultant />
+              <CreateConsultant consultantAreas={handleConsultantAreas} />
             </DialogContent>
           </Dialog>
         </DialogContent>
