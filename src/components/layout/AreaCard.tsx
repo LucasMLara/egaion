@@ -32,6 +32,7 @@ import { DocSchema, IEditalDoc, MultipleCheckBoxOptions } from "@/types/types";
 import CheckboxFormMultiplo from "./CheckBoxNaturezasForm";
 import { useEditalStore, Documents } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
+import { toast } from "sonner";
 
 export default function AreaCard({
   area,
@@ -56,6 +57,7 @@ export default function AreaCard({
     limparDocumentosTecnicos,
     setNaturezaPrestacao,
     clearNaturezaPrestacao,
+    limparConsultores,
   } = useEditalStore();
 
   const form = useForm<IEditalDoc & { natureza: string[] }>({
@@ -71,7 +73,13 @@ export default function AreaCard({
     }));
     setNaturezaPrestacao(naturezaPrestacao, activeArea);
   };
-
+  const handleRemoveArea = (areaId: string) => {
+    if (Qualificacao.length === 1) {
+      limparConsultores();
+      toast.warning("Removido todas as áreas. Os Consultores foram removidos");
+    }
+    removerArea(areaId);
+  };
   const handleResetNaturezas = () => {
     setSelectedNaturezas([]);
     clearNaturezaPrestacao(activeArea);
@@ -252,7 +260,7 @@ export default function AreaCard({
               <DialogFooter>
                 <Button
                   variant="destructive"
-                  onClick={() => removerArea(areaId)}
+                  onClick={() => handleRemoveArea(areaId)}
                 >
                   Sim, Tenho certeza. Remover Área!
                 </Button>
