@@ -10,13 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useMyEditals } from "@/store/useMyEditals";
 import { nanoid } from "nanoid";
 
 export default function ConfirmaDados() {
-  const { Documentos, Qualificacao } = useEditalStore();
   const { setMyEdital } = useMyEditals();
   const router = useRouter();
   function cadastrarEdital() {
@@ -32,29 +30,14 @@ export default function ConfirmaDados() {
 
   return (
     <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-        Confirmação de Dados
+      <h3 className="scroll-m-20 text-2xl font-bold tracking-tight mb-5">
+        Atenção:
       </h3>
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        Consultores
+        Antes de prosseguir, por favor, verifique todos os dados inseridos.
+        Certifique-se de que todas as informações estão corretas, pois após a
+        confirmação, não será possível alterá-las.
       </h4>
-      {Qualificacao.map((area) =>
-        area.Consultores.map((consultor) => (
-          <p key={consultor.id}>
-            {consultor.nome} - {area.name}
-          </p>
-        ))
-      )}
-
-      <h4 className="text-xl font-semibold tracking-tight">Documentos</h4>
-
-      <ul className="grid xl:grid-cols-2 gap-2 p-2">
-        {Documentos.map((documento) => (
-          <li key={documento.id}>
-            <Label>{documento.title}</Label>
-          </li>
-        ))}
-      </ul>
       <div className="flex flex-wrap m-4 p-4 justify-evenly w-full">
         <Button onClick={() => router.back()} variant="ghost">
           Voltar
