@@ -48,8 +48,6 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
       toast.error("Por favor, insira um arquivo para cada área selecionada!");
       return;
     }
-
-    console.log("Form submitted:", data);
     setSubmittedData(data);
 
     if (onFormSubmit) {
