@@ -106,6 +106,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
                 render={({ field }) => (
                   <Input
                     type="file"
+                    accept="application/pdf, image/jpeg, image/jpg"
                     multiple
                     onChange={(e) => {
                       const files = e.target.files;
