@@ -28,6 +28,7 @@ export default function InsertEditalDocuments() {
     Documentos,
     alterarPermissaoEdital,
     Qualificacao,
+    Consultores,
   } = useEditalStore();
 
   const handleReupload = () => {
@@ -60,7 +61,7 @@ export default function InsertEditalDocuments() {
   const { errors } = form.formState;
 
   useEffect(() => {
-    Qualificacao.map(({ naturezaPrestacao, AreaDocuments, Consultores }) => {
+    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
       if (
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
@@ -72,7 +73,7 @@ export default function InsertEditalDocuments() {
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, Documentos]);
+  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
 
   return (
     <div className="grid place-content-center text-center">

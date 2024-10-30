@@ -5,10 +5,11 @@ import { useEditalStore } from "@/store/EditalRegister";
 import { useEffect } from "react";
 
 export default function InsertQualificacaoTecnicaDocs() {
-  const { Qualificacao, alterarPermissaoEdital, Documentos } = useEditalStore();
+  const { Qualificacao, alterarPermissaoEdital, Documentos, Consultores } =
+    useEditalStore();
 
   useEffect(() => {
-    Qualificacao.map(({ naturezaPrestacao, AreaDocuments, Consultores }) => {
+    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
       if (
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
@@ -20,7 +21,7 @@ export default function InsertQualificacaoTecnicaDocs() {
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, Documentos]);
+  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
 
   return (
     <div>

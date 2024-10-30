@@ -13,13 +13,18 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function ConsultantsArea() {
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
   >([]);
-  const { Consultores, Qualificacao, permissaoDeCadastroConsultor } =
-    useEditalStore();
+  const {
+    Consultores,
+    Qualificacao,
+    permissaoDeCadastroConsultor,
+    Documentos,
+    alterarPermissaoEdital,
+  } = useEditalStore();
   const areasPreSelecionadas = Qualificacao.map(({ name, areaId }) => ({
     value: name,
     label: name,
@@ -33,6 +38,21 @@ export default function ConsultantsArea() {
   function handleReset() {
     setAreasSelecionadas([]);
   }
+
+  useEffect(() => {
+    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+      if (
+        naturezaPrestacao.length === 0 ||
+        AreaDocuments.length === 0 ||
+        Consultores.length === 0 ||
+        Documentos.length === 0
+      ) {
+        alterarPermissaoEdital(false);
+      } else {
+        alterarPermissaoEdital(true);
+      }
+    });
+  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
 
   if (Qualificacao.length === 0)
     return (
@@ -48,6 +68,22 @@ export default function ConsultantsArea() {
 
   return (
     <div>
+      <Button
+        onClick={() => {
+          Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+            console.log(
+              "naturezaPrestacao",
+              naturezaPrestacao,
+              "AreaDocuments",
+              AreaDocuments,
+              "Consultores",
+              Consultores
+            );
+          });
+        }}
+      >
+        LOGAR
+      </Button>
       <Dialog>
         <DialogTrigger asChild>
           <Button className="md:w-64 w-full my-10 flex items-center">

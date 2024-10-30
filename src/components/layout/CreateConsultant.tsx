@@ -21,7 +21,8 @@ import { useRef } from "react";
 import { formatCpf, formatPhone } from "@/lib/formatters";
 
 export default function CreateConsultant() {
-  const { cadastrarConsultor } = useEditalStore();
+  const { cadastrarConsultor, vincularAreaConsultor, activeArea } =
+    useEditalStore();
 
   const form = useForm<IConsultant>({
     resolver: zodResolver(consultantSchema),
@@ -68,6 +69,7 @@ export default function CreateConsultant() {
     const uniqueId = nanoid();
 
     cadastrarConsultor({ ...data, id: uniqueId });
+    vincularAreaConsultor(activeArea, uniqueId);
     toast.success("Consultor cadastrado com sucesso!");
 
     resetConsultantForm();
