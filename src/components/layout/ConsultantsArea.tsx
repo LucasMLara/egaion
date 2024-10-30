@@ -72,22 +72,6 @@ export default function ConsultantsArea() {
 
   return (
     <div>
-      <Button
-        onClick={() => {
-          Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
-            console.log(
-              "naturezaPrestacao",
-              naturezaPrestacao,
-              "AreaDocuments",
-              AreaDocuments,
-              "Consultores",
-              Consultores
-            );
-          });
-        }}
-      >
-        LOGAR
-      </Button>
       <Dialog>
         <DialogTrigger asChild>
           <Button className="md:w-64 w-full my-10 flex items-center">
