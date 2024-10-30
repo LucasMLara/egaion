@@ -82,14 +82,14 @@ export default function InsertEditalDocuments() {
           <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
             Documentos Submetidos
           </h2>
-          <ul>
+          <ul className="list-disc list-inside mt-4">
             {Documentos.map((doc) => (
               <li key={doc.id} className="my-2">
                 <a
                   href={doc.blob}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="leading-7 [&:not(:first-child)]:mt-6"
+                  className="leading-7 [&:not(:first-child)]:mt-6 text-blue-500 underline"
                 >
                   {doc.title}
                 </a>
