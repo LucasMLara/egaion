@@ -27,7 +27,6 @@ export type Qualificacao = {
   areaId: string;
   naturezaPrestacao: NaturezaPrestacao[];
   AreaDocuments: Documents[];
-  Consultores: IConsultant[];
 };
 
 type IEditalStore = {
