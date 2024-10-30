@@ -43,6 +43,7 @@ type IEditalStore = {
 };
 
 type editalActions = {
+  limparConsultores: () => void;
   cadastrarConsultor: (consultor: IConsultant) => void;
   reset: () => void;
   removerConsultor: (consultorId: string) => void;
@@ -62,8 +63,6 @@ type editalActions = {
     areaId: string
   ) => void;
   clearNaturezaPrestacao: (areaId: string) => void;
-  vincularAreaConsultor: (areaId: string, consultorId: string) => void;
-  desvincularAreaConsultor: (areaId: string, consultorId: string) => void;
 };
 
 const initialState: IEditalStore = {
@@ -82,6 +81,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set) => ({
       ...initialState,
+      limparConsultores: () => set({ Consultores: [] }),
       alterarPermissaoEdital: (permitir) =>
         set({ permissaoDeCadastroEdital: permitir }),
       alterarPermissaoConsultor: (permitir) =>
@@ -90,43 +90,6 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       clearActiveArea: () => set({ activeArea: "" }),
       reset: () => {
         set(initialState);
-      },
-
-      vincularAreaConsultor: (areaId, consultorId) => {
-        set((state) => ({
-          Qualificacao: state.Qualificacao.map((qualificacao) => {
-            if (qualificacao.areaId === areaId) {
-              const consultor = state.Consultores.find(
-                (consultor) => consultor.id === consultorId
-              );
-
-              if (consultor) {
-                return {
-                  ...qualificacao,
-
-                  Consultores: [...qualificacao.Consultores, consultor],
-                };
-              }
-            }
-
-            return qualificacao;
-          }),
-        }));
-      },
-      desvincularAreaConsultor: (areaId, consultorId) => {
-        set((state) => ({
-          Qualificacao: state.Qualificacao.map((qualificacao) => {
-            if (qualificacao.areaId === areaId) {
-              return {
-                ...qualificacao,
-                Consultores: qualificacao.Consultores.filter(
-                  (consultor) => consultor.id !== consultorId
-                ),
-              };
-            }
-            return qualificacao;
-          }),
-        }));
       },
       setNaturezaPrestacao: (naturezaPrestacao, areaId) => {
         set((state) => ({
