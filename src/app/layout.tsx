@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Ubuntu as FontSans } from "next/font/google"; // Change this line
+import { Ubuntu as FontSans } from "next/font/google";
 import "./styles/globals.css";
 import { Toaster } from "sonner";
 
