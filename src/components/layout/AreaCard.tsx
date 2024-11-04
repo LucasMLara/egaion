@@ -120,6 +120,7 @@ export default function AreaCard({
     cadastrarDocumentosTecnicos(activeArea, documentos);
     setSubmittedFiles(true);
     form.reset();
+    toast.success("Documentos preparados com sucesso!");
   };
 
   const handleResetDocuments = () => {
