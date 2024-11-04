@@ -81,10 +81,10 @@ export default function ConsultantsArea() {
         <DialogContent className="md:min-w-[720px] overflow-y-auto h-2/6 md:h-1/2">
           <DialogTitle>Em quais áreas esse consultor irá atuar? </DialogTitle>
           <DialogDescription>
-            Selecione uma ou mais áreas - (Lembre-se de selecionar todas as
-            áreas previamente antes de adicionar seus consultores). Atente-se em
-            anexar todos os documentos técnicos referentes À todas as áreas
-            selecionadas
+            Selecione uma ou mais áreas (Lembre-se de selecionar todas as áreas
+            previamente antes de adicionar seus consultores). Atente-se em
+            anexar todos os documentos técnicos referentes à todas as áreas
+            selecionadas.
           </DialogDescription>
           <CheckboxFormMultiplo
             labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
