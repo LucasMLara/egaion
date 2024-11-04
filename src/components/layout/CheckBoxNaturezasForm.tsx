@@ -20,6 +20,7 @@ import {
 } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 interface CheckboxFormMultiploProps {
   opcoes: MultipleCheckBoxOptions[];
   onSubmit: (opcoes: MultipleCheckBoxOptions[]) => void;
@@ -60,6 +61,7 @@ export default function CheckboxFormMultiplo({
           (opcao): opcao is MultipleCheckBoxOptions => opcao !== undefined
         )
     );
+    toast.success("Opções selecionadas com sucesso!");
   }
 
   return submittedAreas ? (
