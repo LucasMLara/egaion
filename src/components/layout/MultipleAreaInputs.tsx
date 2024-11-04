@@ -50,6 +50,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     }
     setSubmittedData(data);
 
+    toast.success("Arquivos preparados com sucesso!");
     if (onFormSubmit) {
       onFormSubmit(data);
     }
