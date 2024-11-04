@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -86,7 +87,7 @@ export default function CreateConsultant({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="flex flex-col gap-4 h-96 overflow-auto px-2"
         >
           <div>
             <FormField
@@ -185,6 +186,7 @@ export default function CreateConsultant({
               )}
             />
           </div>
+          <Separator />
           <div>
             <FormField
               control={form.control}
@@ -282,28 +284,6 @@ export default function CreateConsultant({
                 </FormItem>
               )}
             />
-            {/* <FormField
-              name="arquivosTecnicos"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Arquivos Técnicos</FormLabel>
-                  <FormControl>
-                    <Input
-                      multiple
-                      accept="application/pdf, image/jpeg, image/jpg"
-                      type="file"
-                      ref={arquivosTecnicos}
-                      className="transition-all"
-                      onChange={(e) => {
-                        const filesArray = Array.from(e.target.files || []);
-                        field.onChange(filesArray);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <div className="flex place-content-center mt-3">
               <Button
                 className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
