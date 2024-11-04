@@ -71,7 +71,7 @@ export const accreditationData = [
 
 export const mockInputsEmpresa: mockInputFiles[] = [
   {
-    "Habilitacão Jurídica": [
+    "Habilitação Jurídica": [
       {
         comprovanteDeInscricao:
           "Comprovante de Inscrição e de Situação Cadastral do CNPJ",
