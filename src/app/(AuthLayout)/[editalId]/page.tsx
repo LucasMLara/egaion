@@ -35,7 +35,7 @@ export default function EditalId({
             <File className="inline lg:hidden w-6 h-6" />
           </TabsTrigger>
           <TabsTrigger value="qualificacaotecnica" className="text-center">
-            <span className="hidden lg:inline">Qualificaçoes Técnicas</span>
+            <span className="hidden lg:inline">Qualificações Técnicas</span>
             <UserCheck className="inline lg:hidden w-6 h-6" />
           </TabsTrigger>
           <TabsTrigger value="consultants" className="text-center">
