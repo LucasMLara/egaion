@@ -15,6 +15,7 @@ import { DocSchema, IEditalDoc } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
 import { Documents, useEditalStore } from "@/store/EditalRegister";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function InsertEditalDocuments() {
   const [submitted, setSubmitted] = useState(false);
@@ -53,6 +54,7 @@ export default function InsertEditalDocuments() {
         });
       });
     });
+    toast.success("Documentos preparados com sucesso!");
     cadastrarDocumento(documentos);
     setSubmitted(true);
     form.reset();
