@@ -47,7 +47,7 @@ export default function Login() {
                   href="/esquecisenha"
                   className="ml-auto inline-block text-sm underline"
                 >
-                  Esqueceu sua senha ?
+                  Esqueceu sua senha?
                 </Link>
               </div>
               <Input
