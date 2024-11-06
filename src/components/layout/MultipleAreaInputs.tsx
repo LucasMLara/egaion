@@ -89,7 +89,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
             </div>
           ))}
           <Button type="button" onClick={handleReset} className="m-1 w-full">
-            Recadastrar Arquivos
+            Recadastrar Documentos
           </Button>
         </div>
       ) : (
@@ -126,7 +126,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
           ))}
           <div className="flex gap-4 mt-4">
             <Button type="submit" className="w-full">
-              Preparar Arquivos
+              Inserir Documentos
             </Button>
           </div>
         </form>

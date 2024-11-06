@@ -149,7 +149,7 @@ export default function AreaCard({
           <Dialog>
             <DialogTrigger asChild>
               <Button onClick={() => setActiveArea(areaId)}>
-                Inserir Dados
+                Inserir Documentos
               </Button>
             </DialogTrigger>
             <DialogContent className=" overflow-auto h-5/6">

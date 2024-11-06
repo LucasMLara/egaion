@@ -39,7 +39,7 @@ export default function EditalId({
             <UserCheck className="inline lg:hidden w-6 h-6" />
           </TabsTrigger>
           <TabsTrigger value="consultants" className="text-center">
-            <span className="hidden lg:inline">Consultores</span>
+            <span className="hidden lg:inline">Equipe Técnica</span>
             <UserCheck className="inline lg:hidden w-6 h-6" />
           </TabsTrigger>
           <TabsTrigger value="anexos" className="text-center">
