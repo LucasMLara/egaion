@@ -124,7 +124,12 @@ export default function InsertEditalDocuments() {
                         name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
                         render={({ field }) => (
                           <FormItem className="m-2">
-                            <FormLabel>{label}</FormLabel>
+                            <div className="flex flex-col">
+                              <FormLabel className="text-md">{label}</FormLabel>
+                              <FormLabel className="text-sm font-light ">
+                                Selecione seu arquivo clicando na área abaixo
+                              </FormLabel>
+                            </div>
                             <FormControl>
                               <Input
                                 accept="application/pdf, image/jpeg, image/jpg"
