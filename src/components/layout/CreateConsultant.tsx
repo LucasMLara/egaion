@@ -193,9 +193,14 @@ export default function CreateConsultant({
               name="consultantCPF"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Documentos Pessoais (Carteira de Trabalho e/ou CPF){" "}
-                  </FormLabel>
+                  <div className="flex flex-col items-center my-4">
+                    <FormLabel>
+                      Documentos Pessoais (Carteira de Trabalho e/ou CPF){" "}
+                    </FormLabel>
+                    <FormLabel className="text-sm font-light ">
+                      Selecione seu arquivo clicando na área abaixo
+                    </FormLabel>
+                  </div>
                   <FormControl>
                     <Input
                       accept="application/pdf, image/jpeg, image/jpg"
@@ -218,7 +223,12 @@ export default function CreateConsultant({
               name="comprovanteVinculoCNPJ"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Comprovante de Vínculo com PJ</FormLabel>
+                  <div className="flex flex-col items-center my-4">
+                    <FormLabel>Comprovante de Vínculo com PJ</FormLabel>
+                    <FormLabel className="text-sm font-light ">
+                      Selecione seu arquivo clicando na área abaixo
+                    </FormLabel>
+                  </div>
                   <FormControl>
                     <Input
                       type="file"
@@ -241,7 +251,12 @@ export default function CreateConsultant({
               name="comprovanteFormacaoAcademica"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Comprovante de Formação Acadêmica</FormLabel>
+                  <div className="flex flex-col items-center my-4">
+                    <FormLabel>Comprovante de Formação Acadêmica</FormLabel>
+                    <FormLabel className="text-sm font-light ">
+                      Selecione seu arquivo clicando na área abaixo
+                    </FormLabel>
+                  </div>
                   <FormControl>
                     <Input
                       accept="application/pdf, image/jpeg, image/jpg"
@@ -264,9 +279,14 @@ export default function CreateConsultant({
               name="registroProfissionalClasse"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Registro Profissional em Órgão de Classe
-                  </FormLabel>
+                  <div className="flex flex-col items-center my-4">
+                    <FormLabel>
+                      Registro Profissional em Órgão de Classe
+                    </FormLabel>
+                    <FormLabel className="text-sm font-light ">
+                      Selecione seu arquivo clicando na área abaixo
+                    </FormLabel>
+                  </div>
                   <FormControl>
                     <Input
                       accept="application/pdf, image/jpeg, image/jpg"
