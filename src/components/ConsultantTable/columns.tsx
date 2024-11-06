@@ -28,11 +28,11 @@ const ConsultantActionsCell = ({ memberId }: { memberId: string }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Selecione</DropdownMenuLabel>
+          <DropdownMenuLabel>Opções</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href={`/team/${memberId}`}>
+          {/* <Link href={`/team/${memberId}`}>
             <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
-          </Link>
+          </Link> */}
           <DropdownMenuItem onClick={() => removerConsultor(memberId)}>
             Remover Consultor
           </DropdownMenuItem>
