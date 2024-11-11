@@ -131,10 +131,11 @@ export default function AreaCard({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Card className="size-52 cursor-pointer hover:shadow-xl transition-all">
+        <Card className="size-full cursor-pointer hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle>{area}</CardTitle>
-            <CardDescription>Area description</CardDescription>
+            <div className="flex items-center justify-center">  
+              <CardTitle>{area}</CardTitle>
+            </div>
           </CardHeader>
         </Card>
       </DialogTrigger>
@@ -154,6 +155,7 @@ export default function AreaCard({
             </DialogTrigger>
             <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
+              <DialogDescription className="text-center text-xl">{area}</DialogDescription>
               <DialogDescription className="flex flex-col">
                 {submittedFiles ? (
                   <div className="bg-gray-100 p-4 rounded-lg shadow-md">
