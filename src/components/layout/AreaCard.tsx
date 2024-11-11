@@ -126,6 +126,7 @@ export default function AreaCard({
   const handleResetDocuments = () => {
     setSelectedNaturezas([]);
     limparDocumentosTecnicos();
+    toast.warning("Documentos removidos com sucesso!");
   };
 
   return (
@@ -180,12 +181,23 @@ export default function AreaCard({
                         ))
                       )}
                     </ul>
-                    <Button
-                      className="w-full mt-4"
-                      onClick={handleResetDocuments}
-                    >
-                      Recadastrar Documentos
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="w-full mt-4">Recadastrar Documentos</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogTitle>Recadastrar Documentos</DialogTitle>
+                        <DialogDescription>
+                          Tem certeza que deseja recadastrar os documentos?
+                          Você precisará recadastrar todos os documentos da área novamente.
+                        </DialogDescription>
+                        <DialogFooter>
+                          <Button variant='destructive' onClick={handleResetDocuments}>
+                            Sim, Tenho certeza. Recadastrar Documentos!
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 ) : (
                   <Form {...form}>
