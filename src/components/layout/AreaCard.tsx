@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { DocSchema, IEditalDoc, MultipleCheckBoxOptions } from "@/types/types";
 import CheckboxFormMultiplo from "./CheckBoxNaturezasForm";
-import { useEditalStore, Documents } from "@/store/EditalRegister";
+import { useEditalStore, Document } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 import { toast } from "sonner";
 
@@ -98,7 +98,7 @@ export default function AreaCard({
   }, [Qualificacao, activeArea, submittedFiles]);
 
   const onSubmit = (data: IEditalDoc) => {
-    const documentos: Documents[] = [];
+    const documentos: Document[] = [];
 
     data.mockInputFiles.forEach((category) => {
       Object.entries(category).forEach(([categoryKey, filesArray]) => {
