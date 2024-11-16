@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { IConsultant } from "@/types/types";
 import { persist } from "zustand/middleware";
 
-export type Documents = {
+export type Document = {
   title: string;
   blob: string;
   id: string;
@@ -26,15 +26,15 @@ export type Qualificacao = {
   name: string;
   areaId: string;
   naturezaPrestacao: NaturezaPrestacao[];
-  AreaDocuments: Documents[];
+  AreaDocuments: Document[];
 };
 
 type IEditalStore = {
   Consultores: IConsultant[];
-  Documentos: Documents[];
+  Documentos: Document[];
   Qualificacao: Qualificacao[];
   Historico: History[];
-  Anexos: Documents[];
+  Anexos: Document[];
   permissaoDeCadastroEdital: boolean;
   permissaoDeCadastroConsultor: boolean;
   activeArea: string;
@@ -48,9 +48,9 @@ type editalActions = {
   removerConsultor: (consultorId: string) => void;
   alterarPermissaoEdital: (permitir: boolean) => void;
   alterarPermissaoConsultor: (permitir: boolean) => void;
-  cadastrarDocumento: (documento: Documents[]) => void;
-  cadastrarDocumentosTecnicos: (areaId: string, documento: Documents[]) => void;
-  limparDocumentos: () => void;
+  cadastrarDocumento: (documento: Document) => void;
+  cadastrarDocumentosTecnicos: (areaId: string, documento: Document[]) => void;
+  removerDocumento: (id: string) => void;
   limparDocumentosTecnicos: () => void;
   inserirArea: (area: Qualificacao) => void;
   removerArea: (areaId: string) => void;
@@ -117,10 +117,12 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       },
       cadastrarDocumento: (documento) =>
         set((state) => ({
-          Documentos: [...state.Documentos, ...documento],
+          Documentos: [...state.Documentos, documento],
         })),
       setEditalId: (editalId) => set({ currentEditalId: editalId }),
-      limparDocumentos: () => set({ Documentos: [] }),
+      removerDocumento: (id) => set((state) => ({
+        Documentos: state.Documentos.filter((documento) => documento.id !== id)
+      })),
       cadastrarConsultor: (consultor) => {
         set((state) => ({
           Consultores: [...state.Consultores, consultor],
