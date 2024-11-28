@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Form,
   FormControl,
@@ -6,158 +7,157 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "../ui/button";
 
+import { useEditalStore } from "@/store/EditalRegister";
+
+import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
-import { Documents, useEditalStore } from "@/store/EditalRegister";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 export default function InsertEditalDocuments() {
-  const [submitted, setSubmitted] = useState(false);
   const form = useForm<IEditalDoc>({
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
-  const {
-    cadastrarDocumento,
-    limparDocumentos,
-    Documentos,
-    alterarPermissaoEdital,
-    Qualificacao,
-    Consultores,
-  } = useEditalStore();
 
-  const handleReupload = () => {
-    limparDocumentos();
-    setSubmitted(false);
-  };
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
+    {}
+  );
 
-  const onSubmit = (data: IEditalDoc) => {
-    const documentos: Documents[] = [];
-    data.mockInputFiles.forEach((category) => {
-      Object.entries(category).forEach(([categoryKey, filesArray]) => {
-        filesArray.forEach((fileObject) => {
-          Object.entries(fileObject).forEach(([fileKey, fileData]) => {
-            if (fileData.file) {
-              documentos.push({
-                title: `${categoryKey}-${fileKey}`,
-                blob: URL.createObjectURL(fileData.file),
-                id: `${categoryKey}-${fileKey}-${Date.now()}`,
-              });
-            }
-          });
-        });
-      });
-    });
-    toast.success("Documentos preparados com sucesso!");
-    cadastrarDocumento(documentos);
-    setSubmitted(true);
-    form.reset();
-  };
+  const { Documentos, cadastrarDocumento, removerDocumento } = useEditalStore();
 
-  const { errors } = form.formState;
+  async function handleFieldSubmit(fieldName: string, file: File | undefined) {
+    const isValid = await form.trigger(fieldName as keyof IEditalDoc);
 
-  useEffect(() => {
-    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
-      if (
-        naturezaPrestacao.length === 0 ||
-        AreaDocuments.length === 0 ||
-        Consultores.length === 0 ||
-        Documentos.length === 0
-      ) {
-        alterarPermissaoEdital(false);
-      } else {
-        alterarPermissaoEdital(true);
-      }
-    });
-  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
+    if (isValid && file) {
+      const blobUrl = URL.createObjectURL(file);
+      const documento = {
+        title: fieldName,
+        blob: blobUrl,
+        id: `${fieldName}-${Date.now()}`,
+      };
 
+      cadastrarDocumento(documento);
+      console.log(`${fieldName} submitted with value:`, documento);
+    } else {
+      console.log(`${fieldName} validation failed.`);
+    }
+  }
+
+  const totalFileInputs = mockInputsEmpresa.reduce(
+    (count, category) =>
+      count +
+      Object.values(category)
+        .flat()
+        .reduce((subCount, fields) => subCount + Object.keys(fields).length, 0),
+    0
+  );
+
+  const allFilesUploaded =
+    Object.keys(uploadedFiles).length === totalFileInputs;
+
+  console.log(allFilesUploaded);
+
+  function handleRemoveFile(documentId: string) {
+    removerDocumento(documentId);
+  }
   return (
     <div className="grid place-content-center text-center">
-      {submitted || Documentos.length > 0 ? (
-        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-          <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-            Documentos Submetidos
-          </h2>
-          <ul className="list-disc list-inside mt-4">
-            {Documentos.map((doc) => (
-              <li key={doc.id} className="my-2">
-                <a
-                  href={doc.blob}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="leading-7 [&:not(:first-child)]:mt-6 text-blue-500 underline"
-                >
-                  {doc.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <Button
-            className="bg-gradient-primary w-full mt-4"
-            onClick={handleReupload}
-          >
-            Recadastrar Documentos
-          </Button>
-        </div>
-      ) : (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            {mockInputsEmpresa.map((item, index) => {
-              const categoryKey = Object.keys(item)[0];
-              const filesArray = item[categoryKey];
-              return (
-                <div key={index}>
-                  <h2 className="text-lg text-center font-bold mb-4">
-                    {categoryKey}
-                  </h2>
-                  {filesArray.map((field, fieldIndex) =>
-                    Object.entries(field).map(([fieldName, label]) => (
-                      <FormField
-                        key={`${fieldName}-${fieldIndex}`}
-                        control={form.control}
-                        name={`mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`}
-                        render={({ field }) => (
-                          <FormItem className="m-2">
-                            <div className="flex flex-col">
-                              <FormLabel className="text-md">{label}</FormLabel>
-                              <FormLabel className="text-sm font-light ">
-                                Selecione seu arquivo clicando na área abaixo
-                              </FormLabel>
+      {mockInputsEmpresa.map((categoria, index) => {
+        const categoryKey = Object.keys(categoria)[0];
+        const filesArray = categoria[categoryKey];
+        return (
+          <div key={index}>
+            <h2 className="text-lg text-center font-bold mb-4">
+              {categoryKey}
+            </h2>
+            {filesArray.map((field, fieldIndex) =>
+              Object.entries(field).map(([fieldName, label]) => {
+                const inputName = `mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`;
+                const existingDocument = Documentos.find(
+                  (doc) => doc.title === inputName
+                );
+                return (
+                  <Form key={`${fieldName}-${fieldIndex}`} {...form}>
+                    <FormField
+                      name={inputName as `mockInputFiles.${number}.${string}`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex flex-col">
+                            <FormLabel className="text-md">{label}</FormLabel>
+                            <FormLabel className="text-sm font-light">
+                              Selecione seu arquivo clicando na área abaixo
+                            </FormLabel>
+                          </div>
+                          <FormControl>
+                            <div className="flex gap-1">
+                              {existingDocument ? (
+                                <div className="flex w-full items-center justify-center gap-2">
+                                  <a
+                                    href={existingDocument.blob}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                  >
+                                    Ver Documento
+                                  </a>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    onClick={() =>
+                                      handleRemoveFile(existingDocument.id)
+                                    }
+                                  >
+                                    Remover
+                                  </Button>
+                                </div>
+                              ) : (
+                                <>
+                                  <Input
+                                    accept="application/pdf, image/jpeg, image/jpg"
+                                    type="file"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      field.onChange(file);
+                                      if (file) {
+                                        form.clearErrors(
+                                          inputName as `mockInputFiles.${number}.${string}`
+                                        );
+                                      }
+                                    }}
+                                  />
+                                  <Button
+                                    type="button"
+                                    onClick={() =>
+                                      handleFieldSubmit(
+                                        inputName,
+                                        field.value as unknown as
+                                          | File
+                                          | undefined
+                                      )
+                                    }
+                                  >
+                                    Travar Documento
+                                  </Button>
+                                </>
+                              )}
                             </div>
-                            <FormControl>
-                              <Input
-                                accept="application/pdf, image/jpeg, image/jpg"
-                                type="file"
-                                onChange={(e) => {
-                                  field.onChange(e.target.files?.[0]);
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    ))
-                  )}
-                </div>
-              );
-            })}
-            <Button
-              className="bg-gradient-primary w-full mb-5"
-              type="submit"
-              disabled={Object.keys(errors).length > 0}
-            >
-              Preparar Documentos
-            </Button>
-          </form>
-        </Form>
-      )}
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Form>
+                );
+              })
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
