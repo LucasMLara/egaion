@@ -75,7 +75,7 @@ export default function ConsultantsArea() {
       <Dialog>
         <DialogTrigger asChild>
           <Button className="md:w-64 w-full my-10 flex items-center">
-            Adicionar Consultor
+            Adicionar Membro de Equipe
           </Button>
         </DialogTrigger>
         <DialogContent className="md:min-w-[720px] overflow-y-auto h-2/6 md:h-1/2">
@@ -100,8 +100,8 @@ export default function ConsultantsArea() {
                   className="w-full flex items-center"
                   disabled={permissaoDeCadastroConsultor}
                 >
-                  Adicionar Consultor
-                </Button>
+                  Adicionar Membro de Equipe
+            </Button>
               </DialogTrigger>
             )}
             <DialogContent>

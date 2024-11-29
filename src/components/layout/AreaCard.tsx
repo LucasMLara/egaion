@@ -246,7 +246,7 @@ export default function AreaCard({
                         type="submit"
                         disabled={Object.keys(form.formState.errors).length > 0}
                       >
-                        Preparar Documentos
+                        Carregar Documentos
                       </Button>
                     </form>
                   </Form>
