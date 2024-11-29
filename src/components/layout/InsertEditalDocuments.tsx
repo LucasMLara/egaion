@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -23,11 +23,7 @@ export default function InsertEditalDocuments() {
     defaultValues: { mockInputFiles: [] },
   });
 
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
-    {}
-  );
-
-  const { Documentos, cadastrarDocumento, removerDocumento } = useEditalStore();
+  const { Documentos, cadastrarDocumento, removerDocumento, alterarPermissaoEdital, Qualificacao, Consultores } = useEditalStore();
 
   async function handleFieldSubmit(fieldName: string, file: File | undefined) {
     const isValid = await form.trigger(fieldName as keyof IEditalDoc);
@@ -57,9 +53,22 @@ export default function InsertEditalDocuments() {
   );
 
   const allFilesUploaded =
-    Object.keys(uploadedFiles).length === totalFileInputs;
+    Documentos.length === totalFileInputs;
 
-  console.log(allFilesUploaded);
+    useEffect(() => {
+      Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+        if (
+          naturezaPrestacao.length === 0 ||
+          AreaDocuments.length === 0 ||
+          Consultores.length === 0 ||
+          !allFilesUploaded
+        ) {
+          alterarPermissaoEdital(false);
+        } else {
+          alterarPermissaoEdital(true);
+        }
+      });
+    }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores]);
 
   function handleRemoveFile(documentId: string) {
     removerDocumento(documentId);
@@ -96,7 +105,7 @@ export default function InsertEditalDocuments() {
                           <FormControl>
                             <div className="flex gap-1">
                               {existingDocument ? (
-                                <div className="flex w-full items-center justify-center gap-2">
+                                <div className="flex w-full items-center justify-center gap-2 m-2">
                                   <a
                                     href={existingDocument.blob}
                                     target="_blank"
