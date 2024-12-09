@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { generateEditalCardData } from "@/lib/utils";
 import { IAvailableEditals } from "@/store/useAvailableEditals/types";
@@ -7,6 +7,21 @@ import { useAvailableEditals } from "@/store/useAvailableEditals";
 
 export default function Editais() {
   const { availableEditals, setListEditals } = useAvailableEditals();
+
+  useEffect(() => {
+    async function fetchEditais() {
+      try {
+        const response = await fetch("/api/editais");
+        const data = await response.json();
+        console.log(data)
+        
+      } catch (error) {
+        console.log('Erro', error);
+        
+      }
+    }
+    fetchEditais();
+  }, [setListEditals]);
 
   useEffect(() => {
     setListEditals(
