@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const editais = await prisma.wFUSER.findMany();
+        const editais = await prisma.sCEdital.findMany();
         const sanitizedEditais = editais.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
