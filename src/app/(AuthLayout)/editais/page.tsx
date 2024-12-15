@@ -8,20 +8,20 @@ import { useAvailableEditals } from "@/store/useAvailableEditals";
 export default function Editais() {
   const { availableEditals, setListEditals } = useAvailableEditals();
 
-  useEffect(() => {
-    async function fetchEditais() {
-      try {
-        const response = await fetch("/api/editais");
-        const data = await response.json();
-        console.log(data)
+  // useEffect(() => {
+  //   async function fetchEditais() {
+  //     try {
+  //       const response = await fetch("/api/editais");
+  //       const data = await response.json();
+  //       console.log(data)
         
-      } catch (error) {
-        console.log('Erro', error);
+  //     } catch (error) {
+  //       console.log('Erro', error);
         
-      }
-    }
-    fetchEditais();
-  }, [setListEditals]);
+  //     }
+  //   }
+  //   fetchEditais();
+  // }, [setListEditals]);
 
   useEffect(() => {
     setListEditals(
