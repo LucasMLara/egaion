@@ -27,6 +27,8 @@ interface CheckboxFormMultiploProps {
   onReset: () => void;
   opcoesSelecionadas: MultipleCheckBoxOptions[];
   labelSelecionados: string;
+  hasError?: boolean;
+  onErrorChange?: (error: boolean) => void;
 }
 export default function CheckboxFormMultiplo({
   opcoes,
@@ -34,15 +36,27 @@ export default function CheckboxFormMultiplo({
   onReset,
   opcoesSelecionadas,
   labelSelecionados,
+  hasError = false,
+  onErrorChange,
 }: CheckboxFormMultiploProps) {
   const [submittedAreas, setSubmittedAreas] = useState(false);
+  const [_, setError] = useState(hasError);
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
     defaultValues: {
       options: opcoesSelecionadas.map((opcao) => opcao.label),
     },
   });
+
   const { Qualificacao, activeArea } = useEditalStore();
+
+
+  useEffect(() => {
+    const formErrors = Object.keys(form.formState.errors).length > 0;
+    setError(formErrors);
+    onErrorChange?.(formErrors);
+  }, [form.formState.errors, onErrorChange])
+
   useEffect(() => {
     const hasAreasPreviouslySelected = Qualificacao.some(
       (area) => area.areaId === activeArea && area.naturezaPrestacao.length > 0
@@ -119,11 +133,7 @@ export default function CheckboxFormMultiplo({
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={Object.keys(form.formState.errors).length > 0}
-        >
+        <Button type="submit" className="w-full" disabled={Object.keys(form.formState.errors).length > 0}>
           Confirmar Seleção
         </Button>
       </form>
