@@ -3,12 +3,8 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Check } from "lucide-react";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -42,7 +38,7 @@ export default function AreaCard({
   areaId: string;
 }) {
   const [submittedFiles, setSubmittedFiles] = useState(false);
-
+  const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedNaturezas, setSelectedNaturezas] = useState<
     MultipleCheckBoxOptions[]
@@ -62,7 +58,7 @@ export default function AreaCard({
 
   const form = useForm<IEditalDoc & { natureza: string[] }>({
     resolver: zodResolver(DocSchema),
-    defaultValues: { mockInputFiles: [], natureza: [] },
+    defaultValues: { mockInputFiles: [] },
   });
 
   const handleNaturezaSubmit = (naturezas: MultipleCheckBoxOptions[]) => {
@@ -85,6 +81,11 @@ export default function AreaCard({
     clearNaturezaPrestacao(activeArea);
   };
 
+  const areaHasFiles = Qualificacao.map( area => area.areaId === activeArea && area.AreaDocuments.length > 0).includes(true);
+  const areaHasNatureza = Qualificacao.map( area => area.areaId === activeArea && area.naturezaPrestacao.length > 0).includes(true);
+  const travarBotao = !areaHasFiles || !areaHasNatureza;
+  
+  
   useEffect(() => {
     const areaHasFiles = Qualificacao.some(
       (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
@@ -96,6 +97,7 @@ export default function AreaCard({
       setSubmittedFiles(false);
     }
   }, [Qualificacao, activeArea, submittedFiles]);
+  
 
   const onSubmit = (data: IEditalDoc) => {
     const documentos: Document[] = [];
@@ -134,13 +136,12 @@ export default function AreaCard({
       <DialogTrigger asChild>
         <Card className="size-full cursor-pointer hover:shadow-xl transition-all">
           <CardHeader>
-            <div className="flex items-center justify-center">  
+            <div className="flex items-center justify-center">
               <CardTitle>{area}</CardTitle>
             </div>
           </CardHeader>
         </Card>
       </DialogTrigger>
-
       <DialogContent>
         <DialogTitle className="my-3">{area}</DialogTitle>
         <DialogHeader className="my-3">
@@ -156,7 +157,9 @@ export default function AreaCard({
             </DialogTrigger>
             <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
-              <DialogDescription className="text-center text-xl">{area}</DialogDescription>
+              <DialogDescription className="text-center text-xl">
+                {area}
+              </DialogDescription>
               <DialogDescription className="flex flex-col">
                 {submittedFiles ? (
                   <div className="bg-gray-100 p-4 rounded-lg shadow-md">
@@ -183,16 +186,22 @@ export default function AreaCard({
                     </ul>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button className="w-full mt-4">Recadastrar Documentos</Button>
+                        <Button className="w-full mt-4">
+                          Recadastrar Documentos
+                        </Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogTitle>Recadastrar Documentos</DialogTitle>
                         <DialogDescription>
-                          Tem certeza que deseja recadastrar os documentos?
-                          Você precisará recadastrar todos os documentos da área novamente.
+                          Tem certeza que deseja recadastrar os documentos? Você
+                          precisará recadastrar todos os documentos da área
+                          novamente.
                         </DialogDescription>
                         <DialogFooter>
-                          <Button variant='destructive' onClick={handleResetDocuments}>
+                          <Button
+                            variant="destructive"
+                            onClick={handleResetDocuments}
+                          >
                             Sim, Tenho certeza. Recadastrar Documentos!
                           </Button>
                         </DialogFooter>
@@ -258,9 +267,13 @@ export default function AreaCard({
                     onSubmit={handleNaturezaSubmit}
                     onReset={handleResetNaturezas}
                     opcoesSelecionadas={selectedNaturezas}
+                    onErrorChange={setCheckboxHasError}
                   />
                 </div>
               </DialogDescription>
+              <DialogFooter>
+                <Button variant='ghost' className="hover:text-neutral-500 hover:bg-auxiliary-success-600 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none" onClick={() => { setOpen(false); toast.success('Informaçoes da área inseridas com sucesso!')}} disabled={Object.keys(form.formState.errors).length > 0 || checkboxHasError || travarBotao}><Check /></Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
           <Dialog>
