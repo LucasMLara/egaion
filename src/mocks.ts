@@ -8,8 +8,8 @@ type mockInputFiles = {
 export const mockDocumentosAreaConsultor: mockInputFiles[] = [
   {
     Documentos: [
-      { relatoDeExperiencia: "Relato de Experiência" },
-      { atestadoDeCapacidadeTecnica: "Atestado de Capacidade Técnica" },
+      { "Relato de Experiência": "Relato de Experiência" },
+      { "Atestado de Capacidade Técnica": "Atestado de Capacidade Técnica" },
     ],
   },
 ];
