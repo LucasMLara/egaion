@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { nanoid } from "nanoid";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -24,11 +26,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DocSchema, IEditalDoc, MultipleCheckBoxOptions } from "@/types/types";
+import { MultipleCheckBoxOptions,AreaDocSchema, IAreaDocSchema  } from "@/types/types";
 import CheckboxFormMultiplo from "./CheckBoxNaturezasForm";
 import { useEditalStore, Document } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
 
 export default function AreaCard({
   area,
@@ -56,8 +59,8 @@ export default function AreaCard({
     limparConsultores,
   } = useEditalStore();
 
-  const form = useForm<IEditalDoc & { natureza: string[] }>({
-    resolver: zodResolver(DocSchema),
+  const form = useForm<IAreaDocSchema & { natureza: string[] }>({
+    resolver: zodResolver(AreaDocSchema),
     defaultValues: { mockInputFiles: [] },
   });
 
@@ -81,11 +84,19 @@ export default function AreaCard({
     clearNaturezaPrestacao(activeArea);
   };
 
-  const areaHasFiles = Qualificacao.map( area => area.areaId === activeArea && area.AreaDocuments.length > 0).includes(true);
-  const areaHasNatureza = Qualificacao.map( area => area.areaId === activeArea && area.naturezaPrestacao.length > 0).includes(true);
+  const areaHasFiles = Qualificacao.map(
+    (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
+  ).includes(true);
+  const areaHasNatureza = Qualificacao.map(
+    (area) => area.areaId === activeArea && area.naturezaPrestacao.length > 0
+  ).includes(true);
   const travarBotao = !areaHasFiles || !areaHasNatureza;
-  
-  
+
+  useEffect(() => {
+    if(Object.keys(form.formState.errors).length > 0){
+      toast.error("Insira todos os dados necessários para prosseguir");
+    }
+  }, [form.formState.errors])
   useEffect(() => {
     const areaHasFiles = Qualificacao.some(
       (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
@@ -97,21 +108,26 @@ export default function AreaCard({
       setSubmittedFiles(false);
     }
   }, [Qualificacao, activeArea, submittedFiles]);
-  
 
-  const onSubmit = (data: IEditalDoc) => {
+  const onSubmit = (data: IAreaDocSchema) => {
     const documentos: Document[] = [];
 
     data.mockInputFiles.forEach((category) => {
       Object.entries(category).forEach(([categoryKey, filesArray]) => {
         filesArray.forEach((fileObject) => {
-          Object.entries(fileObject).forEach(([fileKey, fileData]) => {
-            if (fileData.file) {
-              documentos.push({
-                title: `${categoryKey}-${fileKey}`,
-                blob: URL.createObjectURL(fileData.file),
-                id: `${categoryKey}-${fileKey}-${Date.now()}`,
-                areaId: activeArea,
+          Object.entries(fileObject).forEach(([fieldKey, fileData]) => {
+            const files = fileData.file;
+            if (Array.isArray(files)) {
+              files.forEach((file) => {
+                if (file) {
+                  documentos.push({
+                    title: file.name,
+                    blob: URL.createObjectURL(file),
+                    id: nanoid(10),
+                    areaId: activeArea,
+                    category: fieldKey,
+                  });
+                }
               });
             }
           });
@@ -130,7 +146,6 @@ export default function AreaCard({
     limparDocumentosTecnicos();
     toast.warning("Documentos removidos com sucesso!");
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -162,16 +177,17 @@ export default function AreaCard({
               </DialogDescription>
               <DialogDescription className="flex flex-col">
                 {submittedFiles ? (
-                  <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-                    <h2 className="text-3xl font-semibold border-b pb-2">
+                  <div className="bg-gray-100 p-4 rounded-lg shadow-md max-h-96 overflow-auto">
+                    <h2 className="text-3xl font-semibold border-b pb-2 text-center">
                       Documentos Submetidos
                     </h2>
-                    <ul className="list-disc list-inside mt-4">
+                    <ul className="list-disc list-inside mt-4" >
                       {Qualificacao.map((area) =>
                         area.AreaDocuments.filter(
                           (doc) => doc.areaId === areaId
                         ).map((doc) => (
                           <li key={doc.id} className="my-2">
+                            <span className="font-semibold">{doc.category}: </span>{" "}
                             <a
                               href={doc.blob}
                               target="_blank"
@@ -231,16 +247,20 @@ export default function AreaCard({
                                         <FormLabel>{label}</FormLabel>
                                         <FormControl>
                                           <Input
+                                            multiple
                                             accept="application/pdf, image/jpeg, image/jpg"
                                             type="file"
-                                            onChange={(e) =>
-                                              field.onChange(
-                                                e.target.files?.[0]
-                                              )
-                                            }
+                                            onChange={(e) => {
+                                              const files = e.target.files;
+                                              if (files) {
+                                                const fileArray =
+                                                  Array.from(files);
+                                                field.onChange(fileArray);
+                                              }
+                                            }}
                                           />
                                         </FormControl>
-                                        <FormMessage />
+                                        {/* <FormMessage /> */}
                                       </FormItem>
                                     )}
                                   />
@@ -271,8 +291,29 @@ export default function AreaCard({
                   />
                 </div>
               </DialogDescription>
+              {Object.keys(form.formState.errors).length > 0 ||
+                checkboxHasError ||
+                (travarBotao && (
+                  <Label className="text-md text-center text-neutral-700  transition-all uppercase bg-auxiliary-warning-500 flex flex-col justify-center rounded-lg">
+                    Insira todos os dados necessários acima
+                  </Label>
+                ))}
               <DialogFooter>
-                <Button variant='ghost' className="hover:text-neutral-500 hover:bg-auxiliary-success-600 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none" onClick={() => { setOpen(false); toast.success('Informaçoes da área inseridas com sucesso!')}} disabled={Object.keys(form.formState.errors).length > 0 || checkboxHasError || travarBotao}><Check /></Button>
+                <Button
+                  variant="ghost"
+                  className="hover:text-neutral-500 hover:bg-auxiliary-success-600 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
+                  onClick={() => {
+                    setOpen(false);
+                    toast.success("Informaçoes da área inseridas com sucesso!");
+                  }}
+                  disabled={
+                    Object.keys(form.formState.errors).length > 0 ||
+                    checkboxHasError ||
+                    travarBotao
+                  }
+                >
+                  <Check />
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
