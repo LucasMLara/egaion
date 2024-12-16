@@ -8,6 +8,7 @@ export type Document = {
   id: string;
   areaId?: string;
   consultorId?: string;
+  category?: string;
 };
 
 type History = {
