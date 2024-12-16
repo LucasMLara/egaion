@@ -230,6 +230,28 @@ export const MockDocCardSchema = z.object({
   docDialogContent: z.string(),
 });
 
+
+export const AreaDocSchema = z.object({
+  areaId: z.string().optional(),
+  mockInputFiles: z.array(
+    z.record(
+      z.string(),
+      z.array(
+        z.record(
+          z.string(),
+          z.object({
+            file: z
+              .array(fileSchema)
+              .min(1, "É necessário carregar pelo menos um arquivo"), // At least one file is required
+          })
+        )
+      )
+    )
+  ),
+});
+
+export type IAreaDocSchema = z.infer<typeof AreaDocSchema>;
+
 export type FileInputForm = z.infer<typeof fileInputSchema>;
 export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
