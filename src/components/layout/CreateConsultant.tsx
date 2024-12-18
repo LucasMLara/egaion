@@ -54,7 +54,6 @@ export default function CreateConsultant({
   function handleReset() {
     setAreasSelecionadas([]);
     alterarPermissaoConsultor(false);
-    console.log('RESET NO CREATE CONSULTANT')
   }
 
   const form = useForm<IConsultant>({
@@ -83,7 +82,6 @@ export default function CreateConsultant({
   const arquivosTecnicos = useRef<HTMLInputElement | null>(null);
 
   function resetConsultantForm() {
-    form.reset();
     if (arquivosTecnicos.current) arquivosTecnicos.current.value = "";
     if (consultantCPFRef.current) consultantCPFRef.current.value = "";
     if (comprovanteVinculoCNPJRef.current)
@@ -92,6 +90,9 @@ export default function CreateConsultant({
       comprovanteFormacaoAcademicaRef.current.value = "";
     if (registroProfissionalClasseRef.current)
       registroProfissionalClasseRef.current.value = "";
+    form.reset();
+    setAreasSelecionadas([]);
+    alterarPermissaoConsultor(false);
   }
 
   const {
