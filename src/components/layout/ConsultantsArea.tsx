@@ -12,11 +12,9 @@ import {
 
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect } from "react";
 export default function ConsultantsArea() {
-  const [areasSelecionadas] = useState<
-    MultipleCheckBoxOptions[]
-  >([]);
+
 
   const {
     Consultores,
@@ -24,11 +22,6 @@ export default function ConsultantsArea() {
     Documentos,
     alterarPermissaoEdital,
   } = useEditalStore();
-  
-
-  const handleConsultantAreas = useMemo(() => {
-    return areasSelecionadas.map(({ id }) => id);
-  }, [areasSelecionadas]);
 
   useEffect(() => {
     Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
@@ -70,7 +63,7 @@ export default function ConsultantsArea() {
               <DialogDescription>
                 Atente-se aos dados inseridos antes de submeter as informações
               </DialogDescription>
-          <CreateConsultant consultantAreas={handleConsultantAreas} />
+          <CreateConsultant />
         </DialogContent>
       </Dialog>
       {Consultores.length > 0 && (
