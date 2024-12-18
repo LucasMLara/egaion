@@ -21,21 +21,19 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { formatCpf, formatPhone } from "@/lib/formatters";
 import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
 
-export default function CreateConsultant({
-  consultantAreas,
-}: {
-  consultantAreas: string[];
-}) {
+export default function CreateConsultant() {
   const {
     cadastrarConsultor,
     Qualificacao,
     permissaoDeCadastroConsultor,
     alterarPermissaoConsultor,
+    consultantAreaDocuments,
+    removeConsultantAreaDocuments,
   } = useEditalStore();
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
@@ -54,6 +52,7 @@ export default function CreateConsultant({
   function handleReset() {
     setAreasSelecionadas([]);
     alterarPermissaoConsultor(false);
+    removeConsultantAreaDocuments()
   }
 
   const form = useForm<IConsultant>({
@@ -92,6 +91,7 @@ export default function CreateConsultant({
       registroProfissionalClasseRef.current.value = "";
     form.reset();
     setAreasSelecionadas([]);
+    removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
   }
 
@@ -99,16 +99,25 @@ export default function CreateConsultant({
     formState: { errors },
   } = form;
 
+    const handleConsultantAreas = useMemo(() => {
+      return areasSelecionadas.map(({ id }) => id);
+    }, [areasSelecionadas]);
+
   function onSubmit(data: IConsultant) {
     const uniqueId = nanoid();
     const newConsultant = {
       ...data,
-      areaId: consultantAreas,
+      areaId: handleConsultantAreas,
       id: uniqueId,
+      areaDocuments: consultantAreaDocuments.map(doc => ({
+        areaId: doc.areaId as string,
+        files: doc.files
+      }))
     };
+    console.log(newConsultant);
     cadastrarConsultor(newConsultant);
+    
     toast.success("Consultor cadastrado com sucesso!");
-
     resetConsultantForm();
   }
 
