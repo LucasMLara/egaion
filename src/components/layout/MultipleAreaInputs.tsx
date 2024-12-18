@@ -22,16 +22,18 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     null
   );
 
-  const { alterarPermissaoConsultor } = useEditalStore();
+  const { alterarPermissaoConsultor, removeConsultantAreaDocuments, insertConsultantAreaDocuments } = useEditalStore();
 
-  const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
+  const { control, handleSubmit, formState, reset, getValues } = useForm<FileInputForm>({
     resolver: zodResolver(fileInputSchema),
     defaultValues: {
       arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [] })),
     },
   });
 
+  
   const { errors } = formState;
+  
 
 
   const onSubmit = (data: FileInputForm) => {
@@ -49,6 +51,8 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormSubmit) {
       onFormSubmit(data);
     }
+    console.log(data.arquivosTecnicos);
+    insertConsultantAreaDocuments(data.arquivosTecnicos);
     alterarPermissaoConsultor(true);
   };
 
@@ -58,6 +62,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormReset) {
       onFormReset();
     }
+    removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
   };
 
