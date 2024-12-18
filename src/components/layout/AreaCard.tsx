@@ -301,7 +301,7 @@ export default function AreaCard({
               <DialogFooter>
                 <Button
                   variant="ghost"
-                  className="hover:text-neutral-500 hover:bg-auxiliary-success-600 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
+                  className=" hover:text-neutral-300 text-neutral-500 ho disabled:text-neutral-900  bg-auxiliary-success-400  hover:bg-auxiliary-success-500 disabled:bg-auxiliary-warning-400  disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
                   onClick={() => {
                     setOpen(false);
                     toast.success("Informaçoes da área inseridas com sucesso!");
