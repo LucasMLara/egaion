@@ -12,36 +12,23 @@ import {
 
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
-import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
 import { useEffect, useState, useMemo } from "react";
 export default function ConsultantsArea() {
-  const [areasSelecionadas, setAreasSelecionadas] = useState<
+  const [areasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
   >([]);
 
   const {
     Consultores,
     Qualificacao,
-    permissaoDeCadastroConsultor,
     Documentos,
     alterarPermissaoEdital,
   } = useEditalStore();
-  const areasPreSelecionadas = Qualificacao.map(({ name, areaId }) => ({
-    value: name,
-    label: name,
-    id: areaId,
-  }));
+  
 
-  function handleAreasSubmit(areas: MultipleCheckBoxOptions[]) {
-    setAreasSelecionadas(areas);
-  }
   const handleConsultantAreas = useMemo(() => {
     return areasSelecionadas.map(({ id }) => id);
   }, [areasSelecionadas]);
-
-  function handleReset() {
-    setAreasSelecionadas([]);
-  }
 
   useEffect(() => {
     Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
@@ -79,39 +66,11 @@ export default function ConsultantsArea() {
           </Button>
         </DialogTrigger>
         <DialogContent className="md:min-w-[720px] overflow-y-auto h-2/6 md:h-1/2">
-          <DialogTitle>Em quais áreas esse consultor irá atuar? </DialogTitle>
-          <DialogDescription>
-            Selecione uma ou mais áreas (Lembre-se de selecionar todas as áreas
-            previamente antes de adicionar seus consultores). Atente-se em
-            anexar todos os documentos técnicos referentes à todas as áreas
-            selecionadas.
-          </DialogDescription>
-          <CheckboxFormMultiplo
-            labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
-            opcoes={areasPreSelecionadas}
-            onSubmit={handleAreasSubmit}
-            onReset={handleReset}
-            opcoesSelecionadas={areasSelecionadas}
-          />
-          <Dialog>
-            {areasSelecionadas.length > 0 && (
-              <DialogTrigger asChild>
-                <Button
-                  className="w-full flex items-center"
-                  disabled={permissaoDeCadastroConsultor}
-                >
-                  Adicionar Membro de Equipe
-            </Button>
-              </DialogTrigger>
-            )}
-            <DialogContent>
-              <DialogTitle>Insira os Dados do seu consultor:</DialogTitle>
+            <DialogTitle>Insira os Dados do seu consultor:</DialogTitle>
               <DialogDescription>
                 Atente-se aos dados inseridos antes de submeter as informações
               </DialogDescription>
-              <CreateConsultant consultantAreas={handleConsultantAreas} />
-            </DialogContent>
-          </Dialog>
+          <CreateConsultant consultantAreas={handleConsultantAreas} />
         </DialogContent>
       </Dialog>
       {Consultores.length > 0 && (
