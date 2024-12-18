@@ -33,11 +33,6 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
 
   const { errors } = formState;
 
-  useEffect(() => {
-    Object.keys(errors).length > 0 || !submittedData
-      ? alterarPermissaoConsultor(true)
-      : alterarPermissaoConsultor(false);
-  }, [errors, alterarPermissaoConsultor, submittedData]);
 
   const onSubmit = (data: FileInputForm) => {
     const hasFilesForAllAreas = data.arquivosTecnicos.every(
@@ -54,6 +49,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormSubmit) {
       onFormSubmit(data);
     }
+    alterarPermissaoConsultor(true);
   };
 
   const handleReset = () => {
@@ -62,6 +58,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormReset) {
       onFormReset();
     }
+    alterarPermissaoConsultor(false);
   };
 
   return (
