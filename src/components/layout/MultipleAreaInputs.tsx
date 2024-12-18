@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -122,7 +122,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
             </div>
           ))}
           <div className="flex gap-4 mt-4">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={Object.keys(errors).length > 0}>
               Inserir Documentos
             </Button>
           </div>
