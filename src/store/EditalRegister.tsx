@@ -9,6 +9,7 @@ export type Document = {
   areaId?: string;
   consultorId?: string;
   category?: string;
+  files?: File[];
 };
 
 type History = {
@@ -29,7 +30,10 @@ export type Qualificacao = {
   naturezaPrestacao: NaturezaPrestacao[];
   AreaDocuments: Document[];
 };
-
+type ConsultantAreaDocuments = {
+  areaId: string;
+  files: File[];
+}
 type IEditalStore = {
   Consultores: IConsultant[];
   Documentos: Document[];
@@ -40,6 +44,7 @@ type IEditalStore = {
   permissaoDeCadastroConsultor: boolean;
   activeArea: string;
   currentEditalId: string;
+  consultantAreaDocuments: Document[];
 };
 
 type editalActions = {
@@ -57,6 +62,8 @@ type editalActions = {
   removerArea: (areaId: string) => void;
   setActiveArea: (areaId: string) => void;
   clearActiveArea: () => void;
+  insertConsultantAreaDocuments: (documents: ConsultantAreaDocuments[]) => void;
+  removeConsultantAreaDocuments: () => void;
   setEditalId: (editalId: string) => void;
   setNaturezaPrestacao: (
     naturezaPrestacao: NaturezaPrestacao[],
@@ -66,6 +73,7 @@ type editalActions = {
 };
 
 const initialState: IEditalStore = {
+  consultantAreaDocuments: [],
   Documentos: [],
   Historico: [],
   Anexos: [],
@@ -81,6 +89,14 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set) => ({
       ...initialState,
+      insertConsultantAreaDocuments: (documents) =>
+        set({ consultantAreaDocuments: documents.flatMap(doc => doc.files.map(file => ({
+          title: file.name,
+          blob: URL.createObjectURL(file),
+          id: file.name,
+          areaId: doc.areaId
+        }))) }),
+      removeConsultantAreaDocuments: () => set({ consultantAreaDocuments: [] }),
       limparConsultores: () => set({ Consultores: [] }),
       alterarPermissaoEdital: (permitir) =>
         set({ permissaoDeCadastroEdital: permitir }),
