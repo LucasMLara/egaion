@@ -20,6 +20,8 @@ import {
 } from "@/types/types";
 import MultipleAreaInputs from "./MultipleAreaInputs";
 
+
+
 interface CheckboxFormMultiploProps {
   opcoes: MultipleCheckBoxOptions[];
   onSubmit: (opcoes: MultipleCheckBoxOptions[]) => void;
