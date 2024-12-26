@@ -1,8 +1,30 @@
 export interface IAvailableEditals {
-  id: string;
-  date: Date;
-  title: string;
-  description: string;
+  idSCEdital: string;
+  finalEnt: number;
+  baCreatedTime: string;
+  baGuid: string;
+  QuantidadeMinimaLocalidade: number | null;
+  QuantidadeMaximaLocalidade: number | null;
+  LocalidadePadrao: string | null;
+  DocumentacaoPadrao: string;
+  ObjetoEdital: string | null;
+  TipodeCredenciamento: string;
+  NomeEdital: string;
+  FimEdital: string;
+  Credenciadora: string;
+  TipoChamadas: string;
+  InicioEdital: string;
+  Objetivos: string;
+  EscolhaLocalidades: boolean;
+  Status: string | null;
+  PesquisaNome: string | null;
+  PesquisaCNPJ: string | null;
+  PesquisaStatusCred: string | null;
+  PesquisaCredenciada: string | null;
+  ObjetoEditalArquivo: number;
+  ResumoEdital: string;
+  ConfirmarDadosCadastro: boolean;
+  SelecionadoExclusao: string | null;
 }
 
 export type TState = {
@@ -13,3 +35,8 @@ export type TActions = {
   setEdital: (editals: IAvailableEditals) => void;
   setListEditals: (editals: IAvailableEditals[]) => void;
 };
+
+
+
+
+  
