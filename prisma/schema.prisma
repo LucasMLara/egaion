@@ -160,8 +160,10 @@ model Anexo {
   Descricao     String?   @db.NVarChar(200)
   Responsavel   String?   @db.NVarChar(100)
   Arquivo       Int?      @db.TinyInt
+  SCEdital      BigInt?
 
   @@index([DadosPadrao], map: "Anexo_F1")
+  @@index([SCEdital], map: "Anexo_F2")
 }
 
 model APPLICATION {
@@ -3508,6 +3510,10 @@ model SCEdital {
   PesquisaCNPJ               String?   @db.NVarChar(50)
   PesquisaStatusCred         BigInt?
   PesquisaCredenciada        BigInt?
+  ObjetoEditalArquivo        Int?      @db.TinyInt
+  ResumoEdital               String?   @db.NVarChar(300)
+  ConfirmarDadosCadastro     Boolean?
+  SelecionadoExclusao        Boolean?
 
   @@index([Credenciadora], map: "SCEdital_F1")
 }
@@ -3686,6 +3692,7 @@ model SCParamEditalNv1 {
   Nivel1Parametrizacao BigInt?
   IdNivel              Int?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv1_F1")
 }
@@ -3699,6 +3706,7 @@ model SCParamEditalNv2 {
   IdNivel              Int?
   Escolhido            Boolean?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv2_F1")
 }
@@ -3712,6 +3720,7 @@ model SCParamEditalNv3 {
   Nivel3Parametrizacao BigInt?
   Escolhido            Boolean?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv3_F1")
 }
@@ -3725,6 +3734,7 @@ model SCParamEditalNv4 {
   Nivel4Parametrizacao BigInt?
   Escolhido            Boolean?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv4_F1")
 }
@@ -3738,6 +3748,7 @@ model SCParamEditalNv5 {
   Escolhido            Boolean?
   Nivel5Parametrizacao BigInt?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv5_F1")
 }
@@ -3751,6 +3762,7 @@ model SCParamEditalNv6 {
   Escolhido            Boolean?
   Nivel6Parametrizacao BigInt?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv6_F1")
 }
@@ -3764,6 +3776,7 @@ model SCParamEditalNv7 {
   IdNivel              Int?
   Nivel7Parametrizacao BigInt?
   SCEdital             BigInt?
+  Populado             Boolean?
 
   @@index([SCEdital], map: "SCParamEditalNv7_F1")
 }
@@ -3799,6 +3812,7 @@ model SCStatusCredEdital {
   dplySCStatusCredEdital Int?     @db.TinyInt
   Codigo                 Int?     @unique(map: "SCStatusCredEdital_EK1")
   Descricao              String?  @db.NVarChar(50)
+  DescricaoAplicativo    String?  @db.NVarChar(50)
 }
 
 model SCStatusEdital {
