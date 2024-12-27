@@ -1,6 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { IEditalCard, IDocCard } from "@/types/types";
+import  Dayjs from "dayjs"
+
+export function formatDate(date: string) {
+  return Dayjs(date).format("DD/MM/YYYY");
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,7 +18,6 @@ export const maskCpf = (cpf: string) => {
 };
 
 const statusOptions: IEditalCard["status"][] = ["ok", "pending", "error", null];
-const areaOptions: string[] = ["area1", "area2", "area3"];
 const sampleContent = "Sample Content";
 const sampleDialogContent = "Dialog Content";
 
