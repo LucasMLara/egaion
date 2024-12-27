@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { currentDate } from "@/lib/utils";
+import { currentDate, formatDate } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { history } from "@/mocks";
 import Attachments from "@/components/layout/Attachments";
@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import InsertQualificacaoTecnicaDocs from "@/components/layout/InsertQualificacaoTecnicaDocs";
 import ConsultantsArea from "@/components/layout/ConsultantsArea";
 import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
+import { IAvailableEdital } from "@/store/useAvailableEditals/types";
+
+
 
 export default function EditalId({
   params,
@@ -22,6 +25,60 @@ export default function EditalId({
   const router = useRouter();
   const { permissaoDeCadastroEdital, Consultores, Documentos, Qualificacao } =
     useEditalStore();
+
+  const initialCurrentEditalState = {
+    idSCEdital: "",
+      finalEnt: 0,
+      baCreatedTime: "",
+      baGuid: "",
+      QuantidadeMinimaLocalidade: 0,
+      QuantidadeMaximaLocalidade: 0,
+      LocalidadePadrao: "",
+      DocumentacaoPadrao: "",
+      ObjetoEdital: "",
+      TipodeCredenciamento: "",
+      NomeEdital: "",
+      FimEdital: "",
+      Credenciadora: "",
+      TipoChamadas: "",
+      InicioEdital: "",
+      Objetivos: "",
+      EscolhaLocalidades: false,
+      Status: "",
+      PesquisaNome: "",
+      PesquisaCNPJ: "",
+      PesquisaStatusCred: "",
+      PesquisaCredenciada: "",
+      ObjetoEditalArquivo: 0,
+      ResumoEdital: "",
+      ConfirmarDadosCadastro: false,
+      SelecionadoExclusao: "",
+      serializedEditalHistory: []
+  }
+    const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(initialCurrentEditalState);
+
+    useEffect(() => {
+      async function fetchEdital() {
+          try {
+              const response = await fetch(`/api/${params.editalId}`);
+              const data = await response.json();
+              setCurrentEdital(data);
+              if (!response.ok) {
+                  console.error("Error:", data.error || data.message);
+              } else {
+                  console.log("Edital data:", data);
+              }
+          } catch (error) {
+              console.error("Fetch error:", error);
+          }
+      }
+      if (params.editalId) {
+          fetchEdital();
+      }
+  }, [params.editalId]);
+  
+  console.log("Current Edital:", currentEdital.serializedEditalHistory);
+  
   return (
     <section className="h-full">
       <Tabs defaultValue="content" className="w-auto m-4">
@@ -76,15 +133,16 @@ export default function EditalId({
         </TabsContent>
         <TabsContent value="anexos">
           <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
+          {/* //TODO Receber por props */}
           <Attachments />
         </TabsContent>
         <TabsContent value="content" className="py-5">
           <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
             <h1 className="text-center m-4 text-2xl font-bold">
               {" "}
-              Edital : {params.editalId}{" "}
+              Edital : {currentEdital.NomeEdital}{" "}
             </h1>
-            <h2 className="text-center text-lg">Data: {currentDate}</h2>
+            <h2 className="text-center text-lg">Data: {formatDate(currentEdital.InicioEdital)}</h2>
             <h1 className="text-center text-md font-semibold my-3">
               Clique no Link abaixo para visualizar as informaçoes atualizadas
               do edital.
