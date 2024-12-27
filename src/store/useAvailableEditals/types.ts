@@ -1,4 +1,4 @@
-export interface IAvailableEdital {
+export type IAvailableEdital = {
   idSCEdital: string;
   finalEnt: number;
   baCreatedTime: string;
@@ -25,7 +25,19 @@ export interface IAvailableEdital {
   ResumoEdital: string;
   ConfirmarDadosCadastro: boolean;
   SelecionadoExclusao: string | null;
-}
+  serializedEditalHistory: {
+    idHistorico: string;
+    finalEnt: number;
+    baCreatedTime: string;
+    baGuid: string;
+    DadosPadrao: string | null;
+    Responsavel: string;
+    DataCriacao: string;
+    Descricao: string;
+    SCEdital: string;
+  }[];
+};
+
 
 export type TState = {
   availableEditals: IAvailableEdital[];
