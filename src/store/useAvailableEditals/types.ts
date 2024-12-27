@@ -1,4 +1,4 @@
-export interface IAvailableEditals {
+export interface IAvailableEdital {
   idSCEdital: string;
   finalEnt: number;
   baCreatedTime: string;
@@ -28,12 +28,12 @@ export interface IAvailableEditals {
 }
 
 export type TState = {
-  availableEditals: IAvailableEditals[];
+  availableEditals: IAvailableEdital[];
 };
 
 export type TActions = {
-  setEdital: (editals: IAvailableEditals) => void;
-  setListEditals: (editals: IAvailableEditals[]) => void;
+  setEdital: (editals: IAvailableEdital) => void;
+  setListEditals: (editals: IAvailableEdital[]) => void;
 };
 
 
