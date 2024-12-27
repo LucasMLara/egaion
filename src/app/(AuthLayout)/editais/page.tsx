@@ -2,7 +2,7 @@
 import { useEffect} from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { useAvailableEditals } from "@/store/useAvailableEditals";
-import  Dayjs from "dayjs"
+import { formatDate } from "@/lib/utils";
 
 export default function Editais() {
   const { availableEditals, setListEditals } = useAvailableEditals();
@@ -38,7 +38,7 @@ export default function Editais() {
             key={card.idSCEdital}
             editalCardContent={card.ResumoEdital}
             editalCardTitle={card.NomeEdital}
-            editalCardDate={Dayjs(card.InicioEdital).format("DD/MM/YYYY")}
+            editalCardDate={formatDate(card.InicioEdital)}
             editalDialogTitle={card.NomeEdital}
             editalDialogDescription={card.Objetivos}
             editalDialogContent={card.Objetivos}
