@@ -126,17 +126,20 @@ export const history = [
     title: "Extensão do Prazo",
     date: "2023-10-10",
     status: "Em andamento",
+    author: "Admin",
   },
   {
     id: 2,
     title: "Ratificação",
     date: "2022-10-10",
     status: "Em andamento",
+    author: "Admin",
   },
   {
     id: 3,
     title: "Abertura de Processo",
     date: "2021-10-10",
     status: "Em andamento",
+    author: "Admin",
   },
 ];
