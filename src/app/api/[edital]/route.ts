@@ -9,6 +9,12 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             return NextResponse.json({ error: "ID do edital inválido ou Inexistente" }, { status: 400 });
         }
 
+        const foundEditalHistory = await prisma.historico.findFirst({
+            where: {
+                SCEdital: parseInt(edital),
+            },
+        });
+
         const foundEdital = await prisma.sCEdital.findFirst({
             where: {
                 idSCEdital: parseInt(edital),
@@ -25,7 +31,14 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             )
         );
 
-        return NextResponse.json(serializedEdital);
+        const serializedEditalHistory = JSON.parse(
+            JSON.stringify(foundEditalHistory, (_, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
+
+        return NextResponse.json({serializedEdital, serializedEditalHistory });
+
     } catch (error: any) {
         console.error("Error fetching data:", error);
         return NextResponse.json(
