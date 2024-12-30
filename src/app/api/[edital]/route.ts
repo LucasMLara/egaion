@@ -9,13 +9,13 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             return NextResponse.json({ error: "ID do edital inválido ou Inexistente" }, { status: 400 });
         }
 
-        const foundEditalHistory = await prisma.historico.findFirst({
+        const foundEditalHistory = await prisma.historico.findMany({
             where: {
                 SCEdital: parseInt(edital),
             },
         });
 
-        const foundEdital = await prisma.sCEdital.findFirst({
+        const foundEdital = await prisma.sCEdital.findUnique({
             where: {
                 idSCEdital: parseInt(edital),
             },
