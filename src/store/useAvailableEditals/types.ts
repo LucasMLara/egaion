@@ -1,5 +1,5 @@
 export type IAvailableEdital = {
-  idSCEdital: string;
+  serializedEdital: {idSCEdital: string;
   finalEnt: number;
   baCreatedTime: string;
   baGuid: string;
@@ -24,7 +24,7 @@ export type IAvailableEdital = {
   ObjetoEditalArquivo: number;
   ResumoEdital: string;
   ConfirmarDadosCadastro: boolean;
-  SelecionadoExclusao: string | null;
+  SelecionadoExclusao: string | null;}
   serializedEditalHistory: {
     idHistorico: string;
     finalEnt: number;
