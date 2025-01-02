@@ -28,7 +28,7 @@ export default function EditalId({
     useEditalStore();
 
   const initialCurrentEditalState : IAvailableEdital = {
-    serializedEdital: {
+    
 
       idSCEdital: "",
       finalEnt: 0,
@@ -56,7 +56,6 @@ export default function EditalId({
       ResumoEdital: "",
       ConfirmarDadosCadastro: false,
       SelecionadoExclusao: "",
-    },
       serializedEditalHistory: []
   }
     const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(initialCurrentEditalState);
@@ -146,9 +145,9 @@ export default function EditalId({
           <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
             <h1 className="text-center m-4 text-2xl font-bold">
               {" "}
-              Edital : {currentEdital.serializedEdital.NomeEdital}{" "}
+              Edital : {currentEdital.NomeEdital}{" "}
             </h1>
-            <h2 className="text-center text-lg">Data: {formatDate(currentEdital.serializedEdital.InicioEdital)}</h2>
+            <h2 className="text-center text-lg">Data: {formatDate(currentEdital.InicioEdital)}</h2>
             <h1 className="text-center text-md font-semibold my-3">
               Clique no Link abaixo para visualizar as informaçoes atualizadas
               do edital.
