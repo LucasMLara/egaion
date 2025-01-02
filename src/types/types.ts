@@ -254,6 +254,13 @@ export const AreaDocSchema = z.object({
   ),
 });
 
+export type HistoryItem = {
+  DataCriacao: string;
+  Descricao: string;
+  Responsavel: string;
+  idHistorico: string;
+}
+
 export type IAreaDocSchema = z.infer<typeof AreaDocSchema>;
 
 export type FileInputForm = z.infer<typeof fileInputSchema>;
