@@ -7,6 +7,17 @@ export function formatDate(date: string) {
   return Dayjs(date).format("DD/MM/YYYY");
 }
 
+export function sanitizeData(data: any[]) {
+  return data.map((edital) =>
+    Object.fromEntries(
+      Object.entries(edital).map(([key, value]) => [
+        key,
+        typeof value === "bigint" ? value.toString() : value,
+      ])
+    )
+  );
+}                               
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
