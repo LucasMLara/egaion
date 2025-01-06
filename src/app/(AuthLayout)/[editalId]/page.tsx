@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { formatDate, createBlobUrl } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
@@ -28,6 +28,7 @@ export default function EditalId({
 
   const initialCurrentEditalState: IAvailableEdital = {
     idSCEdital: "",
+    ObjetoEditalBase64: "",
     finalEnt: 0,
     baCreatedTime: "",
     baGuid: "",
@@ -181,8 +182,8 @@ export default function EditalId({
             </h1>
             <ul className="my-3">
               <li className="text-center text-lg font-bold ">
-                <a href="https://www.egaion.com.br/" target="_blank">
-                  Egaion
+                <a href={createBlobUrl(currentEdital.ObjetoEditalBase64, "application/pdf")} target="_blank">
+                  Objeto do Edital
                 </a>
               </li>
             </ul>
