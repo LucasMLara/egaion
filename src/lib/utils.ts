@@ -22,6 +22,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function createBlobUrl(base64: string, mimeType: string): string {
+  
+  const base64Content = base64.includes(",") ? base64.split(",")[1] : base64;
+
+  
+  const byteString = atob(base64Content);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uintArray = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < byteString.length; i++) {
+    uintArray[i] = byteString.charCodeAt(i);
+  }
+
+  const blob = new Blob([uintArray], { type: mimeType });
+  return URL.createObjectURL(blob);
+}
+
+
 
 export function formatDocEntry(input: string) : string {
   return input.replace(/\D/g, '');
@@ -77,6 +95,7 @@ export function generateDocCardData(size: number = 20): IDocCard[] {
 
   for (let i = 0; i < length; i++) {
     const docCard: IDocCard = {
+      docFile: '',
       docId: `ID-${i + 1}`,
       docTitle: `Doc Title ${i + 1}`,
       docContent: sampleContent,
