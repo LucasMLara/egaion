@@ -77,7 +77,7 @@ export default function DocCard({
             {docDialogContent}
           </div>
         )}
-        <DialogFooter className="flex flex-col flex-wrap">
+        {/* <DialogFooter className="flex flex-col flex-wrap">
           <Input
             id="cnpj"
             type="file"
@@ -85,7 +85,7 @@ export default function DocCard({
             onChange={(e) => console.log(e)}
           />
           <Button className="bg-gradient-primary w-full">Enviar</Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );
