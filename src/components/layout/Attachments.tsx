@@ -1,29 +1,27 @@
 import React from "react";
 import DocCard from "@/components/layout/DocCard";
-import { generateDocCardData } from "@/lib/utils";
-import { IDocCard } from "@/types/types";
+import { AttachmentItem } from "@/types/types";
 
-function getData(): IDocCard[] {
-  return generateDocCardData();
-}
 
-export default function Documentacao() {
-  const docCardData = getData();
+
+
+
+export default function Documentacao( { anexos }: {anexos: AttachmentItem[] }) {
 
   return (
     <section className="flex flex-wrap flex-col gap-6 justify-center place-content-center">
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
-        {docCardData.map((card) => (
+        {anexos.map((card) => (
           <DocCard
-            key={card.docId}
+            key={card.idAnexo}
             docStatus={null}
-            docTitle={card.docTitle}
-            docDate={card.docDate}
-            docContent={card.docContent}
-            docDialogContent={card.docDialogContent}
-            docDialogDescription={card.docDialogDescription}
-            docDialogTitle={card.docDialogTitle}
-            docId={card.docId}
+            docTitle={card.Descricao}
+            docDate={card.DataCriacao}
+            docContent={card.Descricao}
+            docDialogContent={`${card.Arquivo}`}
+            docDialogDescription={card.Descricao}
+            docDialogTitle={card.Responsavel}
+            docId={card.idAnexo}
           />
         ))}
       </div>
