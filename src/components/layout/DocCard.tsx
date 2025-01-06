@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { formatDate, createBlobUrl } from "@/lib/utils";
+
 import {
   Dialog,
   DialogContent,
@@ -42,6 +44,7 @@ export default function DocCard({
   docTitle,
   docDate,
   docContent,
+  docFile,
   docDialogContent,
   docDialogDescription,
   docDialogTitle,
@@ -73,19 +76,24 @@ export default function DocCard({
         </DialogHeader>
         {docDialogContent && (
           <div>
-            <h1 className="font-bold text-lg">Justificativa:</h1>
+            <h1 className="font-bold text-lg">Arquivo:</h1>
             {docDialogContent}
           </div>
         )}
-        {/* <DialogFooter className="flex flex-col flex-wrap">
-          <Input
-            id="cnpj"
-            type="file"
-            required
-            onChange={(e) => console.log(e)}
-          />
-          <Button className="bg-gradient-primary w-full">Enviar</Button>
-        </DialogFooter> */}
+        {/* {docFile ?? (
+          <DialogFooter className="flex flex-col flex-wrap">
+            <ul className="my-3">
+              <li className="text-center text-lg font-bold ">
+                <a
+                  href={createBlobUrl(docFile, "application/pdf")}
+                  target="_blank"
+                >
+                  {docTitle}
+                </a>
+              </li>
+            </ul>
+          </DialogFooter>
+        )} */}
       </DialogContent>
     </Dialog>
   );
