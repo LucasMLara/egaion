@@ -69,7 +69,7 @@ export default function EditalId({
   const history = useMemo(() => {
     return editalHistory.map((itemHistorico) => {
       return {
-        DataCriacao: formatDate(itemHistorico.DataCriacao),
+        DataCriacao: itemHistorico.DataCriacao,
         Descricao: itemHistorico.Descricao,
         Responsavel: itemHistorico.Responsavel,
         idHistorico: itemHistorico.idHistorico,
@@ -82,7 +82,7 @@ export default function EditalId({
       return {
         idAnexo: anexo.idAnexo,
         Descricao: anexo.Descricao,
-        DataCriacao: formatDate(anexo.DataCriacao),
+        DataCriacao: anexo.DataCriacao,
         Responsavel: anexo.Responsavel,
         Arquivo: anexo.Arquivo,
         DadosPadrao: anexo.DadosPadrao,
