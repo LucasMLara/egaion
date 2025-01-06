@@ -3514,6 +3514,7 @@ model SCEdital {
   ResumoEdital               String?   @db.NVarChar(300)
   ConfirmarDadosCadastro     Boolean?
   SelecionadoExclusao        Boolean?
+  ObjetoEditalBase64         String?   @db.NText
 
   @@index([Credenciadora], map: "SCEdital_F1")
 }
@@ -3800,8 +3801,10 @@ model SCParametrizacaoEdital {
   PesquisaNomeMembro       String?  @db.NVarChar(50)
   PesquisaCPFMembro        String?  @db.NVarChar(50)
   PesquisaMembroIndicado   BigInt?
+  SCEdital                 BigInt?
 
   @@index([SCCredenciadasEdital], map: "SCParametrizacaoEdital_F2")
+  @@index([SCEdital], map: "SCParametrizacaoEdital_F3")
 }
 
 model SCStatusCredEdital {
