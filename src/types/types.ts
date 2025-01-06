@@ -219,6 +219,7 @@ export type ConsultantRowDisplay = {
 };
 
 export const MockDocCardSchema = z.object({
+  docFile: z.string(),
   docId: z.string(),
   docTitle: z.string(),
   docContent: z.string(),
@@ -262,7 +263,7 @@ export type HistoryItem = {
 }
 
 export type AttachmentItem = {
-  Arquivo: number,
+  Arquivo: string,
   DadosPadrao: null,
   DataCriacao: string,
   Descricao: string,
