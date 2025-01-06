@@ -13,8 +13,7 @@ import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
 import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
 import { HistoryItem, AttachmentItem } from "@/types/types";
-
-
+import { LoaderIcon } from "lucide-react";
 
 export default function EditalId({
   params,
@@ -27,90 +26,101 @@ export default function EditalId({
   const { permissaoDeCadastroEdital, Consultores, Documentos, Qualificacao } =
     useEditalStore();
 
-  const initialCurrentEditalState : IAvailableEdital = {
-      idSCEdital: "",
-      finalEnt: 0,
-      baCreatedTime: "",
-      baGuid: "",
-      QuantidadeMinimaLocalidade: 0,
-      QuantidadeMaximaLocalidade: 0,
-      LocalidadePadrao: "",
-      DocumentacaoPadrao: "",
-      ObjetoEdital: "",
-      TipodeCredenciamento: "",
-      NomeEdital: "",
-      FimEdital: "",
-      Credenciadora: "",
-      TipoChamadas: "",
-      InicioEdital: "",
-      Objetivos: "",
-      EscolhaLocalidades: false,
-      Status: "",
-      PesquisaNome: "",
-      PesquisaCNPJ: "",
-      PesquisaStatusCred: "",
-      PesquisaCredenciada: "",
-      ObjetoEditalArquivo: 0,
-      ResumoEdital: "",
-      ConfirmarDadosCadastro: false,
-      SelecionadoExclusao: "",
-      serializedEditalHistory: [],
-      serializedEditalAttachments: [],
-  }
-    const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(initialCurrentEditalState);
-    const [editalHistory, setEditalHistory] = useState<HistoryItem[]>([]);
-    const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>([]);
-    
-    const history = useMemo(() => {
-      return editalHistory.map((itemHistorico) => {
-        return {
-          DataCriacao: formatDate(itemHistorico.DataCriacao),
-          Descricao: itemHistorico.Descricao,
-          Responsavel: itemHistorico.Responsavel,
-          idHistorico: itemHistorico.idHistorico,
-        };
-      })
-    }, [editalHistory]);
+  const initialCurrentEditalState: IAvailableEdital = {
+    idSCEdital: "",
+    finalEnt: 0,
+    baCreatedTime: "",
+    baGuid: "",
+    QuantidadeMinimaLocalidade: 0,
+    QuantidadeMaximaLocalidade: 0,
+    LocalidadePadrao: "",
+    DocumentacaoPadrao: "",
+    ObjetoEdital: "",
+    TipodeCredenciamento: "",
+    NomeEdital: "",
+    FimEdital: "",
+    Credenciadora: "",
+    TipoChamadas: "",
+    InicioEdital: "",
+    Objetivos: "",
+    EscolhaLocalidades: false,
+    Status: "",
+    PesquisaNome: "",
+    PesquisaCNPJ: "",
+    PesquisaStatusCred: "",
+    PesquisaCredenciada: "",
+    ObjetoEditalArquivo: 0,
+    ResumoEdital: "",
+    ConfirmarDadosCadastro: false,
+    SelecionadoExclusao: "",
+    serializedEditalHistory: [],
+    serializedEditalAttachments: [],
+  };
+  const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(
+    initialCurrentEditalState
+  );
+  const [editalHistory, setEditalHistory] = useState<HistoryItem[]>([]);
+  const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
 
-    
-    const attachments = useMemo(() => {
-      return editalAttachments.map((anexo: AttachmentItem) => {
-        return {
-          idAnexo: anexo.idAnexo,
-          Descricao: anexo.Descricao,
-          DataCriacao: formatDate(anexo.DataCriacao),
-          Responsavel: anexo.Responsavel,
-          Arquivo: anexo.Arquivo,
-          DadosPadrao: anexo.DadosPadrao,
-          SCEdital: anexo.SCEdital,
-        };
-      })
-    }, [editalAttachments]);
+  const history = useMemo(() => {
+    return editalHistory.map((itemHistorico) => {
+      return {
+        DataCriacao: formatDate(itemHistorico.DataCriacao),
+        Descricao: itemHistorico.Descricao,
+        Responsavel: itemHistorico.Responsavel,
+        idHistorico: itemHistorico.idHistorico,
+      };
+    });
+  }, [editalHistory]);
 
-    useEffect(() => {
-      async function fetchEdital() {
-          try {
-              const response = await fetch(`/api/${params.editalId}`);
-              const data = await response.json();
-              if (!response.ok) {
-                  console.error("Error:", data.error || data.message);
-              } else {
-                  setCurrentEdital(data.serializedEdital);
-                  setEditalHistory(data.serializedEditalHistory);
-                  setEditalAttachments(data.serializedEditalAttachments);
-              }
-          } catch (error) {
-              console.error("Fetch error:", error);
-          }
+  const attachments = useMemo(() => {
+    return editalAttachments.map((anexo: AttachmentItem) => {
+      return {
+        idAnexo: anexo.idAnexo,
+        Descricao: anexo.Descricao,
+        DataCriacao: formatDate(anexo.DataCriacao),
+        Responsavel: anexo.Responsavel,
+        Arquivo: anexo.Arquivo,
+        DadosPadrao: anexo.DadosPadrao,
+        SCEdital: anexo.SCEdital,
+      };
+    });
+  }, [editalAttachments]);
+
+  useEffect(() => {
+    async function fetchEdital() {
+      try {
+        const response = await fetch(`/api/${params.editalId}`);
+        const data = await response.json();
+        if (!response.ok) {
+          console.error("Error:", data.error || data.message);
+        } else {
+          console.log("Edital:", data);
+          setCurrentEdital(data.serializedEdital);
+          setEditalHistory(data.serializedEditalHistory);
+          setEditalAttachments(data.serializedEditalAttachments);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error("Fetch error:", error);
       }
-      if (params.editalId) {
-          fetchEdital();
-      }
+    }
+    if (params.editalId) {
+      fetchEdital();
+    }
   }, [params.editalId]);
-  
-  
-  
 
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <LoaderIcon className="animate-spin size-8" />
+      </div>
+    );
+  }
   return (
     <section className="h-full">
       <Tabs defaultValue="content" className="w-auto m-4">
@@ -150,11 +160,11 @@ export default function EditalId({
           <InsertQualificacaoTecnicaDocs />
         </TabsContent>
         <TabsContent value="historico">
-      <EditalHistory historico={history}/>
+          <EditalHistory historico={history} />
         </TabsContent>
         <TabsContent value="anexos">
           <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
-          <Attachments anexos={attachments}/>
+          <Attachments anexos={attachments} />
         </TabsContent>
         <TabsContent value="content" className="py-5">
           <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
@@ -162,7 +172,9 @@ export default function EditalId({
               {" "}
               Edital : {currentEdital.NomeEdital}{" "}
             </h1>
-            <h2 className="text-center text-lg">Data: {formatDate(currentEdital.InicioEdital)}</h2>
+            <h2 className="text-center text-lg">
+              Data: {formatDate(currentEdital.InicioEdital)}
+            </h2>
             <h1 className="text-center text-md font-semibold my-3">
               Clique no Link abaixo para visualizar as informaçoes atualizadas
               do edital.
