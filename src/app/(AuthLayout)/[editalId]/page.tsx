@@ -163,7 +163,7 @@ export default function EditalId({
           <EditalHistory historico={history} />
         </TabsContent>
         <TabsContent value="anexos">
-          <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
+          { attachments.length > 0 && <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>}
           <Attachments anexos={attachments} />
         </TabsContent>
         <TabsContent value="content" className="py-5">
