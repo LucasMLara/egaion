@@ -15,6 +15,12 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             },
         });
 
+        const foundEditalAttachments = await prisma.anexo.findMany({
+            where: {
+                SCEdital: parseInt(edital),
+            },
+        });
+
         const foundEdital = await prisma.sCEdital.findUnique({
             where: {
                 idSCEdital: parseInt(edital),
@@ -31,13 +37,18 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             )
         );
 
+        const serializedEditalAttachments = JSON.parse(
+            JSON.stringify(foundEditalAttachments, (_, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
         const serializedEditalHistory = JSON.parse(
             JSON.stringify(foundEditalHistory, (_, value) =>
                 typeof value === "bigint" ? value.toString() : value
             )
         );
 
-        return NextResponse.json({serializedEdital, serializedEditalHistory });
+        return NextResponse.json({serializedEdital, serializedEditalHistory, serializedEditalAttachments });
 
     } catch (error: any) {
         console.error("Error fetching data:", error);
