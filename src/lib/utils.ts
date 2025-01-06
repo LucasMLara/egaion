@@ -22,6 +22,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+
+export function formatDocEntry(input: string) : string {
+  return input.replace(/\D/g, '');
+}
+
 export const currentDate = new Date().toLocaleDateString("pt-BR");
 
 export const maskCpf = (cpf: string) => {
