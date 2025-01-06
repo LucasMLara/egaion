@@ -261,6 +261,16 @@ export type HistoryItem = {
   idHistorico: string;
 }
 
+export type AttachmentItem = {
+  Arquivo: number,
+  DadosPadrao: null,
+  DataCriacao: string,
+  Descricao: string,
+  Responsavel: string,
+  SCEdital: string,
+  idAnexo: string
+}
+
 export type IAreaDocSchema = z.infer<typeof AreaDocSchema>;
 
 export type FileInputForm = z.infer<typeof fileInputSchema>;
