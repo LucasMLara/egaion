@@ -36,6 +36,18 @@ export type IAvailableEdital = {
     Descricao: string;
     SCEdital: string;
   }[];
+  serializedEditalAttachments: {
+    Arquivo: number,
+    DadosPadrao: null,
+    DataCriacao: string,
+    Descricao: string,
+    Responsavel: string,
+    SCEdital: string,
+    baCreatedTime: string,
+    baGuid: string,
+    finalEnt: number,
+    idAnexo: string
+  }[];
 };
 
 export type TState = {
