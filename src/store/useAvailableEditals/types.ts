@@ -1,5 +1,6 @@
 export type IAvailableEdital = {
   idSCEdital: string;
+  ObjetoEditalBase64: string;
   finalEnt: number;
   baCreatedTime: string;
   baGuid: string;
