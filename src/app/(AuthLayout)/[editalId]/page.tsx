@@ -12,7 +12,7 @@ import ConsultantsArea from "@/components/layout/ConsultantsArea";
 import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
 import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
-import { HistoryItem } from "@/types/types";
+import { HistoryItem, AttachmentItem } from "@/types/types";
 
 
 
@@ -28,8 +28,6 @@ export default function EditalId({
     useEditalStore();
 
   const initialCurrentEditalState : IAvailableEdital = {
-    
-
       idSCEdital: "",
       finalEnt: 0,
       baCreatedTime: "",
@@ -56,10 +54,12 @@ export default function EditalId({
       ResumoEdital: "",
       ConfirmarDadosCadastro: false,
       SelecionadoExclusao: "",
-      serializedEditalHistory: []
+      serializedEditalHistory: [],
+      serializedEditalAttachments: [],
   }
     const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(initialCurrentEditalState);
     const [editalHistory, setEditalHistory] = useState<HistoryItem[]>([]);
+    const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>([]);
     
     const history = useMemo(() => {
       return editalHistory.map((itemHistorico) => {
@@ -72,6 +72,21 @@ export default function EditalId({
       })
     }, [editalHistory]);
 
+    
+    const attachments = useMemo(() => {
+      return editalAttachments.map((anexo: AttachmentItem) => {
+        return {
+          idAnexo: anexo.idAnexo,
+          Descricao: anexo.Descricao,
+          DataCriacao: formatDate(anexo.DataCriacao),
+          Responsavel: anexo.Responsavel,
+          Arquivo: anexo.Arquivo,
+          DadosPadrao: anexo.DadosPadrao,
+          SCEdital: anexo.SCEdital,
+        };
+      })
+    }, [editalAttachments]);
+
     useEffect(() => {
       async function fetchEdital() {
           try {
@@ -80,8 +95,9 @@ export default function EditalId({
               if (!response.ok) {
                   console.error("Error:", data.error || data.message);
               } else {
-                  setCurrentEdital(data);
+                  setCurrentEdital(data.serializedEdital);
                   setEditalHistory(data.serializedEditalHistory);
+                  setEditalAttachments(data.serializedEditalAttachments);
               }
           } catch (error) {
               console.error("Fetch error:", error);
@@ -138,8 +154,7 @@ export default function EditalId({
         </TabsContent>
         <TabsContent value="anexos">
           <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
-          {/* //TODO Receber por props */}
-          <Attachments />
+          <Attachments anexos={attachments}/>
         </TabsContent>
         <TabsContent value="content" className="py-5">
           <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
