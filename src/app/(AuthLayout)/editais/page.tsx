@@ -1,11 +1,13 @@
 "use client";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { useAvailableEditals } from "@/store/useAvailableEditals";
 import { formatDate } from "@/lib/utils";
+import { LoaderIcon } from "lucide-react";
 
 export default function Editais() {
   const { availableEditals, setListEditals } = useAvailableEditals();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchEditais() {
@@ -13,6 +15,7 @@ export default function Editais() {
         const response = await fetch("/api/editais");
         const { editais } = await response.json();
         setListEditals(editais);
+        setLoading(false);
         
       } catch (error) {
         console.log('Erro', error);
@@ -25,7 +28,13 @@ export default function Editais() {
 
   
 
-
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <LoaderIcon className="animate-spin size-8" />
+      </div>
+    );
+  }
   return (
     <section className="flex flex-wrap gap-6 py-10 items-center justify-center flex-col">
       <h1 className="text-2xl font-bold text-neutral-700 text-center m-9">
