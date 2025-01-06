@@ -1,6 +1,7 @@
 import React from "react";
 import DocCard from "@/components/layout/DocCard";
 import { AttachmentItem } from "@/types/types";
+import { formatDate } from "@/lib/utils";
 
 
 
@@ -25,7 +26,7 @@ export default function Documentacao( { anexos }: {anexos: AttachmentItem[] }) {
             key={card.idAnexo}
             docStatus={null}
             docTitle={card.Descricao}
-            docDate={card.DataCriacao}
+            docDate={formatDate(card.DataCriacao)}
             docContent={card.Descricao}
             docDialogContent={`${card.Arquivo}`}
             docDialogDescription={card.Descricao}
