@@ -7,6 +7,14 @@ import { AttachmentItem } from "@/types/types";
 
 
 export default function Documentacao( { anexos }: {anexos: AttachmentItem[] }) {
+  if (anexos.length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-md">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-4">
+          Não há anexos cadastrados neste edital.
+        </h1>
+      </div>
+    );
 
   return (
     <section className="flex flex-wrap flex-col gap-6 justify-center place-content-center">
