@@ -21,6 +21,7 @@ export default function Documentacao( { anexos }: {anexos: AttachmentItem[] }) {
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
         {anexos.map((card) => (
           <DocCard
+            docFile={card.Arquivo}
             key={card.idAnexo}
             docStatus={null}
             docTitle={card.Descricao}
