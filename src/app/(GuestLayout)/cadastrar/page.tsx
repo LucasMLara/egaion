@@ -45,9 +45,13 @@ export default function Cadastro() {
   } = form;
 
   async function onSubmit(data: ISignUp) {
-    await signUp(data);
-    toast.success("Cadastro realizado");
-    router.push("/");
+    try {
+      await signUp(data);
+      toast.success("Cadastro realizado");
+      router.push("/");
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
   }
 
   return (
