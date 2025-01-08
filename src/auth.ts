@@ -1,15 +1,13 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
-import { users } from "./users";
-import {compareSync} from "bcryptjs";
+import { findUserByCredentials } from "./users";
 import { z } from "zod";
 
 const hour = 60 * 60;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
-    maxAge: 24 * hour, // 24 hours
+    maxAge: 24 * hour,
   },
   providers: [
     Credentials({
@@ -40,20 +38,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error(schemaError.errors[0].message);
         }
 
-        const user = users[credentials.email as keyof typeof users];
+        const user = await findUserByCredentials(credentials.email as string, credentials.password as string);
 
-        if (
-          !user ||
-          !compareSync(credentials.password as string, user.password)
-        ) {
+        if (!user) {
           throw new Error("Suas credenciais estão incorretas");
         }
 
-        return {
-          email: credentials.email as string,
-        };
+        return user;
       },
     }),
-    Google,
   ],
 });
