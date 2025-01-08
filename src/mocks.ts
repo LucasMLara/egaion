@@ -1,9 +1,5 @@
-import { HistoryItem, MultipleCheckBoxOptions } from "@/types/types";
-type mockInputFiles = {
-  [key: string]: {
-    [key: string]: string;
-  }[];
-};
+import { mockInputFiles, MultipleCheckBoxOptions } from "@/types/types";
+
 
 export const mockDocumentosAreaConsultor: mockInputFiles[] = [
   {
