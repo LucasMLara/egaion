@@ -272,8 +272,12 @@ export type AttachmentItem = {
   idAnexo: string
 }
 
+export type mockInputFiles = {
+  [key: string]: {
+    [key: string]: string;
+  }[];
+};
 export type IAreaDocSchema = z.infer<typeof AreaDocSchema>;
-
 export type FileInputForm = z.infer<typeof fileInputSchema>;
 export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
