@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import signUp from "@/services/signup";
 
 import {
   Form,
@@ -23,7 +23,6 @@ import { LoaderIcon } from "lucide-react";
 import { formatCnpj, formatPhone } from "@/lib/formatters";
 
 export default function Cadastro() {
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const router = useRouter();
 
   const form = useForm<ISignUp>({
@@ -40,12 +39,14 @@ export default function Cadastro() {
     },
   });
 
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
+
   async function onSubmit(data: ISignUp) {
-    setFormIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setFormIsSubmitting(false);
+    await signUp(data);
     toast.success("Cadastro realizado");
-    console.log(data);
     router.push("/");
   }
 
@@ -53,10 +54,7 @@ export default function Cadastro() {
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-col w-96">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
             <FormField
               control={form.control}
               name="razaoSocial"
@@ -191,10 +189,12 @@ export default function Cadastro() {
             <div className="mt-5 gap-3 flex flex-col">
               <Button
                 type="submit"
-                disabled={formIsSubmitting}
+                disabled={
+                  isSubmitting || Object.keys(form.formState.errors).length > 0
+                }
                 className="w-full bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all"
               >
-                {formIsSubmitting ? (
+                {isSubmitting ? (
                   <LoaderIcon className="animate-spin" />
                 ) : (
                   "Cadastrar"
