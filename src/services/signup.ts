@@ -2,7 +2,8 @@
 import prisma from "@/db";
 import { ISignUp } from "@/types/types";
 import { hashSync } from "bcryptjs";
-import { formatDocEntry } from "@/lib/utils";
+import { formatDocEntry, sanitizeData } from "@/lib/utils";
+
 
 
 export default async function signUp(newUser: ISignUp) {
@@ -14,11 +15,6 @@ export default async function signUp(newUser: ISignUp) {
         typeof newUser.razaoSocial !== "string"
     ) {
         throw new Error("Todos os campos devem ser preenchidos corretamente");
-    }
-
-
-    if (typeof newUser.password.password !== "string") {
-        throw new Error("Senha inválida");
     }
 
     const userAlreadyExists = await prisma.sCCredenciada.findFirst({
@@ -33,18 +29,35 @@ export default async function signUp(newUser: ISignUp) {
     if (userAlreadyExists) {
         throw new Error("Usuário já existe");
     }
-    const newUserOkay = {
-        idSCCredenciada: 8,
-        CNPJ: formatDocEntry(newUser.CNPJ),
-        Telefone: formatDocEntry(newUser.telefone),
-        Email: newUser.email.email,
-        RazaoSocial: newUser.razaoSocial,
-        Senha: hashSync(newUser.password.password, 12),
-    }
 
-    console.log("New User:", newUserOkay);
+    const idSCCredenciada = await prisma.bAGENERATORTABLE.findFirst({
+        where: {
+            sequenceName: "SCCREDENCIADA",
+        }
+    })
 
-    await prisma.sCCredenciada.create({
-        data: newUserOkay,
+    const sanitizedData = sanitizeData([idSCCredenciada])
+    const newUserId = +(sanitizedData[0] as { sequenceValue: number }).sequenceValue + 1;
+
+    const createdUser = await prisma.sCCredenciada.create({
+        data: {
+            idSCCredenciada: newUserId,
+            CNPJ: formatDocEntry(newUser.CNPJ),
+            Telefone: formatDocEntry(newUser.telefone),
+            Email: newUser.email.email,
+            RazaoSocial: newUser.razaoSocial,
+            Senha: hashSync(newUser.password.password, 12),
+        },
     });
+
+    if (createdUser) {
+        await prisma.bAGENERATORTABLE.update({
+            where: {
+                sequenceName: "SCCREDENCIADA",
+            },
+            data: {
+                sequenceValue: newUserId,
+            }
+        });
+    }
 }
