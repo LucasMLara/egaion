@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import SebraeLogo from "@/assets/Sebrae.svg";
 import signIn from "@/services/signIn";
 import { useFormState } from "react-dom";
 import React from "react";
@@ -69,14 +68,6 @@ export default function Login() {
                 "Entrar"
               )}
             </Button>
-            {/* <Button
-              type="button"
-              onClick={async () => {
-                await nextAuthSignIn("google");
-              }}
-            >
-              Continuar com Google
-            </Button> */}
           </form>
           <div className="mt-4 text-center text-sm ">
             Ainda não possui uma conta?
