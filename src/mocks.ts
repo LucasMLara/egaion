@@ -1,7 +1,7 @@
-import { mockInputFiles, MultipleCheckBoxOptions } from "@/types/types";
+import { RequiredDocuments, MultipleCheckBoxOptions } from "@/types/types";
 
 
-export const mockDocumentosAreaConsultor: mockInputFiles[] = [
+export const mockDocumentosAreaConsultor: RequiredDocuments[] = [
   {
     Documentos: [
       { "Relato de Experiência": "Relato de Experiência" },
@@ -65,7 +65,7 @@ export const accreditationData = [
   },
 ];
 
-export const mockInputsEmpresa: mockInputFiles[] = [
+export const mockInputsEmpresa: RequiredDocuments[] = [
   {
     "Habilitação Jurídica": [
       {
