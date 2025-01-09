@@ -12,7 +12,7 @@ import ConsultantsArea from "@/components/layout/ConsultantsArea";
 import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
 import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
-import { HistoryItem, AttachmentItem, mockInputFiles } from "@/types/types";
+import { HistoryItem, AttachmentItem, RequiredDocuments } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
 
 export default function EditalId({
@@ -66,11 +66,11 @@ export default function EditalId({
   );
 
   const [requiredEditalDocs, setRequiredEditalDocs] = useState<
-    mockInputFiles[]
+    RequiredDocuments[]
   >([]);
 
   const [documentCategories, setDocumentCategories] = useState<
-    mockInputFiles[]
+    RequiredDocuments[]
   >([]);
 
   const [loading, setLoading] = useState(true);
@@ -189,7 +189,7 @@ export default function EditalId({
           <ConsultantsArea />
         </TabsContent>
         <TabsContent value="documents">
-          <InsertEditalDocuments />
+          <InsertEditalDocuments documentosRequeridos={editalDocsPerCategory} />
         </TabsContent>
         <TabsContent value="qualificacaotecnica">
           <InsertQualificacaoTecnicaDocs />
