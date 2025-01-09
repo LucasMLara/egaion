@@ -272,7 +272,7 @@ export type AttachmentItem = {
   idAnexo: string
 }
 
-export type mockInputFiles = {
+export type RequiredDocuments = {
   [key: string]: {
     [key: string]: string;
   }[];
