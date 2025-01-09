@@ -24,7 +24,7 @@ export default function InsertEditalDocuments({
 }) {
   const form = useForm<IEditalDoc>({
     resolver: zodResolver(DocSchema),
-    defaultValues: { mockInputFiles: [] },
+    defaultValues: { editalDocs: [] },
   });
 
   const {
@@ -81,8 +81,19 @@ export default function InsertEditalDocuments({
   }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores]);
 
   function handleRemoveFile(documentId: string) {
-    removerDocumento(documentId);
+    const documentToRemove = Documentos.find((doc) => doc.id === documentId);
+
+    if (documentToRemove) {
+      URL.revokeObjectURL(documentToRemove.blob);
+
+      removerDocumento(documentId);
+
+      console.log(`Document with ID ${documentId} removed successfully.`);
+    } else {
+      console.error(`Document with ID ${documentId} not found.`);
+    }
   }
+
   return (
     <div className="grid place-content-center text-center">
       {documentosRequeridos.map((categoria, index) => {
@@ -102,7 +113,7 @@ export default function InsertEditalDocuments({
                 return (
                   <Form key={`${fieldName}-${fieldIndex}`} {...form}>
                     <FormField
-                      name={inputName as `mockInputFiles.${number}.${string}`}
+                      name={inputName as `editalDocs.${number}.${string}`}
                       control={form.control}
                       render={({ field }) => (
                         <FormItem>
@@ -144,7 +155,7 @@ export default function InsertEditalDocuments({
                                       field.onChange(file);
                                       if (file) {
                                         form.clearErrors(
-                                          inputName as `mockInputFiles.${number}.${string}`
+                                          inputName as `editalDocs.${number}.${string}`
                                         );
                                       }
                                     }}
