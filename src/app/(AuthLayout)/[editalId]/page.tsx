@@ -12,7 +12,7 @@ import ConsultantsArea from "@/components/layout/ConsultantsArea";
 import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
 import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
-import { HistoryItem, AttachmentItem } from "@/types/types";
+import { HistoryItem, AttachmentItem, mockInputFiles } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
 
 export default function EditalId({
@@ -64,7 +64,38 @@ export default function EditalId({
   const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>(
     []
   );
+
+  const [requiredEditalDocs, setRequiredEditalDocs] = useState<
+    mockInputFiles[]
+  >([]);
+
+  const [documentCategories, setDocumentCategories] = useState<
+    mockInputFiles[]
+  >([]);
+
   const [loading, setLoading] = useState(true);
+
+  const editalDocsPerCategory = useMemo(() => {
+    const categorias = documentCategories.map((categoria) => ({
+      Codigo: String(categoria.Codigo),
+      Descricao: categoria.Descricao,
+    }));
+
+    const documentacao = requiredEditalDocs.map((doc) => ({
+      ...doc,
+      Categoria: String(doc.Categoria),
+    }));
+
+    const filteredDocuments = categorias.map((categoria) => ({
+      [String(categoria.Descricao)]: documentacao
+        .filter((doc) => doc.Categoria === categoria.Codigo)
+        .map((doc: any) => ({
+          [doc.Nome.toLowerCase().replace(/ /g, "")]: doc.Nome,
+        })),
+    }));
+
+    return filteredDocuments;
+  }, [documentCategories, requiredEditalDocs]);
 
   const history = useMemo(() => {
     return editalHistory.map((itemHistorico) => {
@@ -99,10 +130,11 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
-          console.log("Edital:", data);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
           setEditalAttachments(data.serializedEditalAttachments);
+          setDocumentCategories(data.serializedEditalDocCategorias);
+          setRequiredEditalDocs(data.serializedEditalDocuments);
           setLoading(false);
         }
       } catch (error) {
@@ -114,6 +146,8 @@ export default function EditalId({
       fetchEdital();
     }
   }, [params.editalId]);
+
+  console.log(editalDocsPerCategory);
 
   if (loading) {
     return (
@@ -164,7 +198,9 @@ export default function EditalId({
           <EditalHistory historico={history} />
         </TabsContent>
         <TabsContent value="anexos">
-          { attachments.length > 0 && <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>}
+          {attachments.length > 0 && (
+            <h2 className="text-lg text-center font-bold mb-4">Anexos</h2>
+          )}
           <Attachments anexos={attachments} />
         </TabsContent>
         <TabsContent value="content" className="py-5">
@@ -182,7 +218,13 @@ export default function EditalId({
             </h1>
             <ul className="my-3">
               <li className="text-center text-lg font-bold ">
-                <a href={createBlobUrl(currentEdital.ObjetoEditalBase64, "application/pdf")} target="_blank">
+                <a
+                  href={createBlobUrl(
+                    currentEdital.ObjetoEditalBase64,
+                    "application/pdf"
+                  )}
+                  target="_blank"
+                >
                   Objeto do Edital
                 </a>
               </li>
