@@ -20,7 +20,7 @@ export const fileSchema = z
 
 export const DocSchema = z.object({
   areaId: z.string().optional(),
-  mockInputFiles: z.array(
+  editalDocs: z.array(
     z.record(
       z.string(),
       z.array(
