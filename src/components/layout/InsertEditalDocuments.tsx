@@ -13,17 +13,28 @@ import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { DocSchema, IEditalDoc } from "@/types/types";
+import { DocSchema, IEditalDoc, RequiredDocuments } from "@/types/types";
 import { mockInputsEmpresa } from "@/mocks";
 import { Input } from "@/components/ui/input";
 
-export default function InsertEditalDocuments() {
+export default function InsertEditalDocuments({
+  documentosRequeridos,
+}: {
+  documentosRequeridos: RequiredDocuments[];
+}) {
   const form = useForm<IEditalDoc>({
     resolver: zodResolver(DocSchema),
     defaultValues: { mockInputFiles: [] },
   });
 
-  const { Documentos, cadastrarDocumento, removerDocumento, alterarPermissaoEdital, Qualificacao, Consultores } = useEditalStore();
+  const {
+    Documentos,
+    cadastrarDocumento,
+    removerDocumento,
+    alterarPermissaoEdital,
+    Qualificacao,
+    Consultores,
+  } = useEditalStore();
 
   async function handleFieldSubmit(fieldName: string, file: File | undefined) {
     const isValid = await form.trigger(fieldName as keyof IEditalDoc);
@@ -52,30 +63,29 @@ export default function InsertEditalDocuments() {
     0
   );
 
-  const allFilesUploaded =
-    Documentos.length === totalFileInputs;
+  const allFilesUploaded = Documentos.length === totalFileInputs;
 
-    useEffect(() => {
-      Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
-        if (
-          naturezaPrestacao.length === 0 ||
-          AreaDocuments.length === 0 ||
-          Consultores.length === 0 ||
-          !allFilesUploaded
-        ) {
-          alterarPermissaoEdital(false);
-        } else {
-          alterarPermissaoEdital(true);
-        }
-      });
-    }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores]);
+  useEffect(() => {
+    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+      if (
+        naturezaPrestacao.length === 0 ||
+        AreaDocuments.length === 0 ||
+        Consultores.length === 0 ||
+        !allFilesUploaded
+      ) {
+        alterarPermissaoEdital(false);
+      } else {
+        alterarPermissaoEdital(true);
+      }
+    });
+  }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores]);
 
   function handleRemoveFile(documentId: string) {
     removerDocumento(documentId);
   }
   return (
     <div className="grid place-content-center text-center">
-      {mockInputsEmpresa.map((categoria, index) => {
+      {documentosRequeridos.map((categoria, index) => {
         const categoryKey = Object.keys(categoria)[0];
         const filesArray = categoria[categoryKey];
         return (
