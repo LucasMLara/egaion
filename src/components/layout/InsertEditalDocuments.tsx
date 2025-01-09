@@ -101,7 +101,7 @@ export default function InsertEditalDocuments({
         const filesArray = categoria[categoryKey];
         return (
           <div key={index}>
-            <h2 className="text-lg text-center font-bold mb-4">
+            <h2 className="text-lg text-center font-bold my-2">
               {categoryKey}
             </h2>
             {filesArray.map((field, fieldIndex) =>
@@ -118,7 +118,9 @@ export default function InsertEditalDocuments({
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex flex-col">
-                            <FormLabel className="text-md">{label}</FormLabel>
+                            <FormLabel className="text-md my-1">
+                              {label}
+                            </FormLabel>
                             <FormLabel className="text-sm font-light">
                               Selecione seu arquivo clicando na área abaixo
                             </FormLabel>
