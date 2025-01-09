@@ -106,7 +106,7 @@ export default function InsertEditalDocuments({
             </h2>
             {filesArray.map((field, fieldIndex) =>
               Object.entries(field).map(([fieldName, label]) => {
-                const inputName = `mockInputFiles.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`;
+                const inputName = `editalDocs.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`;
                 const existingDocument = Documentos.find(
                   (doc) => doc.title === inputName
                 );
