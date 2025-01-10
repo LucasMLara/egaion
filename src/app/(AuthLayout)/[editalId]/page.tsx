@@ -1,7 +1,12 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { formatDate, createBlobUrl } from "@/lib/utils";
+import {
+  formatDate,
+  createBlobUrl,
+  transformData,
+  InputItem,
+} from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
@@ -73,6 +78,8 @@ export default function EditalId({
     RequiredDocuments[]
   >([]);
 
+  const [areas, setAreas] = useState<InputItem[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   const editalDocsPerCategory = useMemo(() => {
@@ -122,6 +129,10 @@ export default function EditalId({
     });
   }, [editalAttachments]);
 
+  const editalAreas = useMemo(() => {
+    return transformData(areas);
+  }, [areas]);
+
   useEffect(() => {
     async function fetchEdital() {
       try {
@@ -130,6 +141,7 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
+          setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
           setEditalAttachments(data.serializedEditalAttachments);
@@ -190,7 +202,7 @@ export default function EditalId({
           <InsertEditalDocuments documentosRequeridos={editalDocsPerCategory} />
         </TabsContent>
         <TabsContent value="qualificacaotecnica">
-          <InsertQualificacaoTecnicaDocs />
+          <InsertQualificacaoTecnicaDocs areas={editalAreas} />
         </TabsContent>
         <TabsContent value="historico">
           <EditalHistory historico={history} />
