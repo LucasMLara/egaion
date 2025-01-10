@@ -28,8 +28,13 @@ export default function EditalId({
   };
 }) {
   const router = useRouter();
-  const { permissaoDeCadastroEdital, Consultores, Documentos, Qualificacao } =
-    useEditalStore();
+  const {
+    permissaoDeCadastroEdital,
+    Consultores,
+    Documentos,
+    Qualificacao,
+    setDocumentsQty,
+  } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
     idSCEdital: "",
@@ -93,6 +98,7 @@ export default function EditalId({
       Categoria: String(doc.Categoria),
     }));
 
+    setDocumentsQty(requiredEditalDocs.length);
     const filteredDocuments = categorias.map((categoria) => ({
       [String(categoria.Descricao)]: documentacao
         .filter((doc) => doc.Categoria === categoria.Codigo)
@@ -102,7 +108,7 @@ export default function EditalId({
     }));
 
     return filteredDocuments;
-  }, [documentCategories, requiredEditalDocs]);
+  }, [documentCategories, requiredEditalDocs, setDocumentsQty]);
 
   const history = useMemo(() => {
     return editalHistory.map((itemHistorico) => {
