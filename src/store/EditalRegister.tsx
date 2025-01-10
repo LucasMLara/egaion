@@ -33,10 +33,11 @@ export type Qualificacao = {
 type ConsultantAreaDocuments = {
   areaId: string;
   files: File[];
-}
+};
 type IEditalStore = {
   Consultores: IConsultant[];
   Documentos: Document[];
+  RequiredDocumentsQty: number;
   Qualificacao: Qualificacao[];
   Historico: History[];
   Anexos: Document[];
@@ -70,9 +71,11 @@ type editalActions = {
     areaId: string
   ) => void;
   clearNaturezaPrestacao: (areaId: string) => void;
+  setDocumentsQty: (qty: number) => void;
 };
 
 const initialState: IEditalStore = {
+  RequiredDocumentsQty: 0,
   consultantAreaDocuments: [],
   Documentos: [],
   Historico: [],
@@ -90,12 +93,17 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
     (set) => ({
       ...initialState,
       insertConsultantAreaDocuments: (documents) =>
-        set({ consultantAreaDocuments: documents.flatMap(doc => doc.files.map(file => ({
-          title: file.name,
-          blob: URL.createObjectURL(file),
-          id: file.name,
-          areaId: doc.areaId
-        }))) }),
+        set({
+          consultantAreaDocuments: documents.flatMap((doc) =>
+            doc.files.map((file) => ({
+              title: file.name,
+              blob: URL.createObjectURL(file),
+              id: file.name,
+              areaId: doc.areaId,
+            }))
+          ),
+        }),
+      setDocumentsQty: (qty) => set({ RequiredDocumentsQty: qty }),
       removeConsultantAreaDocuments: () => set({ consultantAreaDocuments: [] }),
       limparConsultores: () => set({ Consultores: [] }),
       alterarPermissaoEdital: (permitir) =>
@@ -137,9 +145,12 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           Documentos: [...state.Documentos, documento],
         })),
       setEditalId: (editalId) => set({ currentEditalId: editalId }),
-      removerDocumento: (id) => set((state) => ({
-        Documentos: state.Documentos.filter((documento) => documento.id !== id)
-      })),
+      removerDocumento: (id) =>
+        set((state) => ({
+          Documentos: state.Documentos.filter(
+            (documento) => documento.id !== id
+          ),
+        })),
       cadastrarConsultor: (consultor) => {
         set((state) => ({
           Consultores: [...state.Consultores, consultor],
