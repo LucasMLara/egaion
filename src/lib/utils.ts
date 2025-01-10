@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { IEditalCard, IDocCard } from "@/types/types";
-import  Dayjs from "dayjs"
+import Dayjs from "dayjs"
 
 export function formatDate(date: string) {
   return Dayjs(date).format("DD/MM/YYYY");
@@ -16,17 +16,17 @@ export function sanitizeData(data: any[]) {
       ])
     )
   );
-}                               
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function createBlobUrl(base64: string, mimeType: string): string {
-  
+
   const base64Content = base64.includes(",") ? base64.split(",")[1] : base64;
 
-  
+
   const byteString = atob(base64Content);
   const arrayBuffer = new ArrayBuffer(byteString.length);
   const uintArray = new Uint8Array(arrayBuffer);
@@ -41,7 +41,7 @@ export function createBlobUrl(base64: string, mimeType: string): string {
 
 
 
-export function formatDocEntry(input: string) : string {
+export function formatDocEntry(input: string): string {
   return input.replace(/\D/g, '');
 }
 
@@ -110,4 +110,52 @@ export function generateDocCardData(size: number = 20): IDocCard[] {
   }
 
   return data;
+}
+
+export type InputItem = {
+  idView: string;
+  SCEdital: string;
+  Nivel: number;
+  idNivel: string;
+  idNivelPai: string;
+  Codigo: number;
+  Descricao: string;
+  Entidade: string;
+  TipoNivel: string;
+  DescTipoNivel: string;
+};
+
+export type OutputItem = {
+  id: number;
+  name: string;
+  subLevels: OutputItem[];
+};
+
+export function transformData(input: InputItem[]): OutputItem[] {
+  const idMap = new Map<string, OutputItem>();
+
+  input.forEach((item) => {
+    idMap.set(item.idNivel, {
+      id: parseInt(item.idNivel, 10),
+      name: item.Descricao,
+      subLevels: [],
+    });
+  });
+
+  const result: OutputItem[] = [];
+  input.forEach((item) => {
+    const current = idMap.get(item.idNivel);
+    if (!current) return;
+
+    if (item.idNivelPai === "0") {
+      result.push(current);
+    } else {
+      const parent = idMap.get(item.idNivelPai);
+      if (parent) {
+        parent.subLevels.push(current);
+      }
+    }
+  });
+
+  return result;
 }
