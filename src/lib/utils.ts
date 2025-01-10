@@ -135,8 +135,8 @@ export function transformData(input: InputItem[]): OutputItem[] {
   const idMap = new Map<string, OutputItem>();
 
   input.forEach((item) => {
-    idMap.set(item.idNivel, {
-      id: parseInt(item.idNivel, 10),
+    idMap.set(item.idView, {
+      id: parseInt(item.idView, 10),
       name: item.Descricao,
       subLevels: [],
     });
@@ -144,15 +144,18 @@ export function transformData(input: InputItem[]): OutputItem[] {
 
   const result: OutputItem[] = [];
   input.forEach((item) => {
-    const current = idMap.get(item.idNivel);
+    const current = idMap.get(item.idView);
     if (!current) return;
 
     if (item.idNivelPai === "0") {
       result.push(current);
     } else {
-      const parent = idMap.get(item.idNivelPai);
-      if (parent) {
-        parent.subLevels.push(current);
+      const areas = input.find((area) => area.idNivel === item.idNivelPai && area.Nivel === item.Nivel - 1);
+      if (areas) {
+        const parent = idMap.get(areas.idView);
+        if (parent) {
+          parent.subLevels.push(current);
+        }
       }
     }
   });
