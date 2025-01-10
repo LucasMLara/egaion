@@ -98,7 +98,6 @@ export default function EditalId({
       Categoria: String(doc.Categoria),
     }));
 
-    setDocumentsQty(requiredEditalDocs.length);
     const filteredDocuments = categorias.map((categoria) => ({
       [String(categoria.Descricao)]: documentacao
         .filter((doc) => doc.Categoria === categoria.Codigo)
@@ -164,6 +163,9 @@ export default function EditalId({
       fetchEdital();
     }
   }, [params.editalId]);
+  useEffect(() => {
+    setDocumentsQty(requiredEditalDocs.length);
+  }, [requiredEditalDocs.length, setDocumentsQty]);
 
   if (loading) {
     return (
