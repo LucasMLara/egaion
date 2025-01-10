@@ -15,6 +15,14 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             },
         });
 
+        const editalAreaParameters = await prisma.$queryRaw`SELECT * FROM vw_nivel_edital WHERE SCEdital = ${edital}`;
+
+        const serializedEditalParameters = JSON.parse(
+            JSON.stringify(editalAreaParameters, (_, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
+
         const foundEditalAttachments = await prisma.anexo.findMany({
             where: {
                 SCEdital: parseInt(edital),
@@ -66,7 +74,7 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             JSON.stringify(foundEditalDocuments, (_, value) => typeof value === "bigint" ? value.toString() : value)
         )
 
-        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias });
+        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters });
 
     } catch (error: any) {
         console.error("Error fetching data:", error);
