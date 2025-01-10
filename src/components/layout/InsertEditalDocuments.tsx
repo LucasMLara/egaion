@@ -34,6 +34,7 @@ export default function InsertEditalDocuments({
     alterarPermissaoEdital,
     Qualificacao,
     Consultores,
+    RequiredDocumentsQty,
   } = useEditalStore();
 
   async function handleFieldSubmit(fieldName: string, file: File | undefined) {
@@ -54,16 +55,7 @@ export default function InsertEditalDocuments({
     }
   }
 
-  const totalFileInputs = mockInputsEmpresa.reduce(
-    (count, category) =>
-      count +
-      Object.values(category)
-        .flat()
-        .reduce((subCount, fields) => subCount + Object.keys(fields).length, 0),
-    0
-  );
-
-  const allFilesUploaded = Documentos.length === totalFileInputs;
+  const allFilesUploaded = Documentos.length === RequiredDocumentsQty;
 
   useEffect(() => {
     Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
