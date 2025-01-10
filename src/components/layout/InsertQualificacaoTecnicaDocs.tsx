@@ -9,8 +9,13 @@ export default function InsertQualificacaoTecnicaDocs({
 }: {
   areas: OutputItem[];
 }) {
-  const { Qualificacao, alterarPermissaoEdital, Documentos, Consultores } =
-    useEditalStore();
+  const {
+    Qualificacao,
+    alterarPermissaoEdital,
+    Documentos,
+    Consultores,
+    RequiredDocumentsQty,
+  } = useEditalStore();
 
   useEffect(() => {
     Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
@@ -18,14 +23,20 @@ export default function InsertQualificacaoTecnicaDocs({
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
-        Documentos.length === 0
+        Documentos.length !== RequiredDocumentsQty
       ) {
         alterarPermissaoEdital(false);
       } else {
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
+  }, [
+    Qualificacao,
+    alterarPermissaoEdital,
+    Documentos,
+    Consultores,
+    RequiredDocumentsQty,
+  ]);
 
   return (
     <div className="max-h-screen overflow-auto">

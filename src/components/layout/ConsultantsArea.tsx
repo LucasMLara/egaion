@@ -14,13 +14,12 @@ import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 export default function ConsultantsArea() {
-
-
   const {
     Consultores,
     Qualificacao,
     Documentos,
     alterarPermissaoEdital,
+    RequiredDocumentsQty,
   } = useEditalStore();
 
   useEffect(() => {
@@ -29,14 +28,20 @@ export default function ConsultantsArea() {
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
-        Documentos.length === 0
+        Documentos.length !== RequiredDocumentsQty
       ) {
         alterarPermissaoEdital(false);
       } else {
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, Documentos, Consultores]);
+  }, [
+    Qualificacao,
+    alterarPermissaoEdital,
+    Documentos,
+    Consultores,
+    RequiredDocumentsQty,
+  ]);
 
   if (Qualificacao.length === 0)
     return (
@@ -59,10 +64,10 @@ export default function ConsultantsArea() {
           </Button>
         </DialogTrigger>
         <DialogContent className="md:min-w-[720px] overflow-y-auto h-2/6 md:h-1/2">
-            <DialogTitle>Insira os Dados do seu consultor:</DialogTitle>
-              <DialogDescription>
-                Atente-se aos dados inseridos antes de submeter as informações
-              </DialogDescription>
+          <DialogTitle>Insira os Dados do seu consultor:</DialogTitle>
+          <DialogDescription>
+            Atente-se aos dados inseridos antes de submeter as informações
+          </DialogDescription>
           <CreateConsultant />
         </DialogContent>
       </Dialog>
