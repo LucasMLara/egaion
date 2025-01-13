@@ -29,7 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             .string()
             .min(1, "Email é obrigatório")
             .email("Email inválido"),
-          password: z.string(),
+          password: z.string().min(1, "Senha é obrigatória"),
         });
 
         const { error: schemaError } = schema.safeParse(credentials);
