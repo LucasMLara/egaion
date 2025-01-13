@@ -12,18 +12,20 @@ export default function Home() {
 
   useEffect(() => {
     setListMyEditals(myEditals);
-  }, []);
+  }, [setListMyEditals, myEditals]);
 
-  // useEffect(() => {
-  //   setListMyEditals(
-  //     generateEditalCardData().map((edital): any => ({
-  //       id: edital.editalId,
-  //       date: new Date(edital.editalCardDate),
-  //       title: edital.editalCardTitle,
-  //       description: edital.editalCardContent,
-  //     }))
-  //   );
-  // }, []);
+  useEffect(() => {
+    async function fetchEditais() {
+      try {
+        const response = await fetch("/api/availableEditals");
+        const { meusEditais } = await response.json();
+        console.log(meusEditais);
+      } catch (error) {
+        console.log("Erro", error);
+      }
+    }
+    fetchEditais();
+  }, []);
 
   return myEditals.length === 0 ? (
     <div className="flex flex-col h-full items-center justify-center">
