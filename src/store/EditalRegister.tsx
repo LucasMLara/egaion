@@ -34,7 +34,8 @@ type ConsultantAreaDocuments = {
   areaId: string;
   files: File[];
 };
-type IEditalStore = {
+
+export type IEditalStore = {
   Consultores: IConsultant[];
   Documentos: Document[];
   RequiredDocumentsQty: number;
