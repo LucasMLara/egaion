@@ -21,13 +21,29 @@ export default async function signIn(_: FormState, formData: FormData) {
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return {
-        error: {
-          message:
-            error.cause?.err?.message || "Ocorreu um erro na autenticação",
-          id: nanoid(10),
-        },
-      };
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {
+            error: {
+              message: "Credenciais inválidas",
+              id: nanoid(10),
+            },
+          };
+        case "CallbackRouteError":
+          return {
+            error: {
+              message: "Ocorreu um erro na autenticação. Tente novamente mais tarde",
+              id: nanoid(10),
+            },
+          };
+        default:
+          return {
+            error: {
+              message: error.cause?.err?.message || "Ocorreu um erro na autenticação. Favor contactar o suporte",
+              id: nanoid(10),
+            },
+          };
+      }
     }
     if (isRedirectError(error)) {
       return { error: null };
