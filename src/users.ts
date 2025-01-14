@@ -5,6 +5,7 @@ type User = {
   password?: string;
   email: string;
   name: string;
+  id: string;
 }
 export async function findUserByCredentials(email: string, password: string): Promise<User | null> {
   const user = await prisma.sCCredenciada.findFirst({
@@ -24,6 +25,7 @@ export async function findUserByCredentials(email: string, password: string): Pr
     return {
       email: user.Email as string,
       name: user.RazaoSocial as string,
+      id: String(user.idSCCredenciada) as string
     }
   }
 
