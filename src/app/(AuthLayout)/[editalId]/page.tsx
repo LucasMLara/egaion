@@ -32,6 +32,7 @@ export default function EditalId({
     permissaoDeCadastroEdital,
     Consultores,
     Documentos,
+    consultantAreaDocuments,
     Qualificacao,
     setDocumentsQty,
   } = useEditalStore();
@@ -253,17 +254,19 @@ export default function EditalId({
       <div className="flex justify-end p-5">
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-          disabled={!permissaoDeCadastroEdital}
+          // disabled={!permissaoDeCadastroEdital}
           onClick={() => {
             console.log(
-              "Consultores",
-              Consultores,
-              "Documentos",
-              Documentos,
+              // "Consultores",
+              // Consultores,
+              // "Documentos",
+              // Documentos,
               "Qualificacao",
-              Qualificacao
+              Qualificacao,
+              "consultantAreaDocuments",
+              consultantAreaDocuments
             );
-            router.push(`/${params.editalId}/confirmarDados`);
+            // router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro

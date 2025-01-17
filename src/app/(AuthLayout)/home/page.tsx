@@ -1,11 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-
 import MyEditalCard from "@/components/layout/MyEditalCard";
-import { generateEditalCardData } from "@/lib/utils";
-
 import { useMyEditals } from "@/store/useMyEditals";
-import { IMyEditals } from "@/store/useMyEditals/types";
 
 export default function Home() {
   const { myEditals, setListMyEditals } = useMyEditals();
@@ -14,18 +10,18 @@ export default function Home() {
     setListMyEditals(myEditals);
   }, [setListMyEditals, myEditals]);
 
-  useEffect(() => {
-    async function fetchEditais() {
-      try {
-        const response = await fetch("/api/availableEditals");
-        const { meusEditais } = await response.json();
-        console.log(meusEditais);
-      } catch (error) {
-        console.log("Erro", error);
-      }
-    }
-    fetchEditais();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchEditais() {
+  //     try {
+  //       const response = await fetch("/api/myEditals");
+  //       const { meusEditais } = await response.json();
+  //       console.log(meusEditais);
+  //     } catch (error) {
+  //       console.log("Erro", error);
+  //     }
+  //   }
+  //   fetchEditais();
+  // }, []);
 
   return myEditals.length === 0 ? (
     <div className="flex flex-col h-full items-center justify-center">

@@ -22,19 +22,21 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     null
   );
 
-  const { alterarPermissaoConsultor, removeConsultantAreaDocuments, insertConsultantAreaDocuments } = useEditalStore();
+  const {
+    alterarPermissaoConsultor,
+    removeConsultantAreaDocuments,
+    insertConsultantAreaDocuments,
+    consultantAreaDocuments,
+  } = useEditalStore();
 
-  const { control, handleSubmit, formState, reset, getValues } = useForm<FileInputForm>({
+  const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
     resolver: zodResolver(fileInputSchema),
     defaultValues: {
       arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [] })),
     },
   });
 
-  
   const { errors } = formState;
-  
-
 
   const onSubmit = (data: FileInputForm) => {
     const hasFilesForAllAreas = data.arquivosTecnicos.every(
@@ -51,8 +53,9 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormSubmit) {
       onFormSubmit(data);
     }
-    console.log(data.arquivosTecnicos);
+    console.log("Inserindo arquivos técnicos do consultor à ser cadastrado");
     insertConsultantAreaDocuments(data.arquivosTecnicos);
+    console.log("consultantAreaDocuments", consultantAreaDocuments);
     alterarPermissaoConsultor(true);
   };
 
@@ -127,7 +130,11 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
             </div>
           ))}
           <div className="flex gap-4 mt-4">
-            <Button type="submit" className="w-full" disabled={Object.keys(errors).length > 0}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={Object.keys(errors).length > 0}
+            >
               Inserir Documentos
             </Button>
           </div>

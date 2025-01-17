@@ -52,7 +52,7 @@ export default function CreateConsultant() {
   function handleReset() {
     setAreasSelecionadas([]);
     alterarPermissaoConsultor(false);
-    removeConsultantAreaDocuments()
+    removeConsultantAreaDocuments();
   }
 
   const form = useForm<IConsultant>({
@@ -99,9 +99,9 @@ export default function CreateConsultant() {
     formState: { errors },
   } = form;
 
-    const handleConsultantAreas = useMemo(() => {
-      return areasSelecionadas.map(({ id }) => id);
-    }, [areasSelecionadas]);
+  const handleConsultantAreas = useMemo(() => {
+    return areasSelecionadas.map(({ id }) => id);
+  }, [areasSelecionadas]);
 
   function onSubmit(data: IConsultant) {
     const uniqueId = nanoid();
@@ -109,14 +109,16 @@ export default function CreateConsultant() {
       ...data,
       areaId: handleConsultantAreas,
       id: uniqueId,
-      areaDocuments: consultantAreaDocuments.map(doc => ({
-        areaId: doc.areaId as string,
-        files: doc.files
-      }))
+      areaDocuments: consultantAreaDocuments
+        .filter((doc) => doc.files && doc.files.length > 0)
+        .map((doc) => ({
+          areaId: doc.areaId as string,
+          files: doc.files,
+        })),
     };
     console.log(newConsultant);
     cadastrarConsultor(newConsultant);
-    
+
     toast.success("Consultor cadastrado com sucesso!");
     resetConsultantForm();
   }

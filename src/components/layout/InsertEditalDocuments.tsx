@@ -14,7 +14,6 @@ import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DocSchema, IEditalDoc, RequiredDocuments } from "@/types/types";
-import { mockInputsEmpresa } from "@/mocks";
 import { Input } from "@/components/ui/input";
 
 export default function InsertEditalDocuments({
@@ -47,11 +46,7 @@ export default function InsertEditalDocuments({
         blob: blobUrl,
         id: `${fieldName}-${Date.now()}`,
       };
-
       cadastrarDocumento(documento);
-      console.log(`${fieldName} submitted with value:`, documento);
-    } else {
-      console.log(`${fieldName} validation failed.`);
     }
   }
 
@@ -74,15 +69,9 @@ export default function InsertEditalDocuments({
 
   function handleRemoveFile(documentId: string) {
     const documentToRemove = Documentos.find((doc) => doc.id === documentId);
-
     if (documentToRemove) {
       URL.revokeObjectURL(documentToRemove.blob);
-
       removerDocumento(documentId);
-
-      console.log(`Document with ID ${documentId} removed successfully.`);
-    } else {
-      console.error(`Document with ID ${documentId} not found.`);
     }
   }
 
