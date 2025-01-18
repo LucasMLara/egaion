@@ -38,7 +38,7 @@ export const DocSchema = z.object({
 export const consultantSchema = z.object({
   areaDocuments: z.array(z.object({
     areaId: z.string(),
-    files: z.array(fileSchema).optional()
+    files: z.string(),
   })).optional(),
   areaId: z.array(z.string()).optional(),
   id: z.string(),

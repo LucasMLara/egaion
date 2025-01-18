@@ -53,9 +53,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     if (onFormSubmit) {
       onFormSubmit(data);
     }
-    console.log("Inserindo arquivos técnicos do consultor à ser cadastrado");
     insertConsultantAreaDocuments(data.arquivosTecnicos);
-    console.log("consultantAreaDocuments", consultantAreaDocuments);
     alterarPermissaoConsultor(true);
   };
 

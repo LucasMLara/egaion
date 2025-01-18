@@ -109,14 +109,11 @@ export default function CreateConsultant() {
       ...data,
       areaId: handleConsultantAreas,
       id: uniqueId,
-      areaDocuments: consultantAreaDocuments
-        .filter((doc) => doc.files && doc.files.length > 0)
-        .map((doc) => ({
-          areaId: doc.areaId as string,
-          files: doc.files,
-        })),
+      areaDocuments: consultantAreaDocuments.map((doc) => ({
+        areaId: doc.areaId as string,
+        files: doc.blob,
+      })),
     };
-    console.log(newConsultant);
     cadastrarConsultor(newConsultant);
 
     toast.success("Consultor cadastrado com sucesso!");
