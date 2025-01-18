@@ -257,10 +257,10 @@ export default function EditalId({
           // disabled={!permissaoDeCadastroEdital}
           onClick={() => {
             console.log(
-              // "Consultores",
-              // Consultores,
-              // "Documentos",
-              // Documentos,
+              "Consultores",
+              Consultores,
+              "Documentos",
+              Documentos,
               "Qualificacao",
               Qualificacao,
               "consultantAreaDocuments",
