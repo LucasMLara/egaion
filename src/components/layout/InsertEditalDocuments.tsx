@@ -83,7 +83,9 @@ export default function InsertEditalDocuments({
         return (
           <div key={index}>
             <h2 className="text-lg text-center font-bold my-2">
-              {categoryKey}
+              {/* {categoryKey} */}
+              {categoryKey !== "Qualificação Técnica" ? categoryKey : ""}{" "}
+              {/* Remove categoria indesejada por enquanto */}
             </h2>
             {filesArray.map((field, fieldIndex) =>
               Object.entries(field).map(([fieldName, label]) => {
