@@ -256,16 +256,12 @@ export default function EditalId({
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           // disabled={!permissaoDeCadastroEdital}
           onClick={() => {
-            console.log(
-              "Consultores",
-              Consultores,
-              "Documentos",
-              Documentos,
-              "Qualificacao",
-              Qualificacao,
-              "consultantAreaDocuments",
-              consultantAreaDocuments
-            );
+            console.log({
+              Consultores: Consultores,
+              Documentos: Documentos,
+              Qualificacao: Qualificacao,
+              consultantAreaDocuments: consultantAreaDocuments,
+            });
             // router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
