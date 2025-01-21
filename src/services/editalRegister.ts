@@ -31,29 +31,19 @@ export default async function EditalRegister(newEdital: IEdital) {
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
             <soap:Header/>
             <soap:Body>
-                <tem:setEvent>
-                    <tem:eventInfo>
+                <tem:saveEntity>
+                    <tem:entityInfo>
                         <BizAgiWSParam>
-                            <domain>domain</domain>
-                            <userName>admon</userName>
-                            <Events>
-                                <Events>
-                                    <EventData>
-                                        <radNumber>${1 || "defaultRadNumber"}</radNumber>
-                                        <eventName>EvtRevisao</eventName>
-                                    </EventData>
-                                    <Entities>
-                                        <FAMDemanda>
-                                            <Consultores>${consultoresXml}</Consultores>
-                                            <Documentos>${documentosXml}</Documentos>
-                                            <Qualificacao>${qualificacaoXml}</Qualificacao>
-                                        </FAMDemanda>
-                                    </Entities>
-                                </Events>
-                            </Events>
+                            <Entities>
+                                <FAMDemanda>
+                                    <Consultores>${consultoresXml}</Consultores>
+                                    <Documentos>${documentosXml}</Documentos>
+                                    <Qualificacao>${qualificacaoXml}</Qualificacao>
+                                </FAMDemanda>
+                            </Entities>
                         </BizAgiWSParam>
-                    </tem:eventInfo>
-                </tem:setEvent>
+                    </tem:entityInfo>
+                </tem:saveEntity>
             </soap:Body>
         </soap:Envelope>
     `;
