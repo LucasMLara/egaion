@@ -11,21 +11,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { useMyEditals } from "@/store/useMyEditals";
-import { nanoid } from "nanoid";
+import { toast } from "sonner";
 
 export default function ConfirmaDados() {
-  const { setMyEdital } = useMyEditals();
+  const { Consultores, Documentos, Qualificacao } = useEditalStore();
   const router = useRouter();
-  function cadastrarEdital() {
-    setMyEdital({
-      date: new Date(),
-      description: "Descrição Teste",
-      id: nanoid(),
-      status: null,
-      title: "Edital Teste",
-    });
-    router.push("cadastroRealizado");
+  //TODO  CONTINUAR AQUI
+  async function cadastrarEdital() {
+    try {
+      const response = await fetch("/api/edital", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ Consultores, Documentos, Qualificacao }),
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json();
+        throw new Error(error || "Erro desconhecido");
+      }
+
+      toast.success("Edital cadastrado com sucesso!");
+      router.push("cadastroRealizado");
+    } catch (e) {
+      console.error(e);
+      toast.error("Erro ao cadastrar edital");
+    }
   }
 
   return (

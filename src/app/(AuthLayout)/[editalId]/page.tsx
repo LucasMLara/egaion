@@ -260,9 +260,9 @@ export default function EditalId({
               Consultores: Consultores,
               Documentos: Documentos,
               Qualificacao: Qualificacao,
-              consultantAreaDocuments: consultantAreaDocuments,
+              //TODO  CONTINUAR AQUI
             });
-            // router.push(`/${params.editalId}/confirmarDados`);
+            router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro

@@ -1,20 +1,25 @@
 "use server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { Document, IEditalStore } from "@/store/EditalRegister";
-import { NextResponse } from "next/server";
 import xmlJs from "xml-js";
 
-type IEdital = Pick<IEditalStore, 'Consultores' | 'Documentos' | 'Qualificacao'>;
+type IEdital = Pick<IEditalStore, "Consultores" | "Documentos" | "Qualificacao">;
 //TODO  CONTINUAR AQUI
-export default async function EditalRegister(newEdital: IEdital) {
+export async function POST(req: Request) {
+    const newEdital: IEdital = await req.json();
+
     if (!newEdital.Consultores?.length || !newEdital.Documentos?.length || !newEdital.Qualificacao?.length) {
-        throw new Error("Todos os campos devem ser preenchidos corretamente");
+        return NextResponse.json(
+            { error: "Todos os campos devem ser preenchidos corretamente" },
+            { status: 400 }
+        );
     }
 
     const session = await auth();
     if (!session?.user?.idSCCredenciada) {
         return NextResponse.json(
-            { error: "Usuario não autenticado" },
+            { error: "Usuário não autenticado" },
             { status: 401 }
         );
     }
@@ -24,7 +29,7 @@ export default async function EditalRegister(newEdital: IEdital) {
     const jsonToXml = (json: Partial<IEdital>) =>
         xmlJs.json2xml(JSON.stringify(json), { compact: true, spaces: 4 });
     const consultoresXml = jsonToXml({ Consultores: newEdital.Consultores });
-    const documentosXml = jsonToXml({ Documentos: newEdital.Documentos });
+    const documentosXml = prepararDocumentosCredenciada(newEdital.Documentos);
     const qualificacaoXml = jsonToXml({ Qualificacao: newEdital.Qualificacao });
 
     const body = `  
@@ -55,6 +60,7 @@ export default async function EditalRegister(newEdital: IEdital) {
         },
         body,
     };
+
     try {
         const response = await fetch(url, fetchOptions);
         if (!response.ok) {
@@ -62,7 +68,7 @@ export default async function EditalRegister(newEdital: IEdital) {
         }
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error:", error);
         return NextResponse.json(
             { error: "Failed to register on edital data" },
             { status: 500 }
@@ -70,32 +76,9 @@ export default async function EditalRegister(newEdital: IEdital) {
     }
 }
 
-function getBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            if (typeof reader.result === "string") {
-                resolve(btoa(reader.result));
-            } else {
-                reject(new Error("The file could not be read as a string."));
-            }
-        };
-
-        reader.onerror = (error) => {
-            reject(error);
-        };
-
-        reader.readAsBinaryString(file);
-    });
-}
-
-
 function prepararDocumentosCredenciada(documents: Document[]): string {
-    let xml = "<DocumentosCredenciado>"; // Root element for the array of documents
-
+    let xml = "<DocumentosCredenciado>";
     for (const document of documents) {
-        // Append the XML structure for each document
         xml += `
             <Documento>
                 <Categoria>${document.category}</Categoria>
@@ -105,27 +88,6 @@ function prepararDocumentosCredenciada(documents: Document[]): string {
             </Documento>
         `;
     }
-
-    xml += "</DocumentosCredenciado>"; // Close the root element
+    xml += "</DocumentosCredenciado>";
     return xml;
 }
-
-const documents: Document[] = [
-    {
-        title: "example1.pdf",
-        blob: "VGhpcyBpcyBhIHRlc3QgYmxvYg==", // Base64-encoded content
-        id: "1",
-        category: "PDF",
-    },
-    {
-        title: "example2.jpg",
-        blob: "U29tZSBiYXNlNjQtZW5jb2RlZCBjb250ZW50",
-        id: "2",
-        category: "Image",
-    },
-];
-
-const documentosXml = prepararDocumentosCredenciada(documents);
-console.log(documentosXml);
-
-
