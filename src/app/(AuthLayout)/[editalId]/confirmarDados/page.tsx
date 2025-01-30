@@ -1,5 +1,5 @@
 "use client";
-import { useEditalStore } from "@/store/EditalRegister";
+import { useEditalStore, Document } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,28 +17,72 @@ export default function ConfirmaDados() {
   const { Consultores, Documentos, Qualificacao } = useEditalStore();
   const router = useRouter();
   //TODO  CONTINUAR AQUI
-  async function cadastrarEdital() {
-    try {
-      const response = await fetch("/api/edital", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ Consultores, Documentos, Qualificacao }),
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Erro desconhecido");
-      }
-
-      toast.success("Edital cadastrado com sucesso!");
-      router.push("cadastroRealizado");
-    } catch (e) {
-      console.error(e);
-      toast.error("Erro ao cadastrar edital");
-    }
+  function getBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(btoa(reader.result));
+        } else {
+          reject(new Error("The file could not be read as a string."));
+        }
+      };
+  
+      reader.onerror = (error) => {
+        reject(error);
+      };
+  
+      reader.readAsBinaryString(file);
+    });
   }
+  async function prepararDocumentosCredenciada(
+    documents: Document[]
+  ): Promise<string> {
+    let xml = "<DocumentosCredenciado>";
+    for (const document of documents) {
+      xml += `
+              <Documento>
+                  <Categoria>${document.category}</Categoria>
+                  <Arquivo>
+                      <File fileName="${document.title}">${await getBase64(
+        new File([document.blob], document.title)
+      )}</File>
+                  </Arquivo>
+              </Documento>
+          `;
+    }
+    xml += "</DocumentosCredenciado>";
+    return xml;
+  }
+
+  async function cadastrarEdital() {
+      const documentosXml = await prepararDocumentosCredenciada(Documentos);
+      console.log(documentosXml);
+  }
+
+  // async function cadastrarEdital() {
+  //   try {
+  //     const response = await fetch("/api/edital", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ Consultores, Documentos, Qualificacao }),
+  //     });
+
+  //     if (!response.ok) {
+  //       const { error } = await response.json();
+  //       throw new Error(error || "Erro desconhecido");
+  //     }
+
+  //     toast.success("Edital cadastrado com sucesso!");
+  //     router.push("cadastroRealizado");
+  //   } catch (e) {
+  //     console.error(e);
+  //     toast.error("Erro ao cadastrar edital");
+  //   }
+  // }
 
   return (
     <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
