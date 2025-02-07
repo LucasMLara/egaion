@@ -36,8 +36,6 @@ export default function EditalId({
     setDocumentsQty,
   } = useEditalStore();
 
-  
-
   const initialCurrentEditalState: IAvailableEdital = {
     idSCEdital: "",
     ObjetoEditalBase64: "",
@@ -148,6 +146,7 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
+          console.log(data.serializedEditalParameters);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
