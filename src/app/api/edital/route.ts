@@ -72,7 +72,7 @@ export async function POST(req: Request) {
   }
 
   const url =
-    "http://10.9.4.162/ESAmbienteBPMS/webservices/entitymanagersoa.asmx";
+    "http://10.9.4.162/ESAmbienteBPMS/webservices/workflowenginesoa.asmx";
 
   const jsonToXml = (json: Partial<IEdital>) =>
     xmlJs.json2xml(JSON.stringify(json), { compact: true, spaces: 4 });
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
             <soap:Header/>
             <soap:Body>
-                <tem:saveEntity>
+                <tem:createCases>
                     <tem:entityInfo>
                         <BizAgiWSParam>
                             <Entities>
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
                             </Entities>
                         </BizAgiWSParam>
                     </tem:entityInfo>
-                </tem:saveEntity>
+                </tem:createCases>
             </soap:Body>
         </soap:Envelope>
     `;
