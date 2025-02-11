@@ -102,10 +102,10 @@ export default function EditalId({
       [String(categoria.Descricao)]: documentacao
         .filter((doc) => doc.Categoria === categoria.Codigo)
         .map((doc: any) => ({
-          [doc.idSCDocumentacao]: doc.Nome,
+          [doc.Nome.toLowerCase().replace(/ /g, "")]:
+            doc.Nome + `#${doc.idSCDocumentacao}`,
         })),
     }));
-
     return filteredDocuments;
   }, [documentCategories, requiredEditalDocs]);
 
