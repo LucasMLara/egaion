@@ -3,6 +3,7 @@ import { IConsultant } from "@/types/types";
 import { persist } from "zustand/middleware";
 
 export type Document = {
+  businessKey?: string;
   title: string;
   blob: string;
   id: string;
