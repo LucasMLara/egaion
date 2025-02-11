@@ -32,20 +32,20 @@ function getBase64(file: File): Promise<string> {
 async function prepararDocumentosCredenciada(
   documents: Document[]
 ): Promise<string> {
-  let xml = "<DocumentosCredenciado>";
+  let xml = "<Documentos>";
   for (const document of documents) {
     xml += `
-            <Documento>
-                <Categoria>${document.category}</Categoria>
+            <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
+            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.businessKey}"/>
                 <Arquivo>
                     <File fileName="${document.title}">${await getBase64(
       new File([document.blob], document.title)
     )}</File>
                 </Arquivo>
-            </Documento>
+            </SCDocCredenciadaEdital>
         `;
   }
-  xml += "</DocumentosCredenciado>";
+  xml += "</Documentos>";
   return xml;
 }
 
