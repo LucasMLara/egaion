@@ -102,7 +102,7 @@ export default function EditalId({
       [String(categoria.Descricao)]: documentacao
         .filter((doc) => doc.Categoria === categoria.Codigo)
         .map((doc: any) => ({
-          [doc.Nome.toLowerCase().replace(/ /g, "")]: doc.Nome,
+          [doc.idSCDocumentacao]: doc.Nome,
         })),
     }));
 
@@ -146,7 +146,6 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
-          console.log(data.serializedEditalParameters);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
