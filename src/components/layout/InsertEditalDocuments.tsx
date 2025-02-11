@@ -36,7 +36,11 @@ export default function InsertEditalDocuments({
     RequiredDocumentsQty,
   } = useEditalStore();
 
-  async function handleFieldSubmit(fieldName: string, file: File | undefined) {
+  async function handleFieldSubmit(
+    fieldName: string,
+    file: File | undefined,
+    idSCDocumentacao: string
+  ) {
     const isValid = await form.trigger(fieldName as keyof IEditalDoc);
 
     if (isValid && file) {
@@ -44,7 +48,7 @@ export default function InsertEditalDocuments({
       const documento = {
         title: fieldName,
         blob: blobUrl,
-        id: `${fieldName}-${Date.now()}`,
+        id: idSCDocumentacao,
       };
       cadastrarDocumento(documento);
     }
@@ -83,12 +87,12 @@ export default function InsertEditalDocuments({
         return (
           <div key={index}>
             <h2 className="text-lg text-center font-bold my-2">
-              {/* {categoryKey} */}
               {categoryKey !== "Qualificação Técnica" ? categoryKey : ""}{" "}
-              {/* Remove categoria indesejada por enquanto */}
             </h2>
             {filesArray.map((field, fieldIndex) =>
               Object.entries(field).map(([fieldName, label]) => {
+                const inputLabel = label.split("#")[0];
+                const idSCDocumentacao = label.split("#")[1];
                 const inputName = `editalDocs.${index}.${categoryKey}.${fieldIndex}.${fieldName}.file`;
                 const existingDocument = Documentos.find(
                   (doc) => doc.title === inputName
@@ -102,7 +106,7 @@ export default function InsertEditalDocuments({
                         <FormItem>
                           <div className="flex flex-col">
                             <FormLabel className="text-md my-1">
-                              {label}
+                              {inputLabel}
                             </FormLabel>
                             <FormLabel className="text-sm font-light">
                               Selecione seu arquivo clicando na área abaixo
@@ -152,7 +156,8 @@ export default function InsertEditalDocuments({
                                         inputName,
                                         field.value as unknown as
                                           | File
-                                          | undefined
+                                          | undefined,
+                                        idSCDocumentacao
                                       )
                                     }
                                   >
