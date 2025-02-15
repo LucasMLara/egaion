@@ -1,55 +1,19 @@
 "use server";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { Document, IEditalStore } from "@/store/EditalRegister";
+import { IEditalStore } from "@/store/EditalRegister";
 import xmlJs from "xml-js";
-
+import { prepararDocumentosCredenciada } from "@/lib/concatEditalDocuments"
+import { useEditalStore } from "@/store/EditalRegister";
 type IEdital = Pick<
   IEditalStore,
   "Consultores" | "Documentos" | "Qualificacao"
 >;
 
-function getBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
 
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        resolve(btoa(reader.result));
-      } else {
-        reject(new Error("The file could not be read as a string."));
-      }
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-
-    reader.readAsBinaryString(file);
-  });
-}
-
-async function prepararDocumentosCredenciada(
-  documents: Document[]
-): Promise<string> {
-  let xml = "<Documentos>";
-  for (const document of documents) {
-    xml += `
-            <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
-            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.businessKey}"/>
-                <Arquivo>
-                    <File fileName="${document.title}">${await getBase64(
-      new File([document.blob], document.title)
-    )}</File>
-                </Arquivo>
-            </SCDocCredenciadaEdital>
-        `;
-  }
-  xml += "</Documentos>";
-  return xml;
-}
 
 export async function POST(req: Request) {
+  const { Documentos } = useEditalStore()
   const newEdital: IEdital = await req.json();
 
   if (
@@ -92,6 +56,7 @@ export async function POST(req: Request) {
                                     <Consultores>
                                       ${consultoresXml}
                                     </Consultores>
+                                    ${prepararDocumentosCredenciada(Documentos)}
                                     <Documentos>${documentosXml}</Documentos>
                                     <Qualificacao>${qualificacaoXml}</Qualificacao>
                                 </FAMDemanda>

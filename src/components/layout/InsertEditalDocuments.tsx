@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 
 import { useEditalStore } from "@/store/EditalRegister";
-
+import { prepararDocumentosCredenciada } from "@/lib/concatEditalDocuments";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -49,7 +49,9 @@ export default function InsertEditalDocuments({
         title: fieldName,
         blob: blobUrl,
         id: idSCDocumentacao,
+        idSCDocumentacao,
       };
+      console.log(documento);
       cadastrarDocumento(documento);
     }
   }
@@ -81,6 +83,14 @@ export default function InsertEditalDocuments({
 
   return (
     <div className="grid place-content-center text-center">
+      {/* <Button
+        onClick={async () => {
+          Documentos.length > 0 &&
+            console.log(await prepararDocumentosCredenciada(Documentos));
+        }}
+      >
+        Listar documentos
+      </Button> */}
       {documentosRequeridos.map((categoria, index) => {
         const categoryKey = Object.keys(categoria)[0];
         const filesArray = categoria[categoryKey];
