@@ -159,6 +159,5 @@ export function transformData(input: InputItem[]): OutputItem[] {
       }
     }
   });
-
   return result;
 }
