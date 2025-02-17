@@ -1,5 +1,6 @@
 import { Document } from "@/store/EditalRegister";
-
+import { IConsultant } from "@/types/types";
+import { formatDocEntry } from "./utils";
 
 function getBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -38,5 +39,65 @@ export async function prepararDocumentosCredenciada(
         `;
     }
     xml += "</Documentos>";
+    return xml;
+}
+
+export async function prepararConsultoresCredenciada(consultants: IConsultant[], idSCCredenciada: string): Promise<string> {
+
+
+    let xml = "<Consultores>";
+    for (const consultor of consultants) {
+        xml += `
+            <SCConsultorEdital>
+                <SCTecnico entityName="SCTecnico"/>
+                    <Email>${consultor.email.email}</Email>
+                    <Whatsapp>${formatDocEntry(consultor.contato)}</Whatsapp>
+                    <CPF>${formatDocEntry(consultor.CPF)}</CPF>
+                    <Assinante>True</Assinante>
+                    <Telefone>${formatDocEntry(consultor.contato)}</Telefone>
+                    <SCCredenciada>${idSCCredenciada}</SCCredenciada>
+                    <EResponsavelLegal>True</EResponsavelLegal>
+                    <Nome>${consultor.nome}</Nome>
+                    <DocumentosPessoais>
+                        <File fileName="${consultor.consultantCPF.name}">${await getBase64(
+            new File([consultor.consultantCPF], consultor.consultantCPF.name)
+        )}</File>
+                    </DocumentosPessoais>
+                    <ComprovanteVinculoPJ>
+                        <File fileName="${consultor.comprovanteVinculoCNPJ.name}">${await getBase64(
+            new File([consultor.comprovanteVinculoCNPJ], consultor.comprovanteVinculoCNPJ.name)
+        )}</File>
+                    </ComprovanteVinculoPJ>
+                    <CompFormacaoAcademica>
+                        <File fileName="${consultor.comprovanteFormacaoAcademica.name}">${await getBase64(
+            new File([consultor.comprovanteFormacaoAcademica], consultor.comprovanteFormacaoAcademica.name)
+        )}</File>
+                    </CompFormacaoAcademica>
+                    <RegistroProfissional>
+                        <File fileName="${consultor.registroProfissionalClasse.name}">${await getBase64(
+            new File([consultor.registroProfissionalClasse], consultor.registroProfissionalClasse.name)
+        )}</File>
+                    </RegistroProfissional>
+                </SCTecnico>
+                <NiveisParametrizacao>`;
+        for (const nivel of consultor.areaDocuments || []) {
+            xml += `
+                    <SCConsultorNivel>
+                        <Documento>
+                        <File fileName="${nivel.files}">${await getBase64(
+                new File([nivel.files], nivel.files)
+            )}</File>
+                        </Documento>
+                        <Parametrizacao>${nivel.areaId}</Parametrizacao>
+                    </SCConsultorNivel>`;
+        }
+        xml += `
+                </NiveisParametrizacao>
+            </SCConsultorEdital>
+        `;
+
+    }
+    xml += `<NiveisFinais>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</NiveisFinais>
+    </Consultores>`;
     return xml;
 }
