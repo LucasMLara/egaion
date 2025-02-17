@@ -26,12 +26,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MultipleCheckBoxOptions,AreaDocSchema, IAreaDocSchema  } from "@/types/types";
+import {
+  MultipleCheckBoxOptions,
+  AreaDocSchema,
+  IAreaDocSchema,
+} from "@/types/types";
 import CheckboxFormMultiplo from "./CheckBoxNaturezasForm";
 import { useEditalStore, Document } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
+import { prepararAreasCredenciada } from "@/lib/concatEditalDocuments";
 
 export default function AreaCard({
   area,
@@ -93,10 +98,10 @@ export default function AreaCard({
   const travarBotao = !areaHasFiles || !areaHasNatureza;
 
   useEffect(() => {
-    if(Object.keys(form.formState.errors).length > 0){
+    if (Object.keys(form.formState.errors).length > 0) {
       toast.error("Insira todos os dados necessários para prosseguir");
     }
-  }, [form.formState.errors])
+  }, [form.formState.errors]);
   useEffect(() => {
     const areaHasFiles = Qualificacao.some(
       (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
@@ -181,13 +186,15 @@ export default function AreaCard({
                     <h2 className="text-3xl font-semibold border-b pb-2 text-center">
                       Documentos Submetidos
                     </h2>
-                    <ul className="list-disc list-inside mt-4" >
+                    <ul className="list-disc list-inside mt-4">
                       {Qualificacao.map((area) =>
                         area.AreaDocuments.filter(
                           (doc) => doc.areaId === areaId
                         ).map((doc) => (
                           <li key={doc.id} className="my-2">
-                            <span className="font-semibold">{doc.category}: </span>{" "}
+                            <span className="font-semibold">
+                              {doc.category}:{" "}
+                            </span>{" "}
                             <a
                               href={doc.blob}
                               target="_blank"
@@ -302,9 +309,11 @@ export default function AreaCard({
                 <Button
                   variant="ghost"
                   className=" hover:text-neutral-300 text-neutral-500 ho disabled:text-neutral-900  bg-auxiliary-success-400  hover:bg-auxiliary-success-500 disabled:bg-auxiliary-warning-400  disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
-                  onClick={() => {
-                    setOpen(false);
-                    toast.success("Informaçoes da área inseridas com sucesso!");
+                  onClick={async () => {
+                    // setOpen(false);
+
+                    console.log(await prepararAreasCredenciada(Qualificacao));
+                    // toast.success("Informaçoes da área inseridas com sucesso!");
                   }}
                   disabled={
                     Object.keys(form.formState.errors).length > 0 ||

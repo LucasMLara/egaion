@@ -1,4 +1,4 @@
-import { Document } from "@/store/EditalRegister";
+import { Document, Qualificacao } from "@/store/EditalRegister";
 import { IConsultant } from "@/types/types";
 import { formatDocEntry } from "./utils";
 
@@ -22,25 +22,84 @@ function getBase64(file: File): Promise<string> {
     });
 }
 
-export async function prepararDocumentosCredenciada(
-    documents: Document[]
-): Promise<string> {
-    let xml = "<Documentos>";
-    for (const document of documents) {
+export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<string> {
+    let xml = "<NiveisFinais>";
+
+    for (const area of Areas) {
         xml += `
-            <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
-            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.idSCDocumentacao}"/>
-                <Arquivo>
-                    <File fileName="${document.title}">${await getBase64(
-            new File([document.blob], document.title)
-        )}</File>
-                </Arquivo>
-            </SCDocCredenciadaEdital>
-        `;
+            <SCParametrizacaoEdital>
+                <Parametrizacao>${area.name}</Parametrizacao>`;
+        for (let i = 1; i <= 7; i++) {
+            const nivelId = area.areaId ? area.areaId : "";
+            xml += `
+                <Nivel${i}Parametrizacao entityName="SCNivel${i}Parametrizacao" ${nivelId ? `businessKey="idSCNivel${i}Parametrizacao='${nivelId}'"` : ""}/>`;
+        }
+
+        if (area.naturezaPrestacao.length > 0) {
+            xml += `
+                <NaturezasPrestacao>`;
+            for (const natureza of area.naturezaPrestacao) {
+                xml += `
+                    <SCNaturezaNivel>
+                        <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza.id}'"/>
+                    </SCNaturezaNivel>`;
+            }
+            xml += `
+                </NaturezasPrestacao>`;
+        }
+
+        //TODO as categorias dos documentos são tags predefinidas que devem ter um FOR por categoria dentro para adicionar os documentos
+        const categorizedDocuments: Record<string, Document[]> = {};
+        for (const doc of area.AreaDocuments) {
+            console.log(doc.category); // TODO CONSOLE LOG PRA MOSTRAR ONDE ESTA A CATEGORIA QUE DEVERÁ SER FILTRADA AO ADICIONAR OS DOCS NAS TAGS
+
+            if (!categorizedDocuments[doc.category || "Uncategorized"]) {
+                categorizedDocuments[doc.category || "Uncategorized"] = [];
+            }
+            categorizedDocuments[doc.category || "Uncategorized"].push(doc);
+        }
+
+        for (const [category, documents] of Object.entries(categorizedDocuments)) {
+            xml += `
+                <${category.replace(/\s+/g, '')}>`;
+            for (const doc of documents) {
+                if (doc.idSCDocumentacao && doc.blob) {
+                    xml += `
+                        <File fileName="${doc.title}">${doc.blob}</File>`;
+                }
+            }
+            xml += `
+                </${category.replace(/\s+/g, '')}>`;
+        }
+
+        xml += `
+            </SCParametrizacaoEdital>`;
     }
-    xml += "</Documentos>";
+
+    xml += "</NiveisFinais>";
     return xml;
 }
+
+
+// export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<string> {
+//     let xml = "<NiveisFinais>";
+//     for (const area of Areas) {
+//         xml += `
+//             <SCParametrizacaoEdital>
+//                 <Parametrizacao>${area.name}</Parametrizacao>`;
+//         for (const natureza of area.naturezaPrestacao) {
+//             xml += `
+//                 <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="idSCNaturezaPrestacao=${natureza.id}"/>`;
+//         }
+//         `<Nivel${area.areaId}Parametrizacao entityName="SCNivel${area.areaId}Parametrizacao" businessKey="idSCNivel${area.areaId}Parametrizacao=${area.areaId}"/>
+//                 <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="idSCNaturezaPrestacao=${area.naturezaPrestacao[0].id}"/>
+//                 <Documentos entityName="SCDocumentacao" businessKey="idSCDocumentacao=${area.AreaDocuments[0].idSCDocumentacao}"/>
+//             </SCParametrizacaoEdital>
+//         `;
+//     }
+//     xml += "</NiveisFinais>";
+//     return xml;
+// }
 
 export async function prepararConsultoresCredenciada(consultants: IConsultant[], idSCCredenciada: string): Promise<string> {
 
@@ -97,7 +156,26 @@ export async function prepararConsultoresCredenciada(consultants: IConsultant[],
         `;
 
     }
-    xml += `<NiveisFinais>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</NiveisFinais>
-    </Consultores>`;
+    xml += `</Consultores>`;
+    return xml;
+}
+
+export async function prepararDocumentosCredenciada(
+    documents: Document[]
+): Promise<string> {
+    let xml = "<Documentos>";
+    for (const document of documents) {
+        xml += `
+            <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
+            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.idSCDocumentacao}"/>
+                <Arquivo>
+                    <File fileName="${document.title}">${await getBase64(
+            new File([document.blob], document.title)
+        )}</File>
+                </Arquivo>
+            </SCDocCredenciadaEdital>
+        `;
+    }
+    xml += "</Documentos>";
     return xml;
 }
