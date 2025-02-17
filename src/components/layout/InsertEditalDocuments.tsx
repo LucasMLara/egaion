@@ -51,7 +51,6 @@ export default function InsertEditalDocuments({
         id: idSCDocumentacao,
         idSCDocumentacao,
       };
-      console.log(documento);
       cadastrarDocumento(documento);
     }
   }
