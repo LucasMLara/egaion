@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { IEditalStore } from "@/store/EditalRegister";
 import xmlJs from "xml-js";
-import { prepararDocumentosCredenciada } from "@/lib/concatEditalDocuments"
+import { prepararDocumentosCredenciada, prepararConsultoresCredenciada } from "@/lib/concatEditalDocuments"
 import { useEditalStore } from "@/store/EditalRegister";
 type IEdital = Pick<
   IEditalStore,
@@ -13,7 +13,7 @@ type IEdital = Pick<
 
 
 export async function POST(req: Request) {
-  const { Documentos } = useEditalStore()
+  const { Documentos, Consultores } = useEditalStore()
   const newEdital: IEdital = await req.json();
 
   if (
@@ -40,8 +40,6 @@ export async function POST(req: Request) {
 
   const jsonToXml = (json: Partial<IEdital>) =>
     xmlJs.json2xml(JSON.stringify(json), { compact: true, spaces: 4 });
-  const consultoresXml = jsonToXml({ Consultores: newEdital.Consultores });
-  const documentosXml = prepararDocumentosCredenciada(newEdital.Documentos);
   const qualificacaoXml = jsonToXml({ Qualificacao: newEdital.Qualificacao });
 
   const body = `  
@@ -54,10 +52,9 @@ export async function POST(req: Request) {
                             <Entities>
                                 <FAMDemanda>
                                     <Consultores>
-                                      ${consultoresXml}
+                                    ${prepararConsultoresCredenciada(Consultores, session?.user?.idSCCredenciada)}
                                     </Consultores>
                                     ${prepararDocumentosCredenciada(Documentos)}
-                                    <Documentos>${documentosXml}</Documentos>
                                     <Qualificacao>${qualificacaoXml}</Qualificacao>
                                 </FAMDemanda>
                             </Entities>
