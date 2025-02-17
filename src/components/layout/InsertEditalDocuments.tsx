@@ -83,14 +83,6 @@ export default function InsertEditalDocuments({
 
   return (
     <div className="grid place-content-center text-center">
-      {/* <Button
-        onClick={async () => {
-          Documentos.length > 0 &&
-            console.log(await prepararDocumentosCredenciada(Documentos));
-        }}
-      >
-        Listar documentos
-      </Button> */}
       {documentosRequeridos.map((categoria, index) => {
         const categoryKey = Object.keys(categoria)[0];
         const filesArray = categoria[categoryKey];
