@@ -10,7 +10,7 @@ export type Document = {
   areaId?: string;
   consultorId?: string;
   category?: string;
-  files?: File[];
+  file?: File[];
 };
 
 type History = {
