@@ -13,6 +13,7 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { prepararConsultoresCredenciada } from "@/lib/concatEditalDocuments";
 export default function ConsultantsArea() {
   const {
     Consultores,
@@ -73,6 +74,16 @@ export default function ConsultantsArea() {
       </Dialog>
       {Consultores.length > 0 && (
         <div className="flex gap-2 justify-evenly m-2 ">
+          <Button
+            onClick={async () => {
+              Documentos.length > 0 && console.log(Consultores);
+              console.log(
+                await prepararConsultoresCredenciada(Consultores, "ID TESTE")
+              );
+            }}
+          >
+            Listar Consultores XML
+          </Button>
           <ConsultantTable />
         </div>
       )}
