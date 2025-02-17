@@ -10,19 +10,6 @@ export default function Home() {
     setListMyEditals(myEditals);
   }, [setListMyEditals, myEditals]);
 
-  // useEffect(() => {
-  //   async function fetchEditais() {
-  //     try {
-  //       const response = await fetch("/api/myEditals");
-  //       const { meusEditais } = await response.json();
-  //       console.log(meusEditais);
-  //     } catch (error) {
-  //       console.log("Erro", error);
-  //     }
-  //   }
-  //   fetchEditais();
-  // }, []);
-
   return myEditals.length === 0 ? (
     <div className="flex flex-col h-full items-center justify-center">
       <div className="text-center flex w-5/6 md:w-3/4 flex-col rounded-md border-2 bg-neutral-500 justify-center items-center p-14">

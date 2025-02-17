@@ -28,13 +28,7 @@ export default function EditalId({
   };
 }) {
   const router = useRouter();
-  const {
-    permissaoDeCadastroEdital,
-    Consultores,
-    Documentos,
-    Qualificacao,
-    setDocumentsQty,
-  } = useEditalStore();
+  const { permissaoDeCadastroEdital, setDocumentsQty } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
     idSCEdital: "",
@@ -255,11 +249,6 @@ export default function EditalId({
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={!permissaoDeCadastroEdital}
           onClick={() => {
-            console.log({
-              Consultores: Consultores,
-              Documentos: Documentos,
-              Qualificacao: Qualificacao,
-            });
             router.push(`/${params.editalId}/confirmarDados`);
           }}
         >

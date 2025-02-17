@@ -32,7 +32,6 @@ export default function EsqueciSenha() {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setFormIsSubmitting(false);
     toast.success("Email Enviado. Favor verificar");
-    console.log(data);
     router.push("/");
   }
   return (

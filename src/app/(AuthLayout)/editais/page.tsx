@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { useAvailableEditals } from "@/store/useAvailableEditals";
 import { formatDate } from "@/lib/utils";
@@ -16,17 +16,12 @@ export default function Editais() {
         const { editais } = await response.json();
         setListEditals(editais);
         setLoading(false);
-        
       } catch (error) {
-        console.log('Erro', error);
-        
+        console.error("Erro", error);
       }
     }
     fetchEditais();
   }, [setListEditals]);
-
-
-  
 
   if (loading) {
     return (

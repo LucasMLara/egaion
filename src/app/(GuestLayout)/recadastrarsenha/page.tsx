@@ -33,7 +33,6 @@ export default function RecadastrarSenha() {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setFormIsSubmitting(false);
     toast.success("Senha recadastrada! Por favor, Tente novamente");
-    console.log(data);
     router.push("/");
   }
   return (
