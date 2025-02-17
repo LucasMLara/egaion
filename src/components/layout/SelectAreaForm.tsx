@@ -32,11 +32,11 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   };
 
   const setAreaOnStore = (): void => {
-    const ultimaAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
-    const uniqueId = nanoid();
-    if (ultimaAreaSelecionada) {
+    const nomeAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
+    const idAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.id;
+    if (nomeAreaSelecionada) {
       const areaExists = Qualificacao.some(
-        (area) => area.name === ultimaAreaSelecionada
+        (area) => area.name === nomeAreaSelecionada
       );
 
       if (areaExists) {
@@ -44,8 +44,8 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       } else {
         const novaArea = {
           naturezaPrestacao: [],
-          name: ultimaAreaSelecionada,
-          areaId: uniqueId,
+          name: nomeAreaSelecionada,
+          areaId: idAreaSelecionada.toString(),
           Consultores: [],
           AreaDocuments: [],
         };
