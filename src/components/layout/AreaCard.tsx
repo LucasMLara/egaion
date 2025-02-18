@@ -309,11 +309,9 @@ export default function AreaCard({
                 <Button
                   variant="ghost"
                   className=" hover:text-neutral-300 text-neutral-500 ho disabled:text-neutral-900  bg-auxiliary-success-400  hover:bg-auxiliary-success-500 disabled:bg-auxiliary-warning-400  disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
-                  onClick={async () => {
-                    // setOpen(false);
-
-                    console.log(await prepararAreasCredenciada(Qualificacao));
-                    // toast.success("Informaçoes da área inseridas com sucesso!");
+                  onClick={() => {
+                    setOpen(false);
+                    toast.success("Informaçoes da área inseridas com sucesso!");
                   }}
                   disabled={
                     Object.keys(form.formState.errors).length > 0 ||
