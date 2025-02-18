@@ -2,6 +2,16 @@ import { Document, Qualificacao } from "@/store/EditalRegister";
 import { IConsultant } from "@/types/types";
 import { formatDocEntry } from "./utils";
 
+function formatTitle(title: string): string {
+    return title
+        .replace(/\sde\s/g, '')
+        .replace(/[éê]/g, 'e')
+        .replace(/\s(\w)/g, (_, letter) => letter.toUpperCase());
+}
+
+
+
+
 function getBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -29,11 +39,9 @@ export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<s
         xml += `
             <SCParametrizacaoEdital>
                 <Parametrizacao>${area.name}</Parametrizacao>`;
-        for (let i = 1; i <= 7; i++) {
-            const nivelId = area.areaId ? area.areaId : "";
-            xml += `
-                <Nivel${i}Parametrizacao entityName="SCNivel${i}Parametrizacao" ${nivelId ? `businessKey="idSCNivel${i}Parametrizacao='${nivelId}'"` : ""}/>`;
-        }
+        const nivelId = area.areaId ? area.areaId : "";
+        xml += `
+            <NivelParametrizacao entityName="SCNivelParametrizacao" ${nivelId ? `businessKey="idSCNivelParametrizacao='${nivelId}'"` : ""}/>`;
 
         if (area.naturezaPrestacao.length > 0) {
             xml += `
@@ -48,58 +56,44 @@ export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<s
                 </NaturezasPrestacao>`;
         }
 
-        //TODO as categorias dos documentos são tags predefinidas que devem ter um FOR por categoria dentro para adicionar os documentos
-        const categorizedDocuments: Record<string, Document[]> = {};
+        const categories = ["AtestadoCapacidadeTecnica", "RelatoExperiencia"];
+        const categorizedDocuments: Record<string, Document[]> = {
+            AtestadoCapacidadeTecnica: [],
+            RelatoExperiencia: [],
+        };
+
+
         for (const doc of area.AreaDocuments) {
-            console.log(doc.category); // TODO CONSOLE LOG PRA MOSTRAR ONDE ESTA A CATEGORIA QUE DEVERÁ SER FILTRADA AO ADICIONAR OS DOCS NAS TAGS
 
-            if (!categorizedDocuments[doc.category || "Uncategorized"]) {
-                categorizedDocuments[doc.category || "Uncategorized"] = [];
+            const docCategory = doc.category ? formatTitle(doc.category) : 'undefined';
+            if (docCategory && categories.includes(docCategory)) {
+                categorizedDocuments[docCategory].push(doc);
             }
-            categorizedDocuments[doc.category || "Uncategorized"].push(doc);
         }
 
-        for (const [category, documents] of Object.entries(categorizedDocuments)) {
-            xml += `
-                <${category.replace(/\s+/g, '')}>`;
-            for (const doc of documents) {
-                if (doc.idSCDocumentacao && doc.blob) {
-                    xml += `
-                        <File fileName="${doc.title}">${doc.blob}</File>`;
+        for (const category of categories) {
+            if (categorizedDocuments[category].length > 0) {
+                xml += `\n    <${category}>`;
+
+                for (const doc of categorizedDocuments[category]) {
+                    if (doc.title && doc.blob) {
+                        xml += `\n        <File fileName="${doc.title}">${doc.blob}</File>`;
+                    }
                 }
+
+                xml += `\n    </${category}>`;
             }
-            xml += `
-                </${category.replace(/\s+/g, '')}>`;
         }
+
 
         xml += `
-            </SCParametrizacaoEdital>`;
+        </SCParametrizacaoEdital>`;
     }
 
-    xml += "</NiveisFinais>";
+    xml += `
+    </NiveisFinais>`;
     return xml;
 }
-
-
-// export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<string> {
-//     let xml = "<NiveisFinais>";
-//     for (const area of Areas) {
-//         xml += `
-//             <SCParametrizacaoEdital>
-//                 <Parametrizacao>${area.name}</Parametrizacao>`;
-//         for (const natureza of area.naturezaPrestacao) {
-//             xml += `
-//                 <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="idSCNaturezaPrestacao=${natureza.id}"/>`;
-//         }
-//         `<Nivel${area.areaId}Parametrizacao entityName="SCNivel${area.areaId}Parametrizacao" businessKey="idSCNivel${area.areaId}Parametrizacao=${area.areaId}"/>
-//                 <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="idSCNaturezaPrestacao=${area.naturezaPrestacao[0].id}"/>
-//                 <Documentos entityName="SCDocumentacao" businessKey="idSCDocumentacao=${area.AreaDocuments[0].idSCDocumentacao}"/>
-//             </SCParametrizacaoEdital>
-//         `;
-//     }
-//     xml += "</NiveisFinais>";
-//     return xml;
-// }
 
 export async function prepararConsultoresCredenciada(consultants: IConsultant[], idSCCredenciada: string): Promise<string> {
 
