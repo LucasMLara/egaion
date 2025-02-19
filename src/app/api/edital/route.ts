@@ -27,6 +27,7 @@ export async function POST(req: Request) {
   }
 
   const session = await auth();
+  console.log(session)
   if (!session?.user?.idSCCredenciada) {
     return NextResponse.json(
       { error: "Usuário não autenticado" },
