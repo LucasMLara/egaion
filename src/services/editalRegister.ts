@@ -8,7 +8,7 @@ type IEdital = Pick<
   IEditalStore,
   "Consultores" | "Documentos" | "Qualificacao"
 >;
-//TODO  CONTINUAR AQUI
+
 export default async function EditalRegister(newEdital: IEdital) {
   if (
     !newEdital.Consultores?.length ||
@@ -76,23 +76,4 @@ export default async function EditalRegister(newEdital: IEdital) {
       { status: 500 }
     );
   }
-}
-
-function prepararDocumentosCredenciada(documents: Document[]): string {
-  let xml = "<DocumentosCredenciado>"; // Root element for the array of documents
-
-  for (const document of documents) {
-    // Append the XML structure for each document
-    xml += `
-            <Documento>
-                <Categoria>${document.category}</Categoria>
-                <Arquivo>
-                    <File fileName="${document.title}">${document.blob}</File>
-                </Arquivo>
-            </Documento>
-        `;
-  }
-
-  xml += "</DocumentosCredenciado>"; // Close the root element
-  return xml;
 }
