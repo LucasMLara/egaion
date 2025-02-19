@@ -30,6 +30,7 @@ export type Qualificacao = {
   areaId: string;
   naturezaPrestacao: NaturezaPrestacao[];
   AreaDocuments: Document[];
+  subLevels: string[];
 };
 type ConsultantAreaDocuments = {
   areaId: string;
