@@ -19,6 +19,11 @@ import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
 import { HistoryItem, AttachmentItem, RequiredDocuments } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
+import {
+  prepararAreasCredenciada,
+  prepararConsultoresCredenciada,
+  prepararDocumentosCredenciada,
+} from "@/lib/concatEditalDocuments";
 
 export default function EditalId({
   params,
@@ -28,7 +33,13 @@ export default function EditalId({
   };
 }) {
   const router = useRouter();
-  const { permissaoDeCadastroEdital, setDocumentsQty } = useEditalStore();
+  const {
+    permissaoDeCadastroEdital,
+    setDocumentsQty,
+    Consultores,
+    Qualificacao,
+    Documentos,
+  } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
     idSCEdital: "",
@@ -248,8 +259,16 @@ export default function EditalId({
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={!permissaoDeCadastroEdital}
-          onClick={() => {
-            router.push(`/${params.editalId}/confirmarDados`);
+          onClick={async () => {
+            // console.log(
+            //   await prepararConsultoresCredenciada(
+            //     Consultores,
+            //     "idSCCredenciada"
+            //   )
+            // );
+            // console.log(await prepararDocumentosCredenciada(Documentos));
+            console.log(await prepararAreasCredenciada(Qualificacao));
+            // router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro
