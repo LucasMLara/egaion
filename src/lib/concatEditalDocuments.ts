@@ -33,67 +33,110 @@ function getBase64(file: File): Promise<string> {
 }
 
 export async function prepararAreasCredenciada(Areas: Qualificacao[]): Promise<string> {
+    console.log(Areas);
     let xml = "<NiveisFinais>";
 
     for (const area of Areas) {
-        xml += `
-            <SCParametrizacaoEdital>
-                <Parametrizacao>${area.name}</Parametrizacao>`;
-        const nivelId = area.areaId ? area.areaId : "";
-        xml += `
-            <NivelParametrizacao entityName="SCNivelParametrizacao" ${nivelId ? `businessKey="idSCNivelParametrizacao='${nivelId}'"` : ""}/>`;
+        xml += `\n    <SCParametrizacaoEdital>`;
 
-        if (area.naturezaPrestacao.length > 0) {
-            xml += `
-                <NaturezasPrestacao>`;
-            for (const natureza of area.naturezaPrestacao) {
-                xml += `
-                    <SCNaturezaNivel>
-                        <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza.id}'"/>
-                    </SCNaturezaNivel>`;
-            }
-            xml += `
-                </NaturezasPrestacao>`;
+        // Add Nivel1Parametrizacao if areaId exists
+        if (area.areaId) {
+            xml += `\n        <Nivel1Parametrizacao entityName="SCNivel1Parametrizacao" businessKey="idSCNivel1Parametrizacao='${area.areaId}'"/>`;
         }
 
-        const categories = ["AtestadoCapacidadeTecnica", "RelatoExperiencia"];
-        const categorizedDocuments: Record<string, Document[]> = {
-            AtestadoCapacidadeTecnica: [],
-            RelatoExperiencia: [],
-        };
+        // Add the area name
+        xml += `\n        <Parametrizacao>${area.name}</Parametrizacao>`;
 
-
-        for (const doc of area.AreaDocuments) {
-
-            const docCategory = doc.category ? formatTitle(doc.category) : 'undefined';
-            if (docCategory && categories.includes(docCategory)) {
-                categorizedDocuments[docCategory].push(doc);
-            }
+        // Ensure area.subLevels exists before calling generateNivelXML
+        if (Array.isArray(area.subLevels) && area.subLevels.length > 0) {
+            xml += generateNivelXML(area.subLevels, 2); // Start from depth level 2
         }
 
-        for (const category of categories) {
-            if (categorizedDocuments[category].length > 0) {
-                xml += `\n    <${category}>`;
+        // Process NaturezaPrestacao
+        // if (Array.isArray(area.naturezaPrestacao) && area.naturezaPrestacao.length > 0) {
+        //     xml += `\n        <NaturezasPrestacao>`;
+        //     for (const natureza of area.naturezaPrestacao) {
+        //         xml += `\n            <SCNaturezaNivel>\n                <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza.id}'"/>\n            </SCNaturezaNivel>`;
+        //     }
+        //     xml += `\n        </NaturezasPrestacao>`;
+        // }
+        //
+        // Categorize documents
+        // const categories = ["AtestadoCapacidadeTecnica", "RelatoExperiencia"];
+        // const categorizedDocuments: Record<string, Document[]> = {
+        //     AtestadoCapacidadeTecnica: [],
+        //     RelatoExperiencia: [],
+        // };
+        //
+        // for (const doc of area.AreaDocuments || []) {
+        //     const docCategory = doc.category ? formatTitle(doc.category) : "undefined";
+        //     if (docCategory && categories.includes(docCategory)) {
+        //         categorizedDocuments[docCategory].push(doc);
+        //     }
+        // }
+        //
+        // Add categorized documents to XML
+        // for (const category of categories) {
+        //     if (categorizedDocuments[category].length > 0) {
+        //         xml += `\n        <${category}>`;
+        //
+        //         for (const doc of categorizedDocuments[category]) {
+        //             if (doc.title && doc.blob) {
+        //                 xml += `\n            <File fileName="${doc.title}">${doc.blob}</File>`;
+        //             }
+        //         }
+        //
+        //         xml += `\n        </${category}>`;
+        //     }
+        // }
 
-                for (const doc of categorizedDocuments[category]) {
-                    if (doc.title && doc.blob) {
-                        xml += `\n        <File fileName="${doc.title}">${doc.blob}</File>`;
-                    }
-                }
-
-                xml += `\n    </${category}>`;
-            }
-        }
-
-
-        xml += `
-        </SCParametrizacaoEdital>`;
+        xml += `\n    </SCParametrizacaoEdital>`;
     }
 
-    xml += `
-    </NiveisFinais>`;
+    xml += `\n</NiveisFinais>`;
     return xml;
 }
+
+
+// Recursive function to generate hierarchical levels
+function generateNivelXML(levels: any[], depth: number): string {
+    if (!Array.isArray(levels) || levels.length === 0) return "";
+
+    let xml = "";
+
+    for (const level of levels) {
+        if (!level.areaId) continue; // Ensure areaId exists
+
+        xml += `\n        <Nivel${depth}Parametrizacao entityName="SCNivel${depth}Parametrizacao" businessKey="idSCNivel${depth}Parametrizacao='${level.areaId}'"/>`;
+
+        // Recursively process sublevels with incremented depth
+        if (Array.isArray(level.subLevels) && level.subLevels.length > 0) {
+            xml += generateNivelXML(level.subLevels, depth + 1);
+        }
+    }
+
+    return xml;
+}
+// function generateNivelXML(levels: { areaId: string; subLevels?: any[] }[], depth: number = 2): string {
+//     if (!Array.isArray(levels) || levels.length === 0) return ""; // Ensure levels is an array
+
+//     let xml = "";
+
+//     for (const level of levels) {
+//         if (!level.areaId) continue; // Ensure areaId exists
+
+//         xml += `\n        <Nivel${depth}Parametrizacao entityName="SCNivel${depth}Parametrizacao" businessKey="idSCNivel${depth}Parametrizacao='${level.areaId}'"/>`;
+
+//         // Recursively process sublevels with incremented depth
+//         if (Array.isArray(level.subLevels) && level.subLevels.length > 0) {
+//             xml += generateNivelXML(level.subLevels, depth + 1);
+//         }
+//     }
+
+//     return xml;
+// }
+
+
 
 export async function prepararConsultoresCredenciada(consultants: IConsultant[], idSCCredenciada: string): Promise<string> {
 
