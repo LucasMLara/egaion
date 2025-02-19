@@ -48,6 +48,9 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
           areaId: idAreaSelecionada.toString(),
           Consultores: [],
           AreaDocuments: [],
+          subLevels: selectedAreas
+            .slice(0, -1)
+            .map((area) => area.id.toString()),
         };
         inserirArea(novaArea);
         setSelectedAreas([]);
