@@ -32,6 +32,7 @@ export type Qualificacao = {
   AreaDocuments: Document[];
   subLevels: string[];
 };
+
 type ConsultantAreaDocuments = {
   areaId: string;
   files: File[];
