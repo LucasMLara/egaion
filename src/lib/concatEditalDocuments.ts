@@ -81,7 +81,11 @@ export async function prepararAreasCredenciada(
 
         for (const doc of categorizedDocuments[category]) {
           if (doc.title && doc.blob) {
-            xml += `\n            <File fileName="${doc.title}">${doc.blob}</File>`;
+            xml += `\n            <File fileName="${
+              doc.title
+            }">${await getBase64(
+              new File([doc.turnToBase64], doc.title)
+            )}</File>`;
           }
         }
 
