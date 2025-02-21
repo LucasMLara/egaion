@@ -268,7 +268,7 @@ export default function EditalId({
             );
             console.log(await prepararDocumentosCredenciada(Documentos));
             console.log(await prepararAreasCredenciada(Qualificacao));
-            // router.push(`/${params.editalId}/confirmarDados`);
+            router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro
