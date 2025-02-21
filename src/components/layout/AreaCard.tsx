@@ -131,6 +131,7 @@ export default function AreaCard({
                     id: nanoid(10),
                     areaId: activeArea,
                     category: fieldKey,
+                    turnToBase64: file
                   });
                 }
               });
