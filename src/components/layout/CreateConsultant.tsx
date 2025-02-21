@@ -111,7 +111,7 @@ export default function CreateConsultant() {
       id: uniqueId,
       areaDocuments: consultantAreaDocuments.map((doc) => ({
         areaId: doc.areaId as string,
-        files: doc.blob,
+        files: doc.turnToBase64,
       })),
     };
     cadastrarConsultor(newConsultant);
