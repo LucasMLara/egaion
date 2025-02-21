@@ -11,6 +11,7 @@ export type Document = {
   consultorId?: string;
   category?: string;
   file?: File[];
+  turnToBase64: File,
 };
 
 type History = {
@@ -104,6 +105,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
               blob: URL.createObjectURL(file),
               id: file.name,
               areaId: doc.areaId,
+              turnToBase64: file,
             }))
           ),
         }),
