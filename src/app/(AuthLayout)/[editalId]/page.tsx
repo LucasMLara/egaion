@@ -142,7 +142,7 @@ export default function EditalId({
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
-
+  console.log("editalAreas", editalAreas);
   useEffect(() => {
     async function fetchEdital() {
       try {
@@ -151,6 +151,7 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
+          console.log(data.serializedEditalParameters);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
@@ -260,13 +261,13 @@ export default function EditalId({
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={!permissaoDeCadastroEdital}
           onClick={async () => {
-            // console.log(
-            //   await prepararConsultoresCredenciada(
-            //     Consultores,
-            //     "idSCCredenciada"
-            //   )
-            // );
-            // console.log(await prepararDocumentosCredenciada(Documentos));
+            console.log(
+              await prepararConsultoresCredenciada(
+                Consultores,
+                "idSCCredenciada"
+              )
+            );
+            console.log(await prepararDocumentosCredenciada(Documentos));
             console.log(await prepararAreasCredenciada(Qualificacao));
             // router.push(`/${params.editalId}/confirmarDados`);
           }}
