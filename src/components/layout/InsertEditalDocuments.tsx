@@ -50,6 +50,7 @@ export default function InsertEditalDocuments({
         blob: blobUrl,
         id: idSCDocumentacao,
         idSCDocumentacao,
+        turnToBase64: file
       };
       cadastrarDocumento(documento);
     }
