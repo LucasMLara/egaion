@@ -179,7 +179,7 @@ export async function prepararConsultoresCredenciada(
                     <SCConsultorNivel>
                         <Documento>
                         <File fileName="${nivel.files}">${await getBase64(
-        new File([nivel.files], nivel.files)
+        new File([nivel.files], nivel.areaId)
       )}</File>
                         </Documento>
                         <Parametrizacao>${nivel.areaId}</Parametrizacao>

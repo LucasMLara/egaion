@@ -36,10 +36,14 @@ export const DocSchema = z.object({
 });
 
 export const consultantSchema = z.object({
-  areaDocuments: z.array(z.object({
-    areaId: z.string(),
-    files: z.string(),
-  })).optional(),
+  areaDocuments: z
+    .array(
+      z.object({
+        areaId: z.string(),
+        files: fileSchema,
+      })
+    )
+    .optional(),
   areaId: z.array(z.string()).optional(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
@@ -235,7 +239,6 @@ export const MockDocCardSchema = z.object({
   docDialogContent: z.string(),
 });
 
-
 export const AreaDocSchema = z.object({
   areaId: z.string().optional(),
   mockInputFiles: z.array(
@@ -260,17 +263,17 @@ export type HistoryItem = {
   Descricao: string;
   Responsavel: string;
   idHistorico: string;
-}
+};
 
 export type AttachmentItem = {
-  Arquivo: string,
-  DadosPadrao: null,
-  DataCriacao: string,
-  Descricao: string,
-  Responsavel: string,
-  SCEdital: string,
-  idAnexo: string
-}
+  Arquivo: string;
+  DadosPadrao: null;
+  DataCriacao: string;
+  Descricao: string;
+  Responsavel: string;
+  SCEdital: string;
+  idAnexo: string;
+};
 
 export type RequiredDocuments = {
   [key: string]: {
