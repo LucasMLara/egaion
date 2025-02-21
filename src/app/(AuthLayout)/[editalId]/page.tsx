@@ -142,7 +142,7 @@ export default function EditalId({
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
-  console.log("editalAreas", editalAreas);
+  
   useEffect(() => {
     async function fetchEdital() {
       try {
@@ -151,7 +151,6 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
-          console.log(data.serializedEditalParameters);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           setEditalHistory(data.serializedEditalHistory);
