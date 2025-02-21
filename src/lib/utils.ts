@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { IEditalCard, IDocCard } from "@/types/types";
-import Dayjs from "dayjs"
+import Dayjs from "dayjs";
 
 export function formatDate(date: string) {
   return Dayjs(date).format("DD/MM/YYYY");
@@ -23,9 +23,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function createBlobUrl(base64: string, mimeType: string): string {
-
   const base64Content = base64.includes(",") ? base64.split(",")[1] : base64;
-
 
   const byteString = atob(base64Content);
   const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -39,10 +37,8 @@ export function createBlobUrl(base64: string, mimeType: string): string {
   return URL.createObjectURL(blob);
 }
 
-
-
 export function formatDocEntry(input: string): string {
-  return input.replace(/\D/g, '');
+  return input.replace(/\D/g, "");
 }
 
 export const currentDate = new Date().toLocaleDateString("pt-BR");
@@ -95,7 +91,7 @@ export function generateDocCardData(size: number = 20): IDocCard[] {
 
   for (let i = 0; i < length; i++) {
     const docCard: IDocCard = {
-      docFile: '',
+      docFile: "",
       docId: `ID-${i + 1}`,
       docTitle: `Doc Title ${i + 1}`,
       docContent: sampleContent,
@@ -136,7 +132,7 @@ export function transformData(input: InputItem[]): OutputItem[] {
 
   input.forEach((item) => {
     idMap.set(item.idView, {
-      id: parseInt(item.idView, 10),
+      id: parseInt(item.idNivel, 10),
       name: item.Descricao,
       subLevels: [],
     });
@@ -150,7 +146,10 @@ export function transformData(input: InputItem[]): OutputItem[] {
     if (item.idNivelPai === "0") {
       result.push(current);
     } else {
-      const areas = input.find((area) => area.idNivel === item.idNivelPai && area.Nivel === item.Nivel - 1);
+      const areas = input.find(
+        (area) =>
+          area.idNivel === item.idNivelPai && area.Nivel === item.Nivel - 1
+      );
       if (areas) {
         const parent = idMap.get(areas.idView);
         if (parent) {
