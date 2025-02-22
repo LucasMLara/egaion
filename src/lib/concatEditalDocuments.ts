@@ -32,7 +32,6 @@ function getBase64(file: File): Promise<string> {
 export async function prepararAreasCredenciada(
   Areas: Qualificacao[]
 ): Promise<string> {
-  console.log(Areas);
   let xml = "<NiveisFinais>";
 
   for (const area of Areas) {
