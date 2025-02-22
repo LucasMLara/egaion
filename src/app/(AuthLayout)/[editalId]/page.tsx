@@ -172,6 +172,11 @@ export default function EditalId({
     setDocumentsQty(requiredEditalDocs.length);
   }, [requiredEditalDocs.length, setDocumentsQty]);
 
+  async function registrarEdital() {
+    const res = await fetch('edital')
+
+    console.log(res)
+  }
   if (loading) {
     return (
       <div className="h-full flex justify-center items-center">
@@ -268,7 +273,8 @@ export default function EditalId({
             );
             console.log(await prepararDocumentosCredenciada(Documentos));
             console.log(await prepararAreasCredenciada(Qualificacao));
-            router.push(`/${params.editalId}/confirmarDados`);
+            await registrarEdital()
+            // router.push(`/${params.editalId}/confirmarDados`);
           }}
         >
           Confirmar Dados de Cadastro
