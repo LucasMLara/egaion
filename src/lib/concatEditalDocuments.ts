@@ -178,7 +178,7 @@ export async function prepararConsultoresCredenciada(
       xml += `
                     <SCConsultorNivel>
                         <Documento>
-                        <File fileName="${nivel.files}">${await getBase64(
+                        <File fileName="${nivel.files.name}">${await getBase64(
         new File([nivel.files], nivel.areaId)
       )}</File>
                         </Documento>
