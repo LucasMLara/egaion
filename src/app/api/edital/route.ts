@@ -2,17 +2,19 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { IEditalStore } from "@/store/EditalRegister";
-import { prepararDocumentosCredenciada, prepararConsultoresCredenciada, prepararAreasCredenciada } from "@/lib/concatEditalDocuments"
+import {
+  prepararDocumentosCredenciada,
+  prepararConsultoresCredenciada,
+  prepararAreasCredenciada,
+} from "@/lib/concatEditalDocuments";
 import { useEditalStore } from "@/store/EditalRegister";
 type IEdital = Pick<
   IEditalStore,
   "Consultores" | "Documentos" | "Qualificacao"
 >;
 
-
-
 export async function POST(req: Request) {
-  const { Documentos, Consultores, Qualificacao } = useEditalStore()
+  const { Documentos, Consultores, Qualificacao } = useEditalStore();
   const newEdital: IEdital = await req.json();
 
   if (
@@ -27,7 +29,6 @@ export async function POST(req: Request) {
   }
 
   const session = await auth();
-  console.log(session)
   if (!session?.user?.idSCCredenciada) {
     return NextResponse.json(
       { error: "Usuário não autenticado" },
@@ -48,7 +49,10 @@ export async function POST(req: Request) {
                             <Entities>
                                 <FAMDemanda>
                                     <Consultores>
-                                    ${prepararConsultoresCredenciada(Consultores, session?.user?.idSCCredenciada)}
+                                    ${prepararConsultoresCredenciada(
+                                      Consultores,
+                                      session?.user?.idSCCredenciada
+                                    )}
                                     </Consultores>
                                     ${prepararDocumentosCredenciada(Documentos)}
                                     ${prepararAreasCredenciada(Qualificacao)}
@@ -71,6 +75,7 @@ export async function POST(req: Request) {
 
   try {
     const response = await fetch(url, fetchOptions);
+    console.log(fetchOptions.body);
     if (!response.ok) {
       throw new Error("Failed to send SOAP request");
     }
