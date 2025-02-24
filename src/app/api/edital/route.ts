@@ -36,8 +36,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const url =
-    "http://10.9.4.162/ESAmbienteBPMS/webservices/workflowenginesoa.asmx";
+  const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
 
   const body = `  
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
@@ -48,12 +47,10 @@ export async function POST(req: Request) {
                         <BizAgiWSParam>
                             <Entities>
                                 <FAMDemanda>
-                                    <Consultores>
                                     ${prepararConsultoresCredenciada(
                                       Consultores,
                                       session?.user?.idSCCredenciada
                                     )}
-                                    </Consultores>
                                     ${prepararDocumentosCredenciada(Documentos)}
                                     ${prepararAreasCredenciada(Qualificacao)}
                                 </FAMDemanda>
