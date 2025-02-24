@@ -125,7 +125,7 @@ export async function prepararConsultoresCredenciada(
   for (const consultor of consultants) {
     xml += `
             <SCConsultorEdital>
-                <SCTecnico entityName="SCTecnico"/>
+                <SCTecnico entityName="SCTecnico">
                     <Email>${consultor.email.email}</Email>
                     <Whatsapp>${formatDocEntry(consultor.contato)}</Whatsapp>
                     <CPF>${formatDocEntry(consultor.CPF)}</CPF>
