@@ -204,8 +204,8 @@ export async function prepararDocumentosCredenciada(
               document.idSCDocumentacao
             }"/>
                 <Arquivo>
-                    <File fileName="${document.title}">${await getBase64(
-      new File([document.turnToBase64], document.title)
+                    <File fileName="${document.fileName}">${await getBase64(
+      new File([document.turnToBase64], document.fileName as string)
     )}</File>
                 </Arquivo>
             </SCDocCredenciadaEdital>
