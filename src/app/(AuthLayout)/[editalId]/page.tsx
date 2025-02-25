@@ -174,7 +174,6 @@ export default function EditalId({
 
   async function registrarEdital() {
     const res = await fetch('edital')
-
     console.log(res)
   }
   if (loading) {
@@ -265,14 +264,14 @@ export default function EditalId({
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={!permissaoDeCadastroEdital}
           onClick={async () => {
-            console.log(
-              await prepararConsultoresCredenciada(
-                Consultores,
-                "idSCCredenciada"
-              )
-            );
-            console.log(await prepararDocumentosCredenciada(Documentos));
-            console.log(await prepararAreasCredenciada(Qualificacao));
+            // console.log(
+            //   await prepararConsultoresCredenciada(
+            //     Consultores,
+            //     "722"
+            //   )
+            // );
+            // console.log(await prepararDocumentosCredenciada(Documentos));
+            // console.log(await prepararAreasCredenciada(Qualificacao));
             await registrarEdital()
             // router.push(`/${params.editalId}/confirmarDados`);
           }}
