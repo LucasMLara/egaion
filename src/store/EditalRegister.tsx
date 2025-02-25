@@ -11,7 +11,8 @@ export type Document = {
   consultorId?: string;
   category?: string;
   file?: File[];
-  turnToBase64: File,
+  turnToBase64: File;
+  fileName? : string,
 };
 
 type History = {
