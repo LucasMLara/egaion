@@ -47,6 +47,7 @@ export default function InsertEditalDocuments({
       const blobUrl = URL.createObjectURL(file);
       const documento = {
         title: fieldName,
+        fileName: file.name,
         blob: blobUrl,
         id: idSCDocumentacao,
         idSCDocumentacao,
