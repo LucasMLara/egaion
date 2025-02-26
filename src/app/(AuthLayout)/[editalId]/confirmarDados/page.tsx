@@ -9,13 +9,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import EditalRegister from "@/services/editalRegister";
 import { useRouter } from "next/navigation";
-
-import EditalRegister from '@/services/editalRegister'
+import { useEditalStore } from "@/store/EditalRegister";
 
 export default function ConfirmaDados() {
   
   const router = useRouter();
+  const { Consultores, Qualificacao, Documentos, currentEditalId } = useEditalStore();
 
   return (
     <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
@@ -42,18 +43,15 @@ export default function ConfirmaDados() {
                 Após confirmar, você não poderá alterar os dados cadastrados.
               </DialogDescription>
             </DialogHeader>
-            <form action={async () => {
-        await EditalRegister()
-      }}>
             <DialogFooter>
               <Button
                 type="submit"
+                onClick={async () => await EditalRegister({Documentos, Qualificacao, Consultores, currentEditalId})}
                 className="bg-gradient-primary"
               >
                 Confirmar
               </Button>
             </DialogFooter>
-                </form>
           </DialogContent>
         </Dialog>
       </div>
