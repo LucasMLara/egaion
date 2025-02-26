@@ -19,11 +19,7 @@ import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
 import { HistoryItem, AttachmentItem, RequiredDocuments } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
-import {
-  prepararAreasCredenciada,
-  prepararConsultoresCredenciada,
-  prepararDocumentosCredenciada,
-} from "@/lib/concatEditalDocuments";
+
 
 export default function EditalId({
   params,
@@ -36,9 +32,6 @@ export default function EditalId({
   const {
     permissaoDeCadastroEdital,
     setDocumentsQty,
-    Consultores,
-    Qualificacao,
-    Documentos,
   } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
@@ -172,10 +165,6 @@ export default function EditalId({
     setDocumentsQty(requiredEditalDocs.length);
   }, [requiredEditalDocs.length, setDocumentsQty]);
 
-  async function registrarEdital() {
-    const res = await fetch('edital')
-    console.log(res)
-  }
   if (loading) {
     return (
       <div className="h-full flex justify-center items-center">
@@ -263,19 +252,8 @@ export default function EditalId({
         <Button
           className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
           disabled={!permissaoDeCadastroEdital}
-          onClick={async () => {
-            // console.log(
-            //   await prepararConsultoresCredenciada(
-            //     Consultores,
-            //     "722"
-            //   )
-            // );
-            // console.log(await prepararDocumentosCredenciada(Documentos));
-            // console.log(await prepararAreasCredenciada(Qualificacao));
-            await registrarEdital()
-            // router.push(`/${params.editalId}/confirmarDados`);
-          }}
-        >
+          onClick={() => router.push(`/${params.editalId}/confirmarDados`)}>
+          
           Confirmar Dados de Cadastro
         </Button>
       </div>
