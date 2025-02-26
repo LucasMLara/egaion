@@ -2,21 +2,17 @@
 import { auth } from "@/auth";
 import { Document, IEditalStore } from "@/store/EditalRegister";
 import { NextResponse } from "next/server";
-import xmlJs from "xml-js";
+import {
+  prepararDocumentosCredenciada,
+  prepararConsultoresCredenciada,
+  prepararAreasCredenciada,
+} from "@/lib/concatEditalDocuments";
 
-type IEdital = Pick<
-  IEditalStore,
-  "Consultores" | "Documentos" | "Qualificacao"
->;
+import { useEditalStore } from "@/store/EditalRegister";
 
-export default async function EditalRegister(newEdital: IEdital) {
-  if (
-    !newEdital.Consultores?.length ||
-    !newEdital.Documentos?.length ||
-    !newEdital.Qualificacao?.length
-  ) {
-    throw new Error("Todos os campos devem ser preenchidos corretamente");
-  }
+export default async function EditalRegister() {
+  const { Documentos, Consultores, Qualificacao, currentEditalId } =
+    useEditalStore();
 
   const session = await auth();
   if (!session?.user?.idSCCredenciada) {
@@ -26,43 +22,56 @@ export default async function EditalRegister(newEdital: IEdital) {
     );
   }
 
-  const url =
-    "http://10.9.4.162/ESAmbienteBPMS/webservices/entitymanagersoa.asmx";
+  const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
 
-  const jsonToXml = (json: Partial<IEdital>) =>
-    xmlJs.json2xml(JSON.stringify(json), { compact: true, spaces: 4 });
-  const consultoresXml = jsonToXml({ Consultores: newEdital.Consultores });
-  const documentosXml = jsonToXml({ Documentos: newEdital.Documentos });
-  const qualificacaoXml = jsonToXml({ Qualificacao: newEdital.Qualificacao });
-
-  const body = `  
+  const body = `
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
-            <soap:Header/>
+          <soap:Header/>
             <soap:Body>
-                <tem:saveEntity>
-                    <tem:entityInfo>
-                        <BizAgiWSParam>
-                            <Entities>
-                                <FAMDemanda>
-                                    <Consultores>${consultoresXml}</Consultores>
-                                    <Documentos>${documentosXml}</Documentos>
-                                    <Qualificacao>${qualificacaoXml}</Qualificacao>
-                                </FAMDemanda>
+                <tem:createCases>
+                  <tem:casesInfo>
+                    <BizAgiWSParam>
+                        <Cases>
+                          <Case>
+                        <Process>CadastrarCredenciadaNoEdit</Process>
+                                  <Entities>
+                                      <SCCredenciadasEdital>
+                                        <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='3'"/>
+                                            <SCEdital businessKey="idSCEdital='${currentEditalId}'"/>
+                                            <Credenciada entityName="SCCredenciada" businessKey="idSCCredenciada='${
+                                              session?.user?.idSCCredenciada
+                                            }'"/>
+                                              ${prepararDocumentosCredenciada(
+                                                Documentos
+                                              )}
+                                            ${prepararAreasCredenciada(
+                                              Qualificacao
+                                            )}
+                                                ${prepararConsultoresCredenciada(
+                                                  Consultores,
+                                                  session?.user?.idSCCredenciada
+                                                )}
+                                      </SCCredenciadasEdital>
                             </Entities>
+                            </Case>
+                          </Cases>
                         </BizAgiWSParam>
-                    </tem:entityInfo>
-                </tem:saveEntity>
+                      </tem:casesInfo>
+                    </tem:createCases>
             </soap:Body>
-        </soap:Envelope>
+  </soap:Envelope>
     `;
 
   const fetchOptions = {
     method: "POST",
     headers: {
-      "Content-Type": "text/xml",
+      "Content-Type":
+        'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
+      "Accept-Encoding": "gzip,deflate",
     },
     body,
   };
+
   try {
     const response = await fetch(url, fetchOptions);
     if (!response.ok) {
