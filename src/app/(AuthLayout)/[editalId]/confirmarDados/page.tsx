@@ -1,5 +1,4 @@
 "use client";
-import { useEditalStore, Document } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,11 +11,11 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 
+import EditalRegister from '@/services/editalRegister'
 
 export default function ConfirmaDados() {
   
   const router = useRouter();
-  // }
 
   return (
     <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
@@ -43,15 +42,18 @@ export default function ConfirmaDados() {
                 Após confirmar, você não poderá alterar os dados cadastrados.
               </DialogDescription>
             </DialogHeader>
+            <form action={async () => {
+        await EditalRegister()
+      }}>
             <DialogFooter>
               <Button
                 type="submit"
                 className="bg-gradient-primary"
-                // onClick={cadastrarEdital}
               >
                 Confirmar
               </Button>
             </DialogFooter>
+                </form>
           </DialogContent>
         </Dialog>
       </div>
