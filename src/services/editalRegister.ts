@@ -1,19 +1,27 @@
 "use server";
 import { auth } from "@/auth";
-import { Document, IEditalStore } from "@/store/EditalRegister";
 import { NextResponse } from "next/server";
 import {
   prepararDocumentosCredenciada,
   prepararConsultoresCredenciada,
   prepararAreasCredenciada,
 } from "@/lib/concatEditalDocuments";
+import { IConsultant } from "@/types/types";
+import { Document, Qualificacao } from "@/store/EditalRegister";
 
-import { useEditalStore } from "@/store/EditalRegister";
+type EditalRegisterParams = {
+  Documentos: Document[];
+  Qualificacao: Qualificacao[];
+  Consultores: IConsultant[];
+  currentEditalId: string;
+};
 
-export default async function EditalRegister() {
-  const { Documentos, Consultores, Qualificacao, currentEditalId } =
-    useEditalStore();
-
+export default async function EditalRegister({
+  Documentos,
+  Qualificacao,
+  Consultores,
+  currentEditalId,
+}: EditalRegisterParams) {
   const session = await auth();
   if (!session?.user?.idSCCredenciada) {
     return NextResponse.json(
