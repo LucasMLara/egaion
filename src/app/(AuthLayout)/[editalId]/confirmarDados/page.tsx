@@ -12,12 +12,29 @@ import {
 import EditalRegister from "@/services/editalRegister";
 import { useRouter } from "next/navigation";
 import { useEditalStore } from "@/store/EditalRegister";
+import { useSession } from "next-auth/react";
+import {
+  prepararDocumentosCredenciada,
+  prepararConsultoresCredenciada,
+  prepararAreasCredenciada,
+} from "@/lib/concatEditalDocuments";
 
 export default function ConfirmaDados() {
   
   const router = useRouter();
   const { Consultores, Qualificacao, Documentos, currentEditalId } = useEditalStore();
 
+  const { data } = useSession()
+
+  const idScCredenciada = data?.user.idSCCredenciada
+  
+  async function enviarDadosEdital() {
+    const documentosTratados = await prepararDocumentosCredenciada(Documentos)
+    const consultoresTratados = await prepararConsultoresCredenciada(Consultores, idScCredenciada)
+    const  qualificacaoTratada = await prepararAreasCredenciada(Qualificacao)
+    
+    EditalRegister({Documentos: documentosTratados, Qualificacao: qualificacaoTratada, Consultores: consultoresTratados, currentEditalId})
+}
   return (
     <div className="rounded w-full md:w-4/6 bg-neutral-500 flex flex-col items-center content-center md:mx-auto mt-14 p-5">
       <h3 className="scroll-m-20 text-2xl font-bold tracking-tight mb-5">
@@ -44,13 +61,14 @@ export default function ConfirmaDados() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
+              <form action={() => enviarDadosEdital()}>
               <Button
                 type="submit"
-                onClick={async () => await EditalRegister({Documentos, Qualificacao, Consultores, currentEditalId})}
                 className="bg-gradient-primary"
               >
                 Confirmar
               </Button>
+              </form>
             </DialogFooter>
           </DialogContent>
         </Dialog>
