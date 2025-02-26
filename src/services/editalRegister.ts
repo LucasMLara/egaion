@@ -1,18 +1,11 @@
 "use server";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import {
-  prepararDocumentosCredenciada,
-  prepararConsultoresCredenciada,
-  prepararAreasCredenciada,
-} from "@/lib/concatEditalDocuments";
-import { IConsultant } from "@/types/types";
-import { Document, Qualificacao } from "@/store/EditalRegister";
 
 type EditalRegisterParams = {
-  Documentos: Document[];
-  Qualificacao: Qualificacao[];
-  Consultores: IConsultant[];
+  Documentos: string;
+  Qualificacao: string;
+  Consultores: string;
   currentEditalId: string;
 };
 
@@ -46,19 +39,10 @@ export default async function EditalRegister({
                                       <SCCredenciadasEdital>
                                         <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='3'"/>
                                             <SCEdital businessKey="idSCEdital='${currentEditalId}'"/>
-                                            <Credenciada entityName="SCCredenciada" businessKey="idSCCredenciada='${
-                                              session?.user?.idSCCredenciada
-                                            }'"/>
-                                              ${prepararDocumentosCredenciada(
-                                                Documentos
-                                              )}
-                                            ${prepararAreasCredenciada(
-                                              Qualificacao
-                                            )}
-                                                ${prepararConsultoresCredenciada(
-                                                  Consultores,
-                                                  session?.user?.idSCCredenciada
-                                                )}
+                                            <Credenciada entityName="SCCredenciada" businessKey="idSCCredenciada='${session?.user?.idSCCredenciada}'"/>
+                                              ${Documentos}
+                                            ${Qualificacao}
+                                                ${Consultores}
                                       </SCCredenciadasEdital>
                             </Entities>
                             </Case>
