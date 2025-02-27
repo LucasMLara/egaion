@@ -26,7 +26,7 @@ export default function ConfirmaDados() {
   const [loading, setLoading] = useState(false)
   
   const router = useRouter();
-  const { Consultores, Qualificacao, Documentos, currentEditalId } = useEditalStore();
+  const { Consultores, Qualificacao, Documentos, currentEditalId, reset } = useEditalStore();
 
   const { data } = useSession()
 
@@ -74,6 +74,7 @@ export default function ConfirmaDados() {
     };
 
     try{
+      console.log(fetchOptions.body)
       setLoading(true)
       const response = await fetch(url, fetchOptions);
       if (!response.ok) {
@@ -82,6 +83,7 @@ export default function ConfirmaDados() {
       toast.success('Registro no Edital Bem sucedido!')
       router.push('/')
       setLoading(false)
+      reset();
     }catch(e) {
       if (e instanceof Error) {
         toast.error(e.message);
