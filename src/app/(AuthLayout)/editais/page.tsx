@@ -48,7 +48,7 @@ export default function Editais() {
             editalDialogContent={card.Objetivos}
             editalId={card.idSCEdital}
           />
-        ))}
+        )).reverse()}
       </div>
     </section>
   );
