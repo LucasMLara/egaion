@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default async function Header() {
-  // const session = await auth();
+  const session = await auth();
   return (
     <header
       className={`relative w-full h-16 flex justify-between bg-neutral-400 z-50`}
@@ -24,6 +24,7 @@ export default async function Header() {
         </Link> */}
       </div>
       <div className="h-full w-full flex justify-end items-center">
+        <p className="leading-7 [&:not(:first-child)]:mt-6">Bem vindo, {session?.user?.name}</p>
         {/* <Link href="#">
           <Image
             src={session?.user.image}
