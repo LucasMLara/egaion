@@ -3086,6 +3086,7 @@ model PVApp {
   CMDDemandas          Int?
   SCCredenciadasEdital Int?
   AEEAnalisarEmpEdital Int?
+  TESTEGerarDados      Int?
 }
 
 model PVCLApp {
@@ -3097,6 +3098,7 @@ model PVCLApp {
   CMDDemandas          Int?
   SCCredenciadasEdital Int?
   AEEAnalisarEmpEdital Int?
+  TESTEGerarDados      Int?
 }
 
 model QUERYFORM {
@@ -3334,17 +3336,6 @@ model SCChamadas {
   @@index([SCEdital], map: "SCChamadas_F1")
 }
 
-model SCConsultoresNivel {
-  idSCConsultoresNivel   BigInt  @id(map: "pk2cc65c143278064328d120fbbc6")
-  finalEnt               Int     @default(10059, map: "DF__SCConsult__final__3E530F62")
-  baCreatedTime          BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCConsultoresNivel_baCreatedTime")
-  baGuid                 String  @default(dbgenerated("newid()"), map: "DF_SCConsultoresNivel_baGuid") @db.UniqueIdentifier
-  Membro                 BigInt?
-  SCParametrizacaoEdital BigInt?
-
-  @@index([SCParametrizacaoEdital], map: "SCConsultoresNivel_F1")
-}
-
 model SCCredenciada {
   idSCCredenciada BigInt  @id(map: "pk7a34f6141748eea46d143840482")
   finalEnt        Int     @default(10034, map: "DF__SCCredenc__final__36DC0ACC")
@@ -3368,10 +3359,10 @@ model SCCredenciada {
 }
 
 model SCCredenciadasEdital {
-  idSCCredenciadasEdital    BigInt   @id(map: "pk97040cb493b8f545efb4389db00")
-  finalEnt                  Int      @default(10046, map: "DF__SCCredenc__final__210CC53E")
-  baCreatedTime             BigInt   @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCCredenciadasEdital_baCreatedTime")
-  baGuid                    String   @default(dbgenerated("newid()"), map: "DF_SCCredenciadasEdital_baGuid") @db.UniqueIdentifier
+  idSCCredenciadasEdital    BigInt    @id(map: "pk97040cb493b8f545efb4389db00")
+  finalEnt                  Int       @default(10046, map: "DF__SCCredenc__final__210CC53E")
+  baCreatedTime             BigInt    @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCCredenciadasEdital_baCreatedTime")
+  baGuid                    String    @default(dbgenerated("newid()"), map: "DF_SCCredenciadasEdital_baGuid") @db.UniqueIdentifier
   Credenciada               BigInt?
   SCEdital                  BigInt?
   StatusCadastro            BigInt?
@@ -3379,8 +3370,15 @@ model SCCredenciadasEdital {
   AcaoTarefa                BigInt?
   JustificativaNaoAprovacao String?
   NumeroCaso                Int?
+  PesquisaNomeConsultor     String?   @db.NVarChar(50)
+  PesquisaCPFConsultor      String?   @db.NVarChar(50)
+  DataCriacaoCaso           DateTime? @db.DateTime
+  Requerente                BigInt?
+  NumeroCasoCadastro        Int?
+  DataCriacaoCadastro       DateTime? @db.DateTime
 
   @@index([SCEdital], map: "SCCredenciadasEdital_F1")
+  @@index([Credenciada], map: "SCCredenciadasEdital_F2")
 }
 
 model SCCredenciadora {
@@ -3427,6 +3425,7 @@ model SCDocCredenciadaEdital {
   Arquivo                  Int?    @db.TinyInt
   DadosDocumento           BigInt?
   SCCredenciadasEdital     BigInt?
+  Teste                    Int?    @db.TinyInt
 
   @@index([SCCredenciadasEdital], map: "SCDocCredenciadaEdital_F1")
 }
@@ -3579,24 +3578,13 @@ model SCLocalidadesPadrao {
   @@index([SCCredenciadora], map: "SCLocalidadesPadrao_F1")
 }
 
-model SCNaturezaConsultor {
-  idSCNaturezaConsultor BigInt  @id(map: "pk1c43ab0480f9d17700f0a229135")
-  finalEnt              Int     @default(10058, map: "DF__SCNaturez__final__2D288360")
-  baCreatedTime         BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCNaturezaConsultor_baCreatedTime")
-  baGuid                String  @default(dbgenerated("newid()"), map: "DF_SCNaturezaConsultor_baGuid") @db.UniqueIdentifier
-  NaturezaPrestacao     BigInt?
-  SCConsultoresNivel    BigInt?
-
-  @@index([SCConsultoresNivel], map: "SCNaturezaConsultor_F1")
-}
-
 model SCNaturezaPrestacao {
   idSCNaturezaPrestacao   BigInt   @id(map: "pk477ff954adbad1a31c50f65ed2e")
   finalEnt                Int      @default(10057, map: "DF__SCNaturez__final__22AAF4ED")
   guidSCNaturezaPrestacao String   @unique(map: "SCNaturezaPrestacao_UKG") @default(dbgenerated("newid()"), map: "DF__SCNaturez__guidS__239F1926") @db.UniqueIdentifier
   dsblSCNaturezaPrestacao Boolean?
   dplySCNaturezaPrestacao Int?     @db.TinyInt
-  Codigo                  Int?
+  Codigo                  Int?     @unique(map: "SCNaturezaPrestacao_EK1")
   Descricao               String?  @db.NVarChar(50)
 }
 
@@ -3783,25 +3771,24 @@ model SCParamEditalNv7 {
 }
 
 model SCParametrizacaoEdital {
-  idSCParametrizacaoEdital BigInt   @id(map: "pkf8dea48424b85f41cff342d766b")
-  finalEnt                 Int      @default(10025, map: "DF__SCParamet__final__0BF1ACC7")
-  baCreatedTime            BigInt   @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCParametrizacaoEdital_baCreatedTime")
-  baGuid                   String   @default(dbgenerated("newid()"), map: "DF_SCParametrizacaoEdital_baGuid") @db.UniqueIdentifier
-  Nivel2Parametrizacao     BigInt?
-  Escolhido                Boolean?
-  Nivel4Parametrizacao     BigInt?
-  Nivel3Parametrizacao     BigInt?
-  Nivel6Parametrizacao     BigInt?
-  Nivel1Parametrizacao     BigInt?
-  Nivel5Parametrizacao     BigInt?
-  Nivel7Parametrizacao     BigInt?
-  IdNivel                  Int?
-  SCCredenciadasEdital     BigInt?
-  Parametrizacao           String?
-  PesquisaNomeMembro       String?  @db.NVarChar(50)
-  PesquisaCPFMembro        String?  @db.NVarChar(50)
-  PesquisaMembroIndicado   BigInt?
-  SCEdital                 BigInt?
+  idSCParametrizacaoEdital  BigInt   @id(map: "pkf8dea48424b85f41cff342d766b")
+  finalEnt                  Int      @default(10025, map: "DF__SCParamet__final__0BF1ACC7")
+  baCreatedTime             BigInt   @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCParametrizacaoEdital_baCreatedTime")
+  baGuid                    String   @default(dbgenerated("newid()"), map: "DF_SCParametrizacaoEdital_baGuid") @db.UniqueIdentifier
+  Nivel2Parametrizacao      BigInt?
+  Escolhido                 Boolean?
+  Nivel4Parametrizacao      BigInt?
+  Nivel3Parametrizacao      BigInt?
+  Nivel6Parametrizacao      BigInt?
+  Nivel1Parametrizacao      BigInt?
+  Nivel5Parametrizacao      BigInt?
+  Nivel7Parametrizacao      BigInt?
+  IdNivel                   Int?
+  SCCredenciadasEdital      BigInt?
+  Parametrizacao            String?
+  SCEdital                  BigInt?
+  RelatoExperiencia         Int?     @db.TinyInt
+  AtestadoCapacidadeTecnica Int?     @db.TinyInt
 
   @@index([SCCredenciadasEdital], map: "SCParametrizacaoEdital_F2")
   @@index([SCEdital], map: "SCParametrizacaoEdital_F3")
@@ -4914,4 +4901,52 @@ model WORKITEMSTATE {
   idWorkItemState Int        @id(map: "WORKITEMSTATE_PK")
   wiName          String     @db.NVarChar(26)
   WORKITEM        WORKITEM[]
+}
+
+model SCConsultorEdital {
+  idSCConsultorEdital  BigInt  @id(map: "pkbc4a7504fdaa5f673cdced23cbc")
+  finalEnt             Int     @default(10064, map: "DF__SCConsult__final__795EC697")
+  baCreatedTime        BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCConsultorEdital_baCreatedTime")
+  baGuid               String  @default(dbgenerated("newid()"), map: "DF_SCConsultorEdital_baGuid") @db.UniqueIdentifier
+  SCTecnico            BigInt?
+  SCCredenciadasEdital BigInt?
+
+  @@index([SCCredenciadasEdital], map: "SCConsultorEdital_F1")
+}
+
+model SCConsultorNivel {
+  idSCConsultorNivel  BigInt  @id(map: "pkbbb3c6e43518f7b3a4213377f71")
+  finalEnt            Int     @default(10063, map: "DF__SCConsult__final__71BDA4CF")
+  baCreatedTime       BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCConsultorNivel_baCreatedTime")
+  baGuid              String  @default(dbgenerated("newid()"), map: "DF_SCConsultorNivel_baGuid") @db.UniqueIdentifier
+  Documento           Int?    @db.TinyInt
+  NivelParametrizacao BigInt?
+  SCConsultorEdital   BigInt?
+  Parametrizacao      String?
+
+  @@index([SCConsultorEdital], map: "SCConsultorNivel_F1")
+}
+
+model SCNaturezaNivel {
+  idSCNaturezaNivel      BigInt  @id(map: "pk0e40b0347b1b62ea6f082b5c2cb")
+  finalEnt               Int     @default(10062, map: "DF__SCNaturez__final__4B97FBE7")
+  baCreatedTime          BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCNaturezaNivel_baCreatedTime")
+  baGuid                 String  @default(dbgenerated("newid()"), map: "DF_SCNaturezaNivel_baGuid") @db.UniqueIdentifier
+  NaturezaPrestacao      BigInt?
+  SCParametrizacaoEdital BigInt?
+
+  @@index([SCParametrizacaoEdital], map: "SCNaturezaNivel_F1")
+}
+
+model TESTEGerarDados {
+  idTESTEGerarDados      BigInt  @id(map: "pk6f10ba240a18d2c53fccc12ed38")
+  finalEnt               Int     @default(10065, map: "DF__TESTEGera__final__0A895299")
+  baCreatedTime          BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_TESTEGerarDados_baCreatedTime")
+  baGuid                 String  @default(dbgenerated("newid()"), map: "DF_TESTEGerarDados_baGuid") @db.UniqueIdentifier
+  SCCredenciadadoEdital  BigInt?
+  SCDocCredenciadaEdital BigInt?
+  SCConsultorEdital      BigInt?
+  SCParametrizacaoEdital BigInt?
+  SCConsultorNivel       BigInt?
+  SCNaturezaNivel        BigInt?
 }
