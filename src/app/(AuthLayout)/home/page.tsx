@@ -62,7 +62,7 @@ const fetchMyEditals = useCallback(async () => {
                 editalDialogContent={card.Objetivos}
                 editalId={card.idSCEdital}
           />
-        ))}
+        )).reverse()}
       </div>
     </section>
   );
