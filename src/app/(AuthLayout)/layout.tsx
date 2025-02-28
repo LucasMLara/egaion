@@ -1,6 +1,7 @@
 import DrawerMenu from "@/components/layout/DrawerMenu";
 import Header from "@/components/layout/Header";
 import Content from "./content";
+import Footer from "@/components/layout/Footer";
 
 export default async function AuthLayout({
   children,
@@ -14,6 +15,7 @@ export default async function AuthLayout({
         <DrawerMenu />
         <Content>{children}</Content>
       </div>
+      <Footer />
     </div>
   );
 }
