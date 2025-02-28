@@ -19,7 +19,7 @@ export interface IMyEditals {
   InicioEdital: string;
   Objetivos: string;
   EscolhaLocalidades: boolean;
-  Status: string | null;
+  Status: TEditalStatus;
   PesquisaNome: string | null;
   PesquisaCNPJ: string | null;
   PesquisaStatusCred: string | null;
