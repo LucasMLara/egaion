@@ -53,7 +53,7 @@ const fetchMyEditals = useCallback(async () => {
         {myEditals.map((card) => (
           <MyEditalCard
             status={null}
-                key={card.idSCEdital}
+                key={card.idSCCredenciadasEdital}
                 editalCardContent={card.ResumoEdital}
                 editalCardTitle={card.NomeEdital}
                 editalCardDate={formatDate(card.InicioEdital)}
