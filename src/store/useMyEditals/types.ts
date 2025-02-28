@@ -2,6 +2,7 @@ type TEditalStatus = "pending" | "ok" | "error" | null;
 
 export interface IMyEditals {
   idSCEdital: string;
+  idSCCredenciadasEdital: string;
   ObjetoEditalBase64: string;
   finalEnt: number;
   baCreatedTime: string;
