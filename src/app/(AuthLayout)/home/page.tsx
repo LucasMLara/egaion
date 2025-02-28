@@ -52,7 +52,7 @@ const fetchMyEditals = useCallback(async () => {
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
         {myEditals.map((card) => (
           <MyEditalCard
-            status={null}
+            status={card.Status}
                 key={card.idSCCredenciadasEdital}
                 editalCardContent={card.ResumoEdital}
                 editalCardTitle={card.NomeEdital}
