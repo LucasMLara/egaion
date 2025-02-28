@@ -7,11 +7,12 @@ import signIn from "@/services/signIn";
 import { useFormState } from "react-dom";
 import React from "react";
 import { toast } from "sonner";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
 export default function Login() {
   const [formState, formAction] = useFormState(signIn, { error: null });
   const [formIsSubmitting, setFormIsSubmitting] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
 
   React.useEffect(() => {
     if (formState.error) {
@@ -49,13 +50,27 @@ export default function Login() {
                   Esqueceu sua senha?
                 </Link>
               </div>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="**********"
-                className="transition-all"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="**********"
+                  className="pr-10 transition-all"
+                />
+                <Button
+                  variant='link'
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? (
+                    <EyeOffIcon size={18} />
+                  ) : (
+                    <EyeIcon size={18} />
+                  )}
+                </Button>
+              </div>
             </div>
             <Button
               type="submit"
