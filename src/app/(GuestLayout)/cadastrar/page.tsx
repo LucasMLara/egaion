@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -19,11 +20,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { ISignUp, SignUpSchema } from "@/types/types";
-import { LoaderIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, LoaderIcon } from "lucide-react";
 import { formatCnpj, formatPhone } from "@/lib/formatters";
 
 export default function Cadastro() {
-  const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
 
   const form = useForm<ISignUp>({
     resolver: zodResolver(SignUpSchema),
@@ -154,24 +156,38 @@ export default function Cadastro() {
                 </FormItem>
               )}
             />
-            <FormField
+              <FormField
               control={form.control}
               name="password.password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="*************"
-                      {...field}
-                      className="transition-all"
-                    />
-                  </FormControl>
-                  <FormMessage />
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="*************"
+                    {...field}
+                    className="transition-all pr-10"
+                  />
+                  <Button
+                    variant="link"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                    <EyeOffIcon size={18} />
+                    ) : (
+                    <EyeIcon size={18} />
+                    )}
+                  </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
                 </FormItem>
               )}
-            />
+              />
             <FormField
               control={form.control}
               name="password.passwordConfirmation"
@@ -179,12 +195,26 @@ export default function Cadastro() {
                 <FormItem>
                   <FormLabel>Confirmar senha</FormLabel>
                   <FormControl>
+                  <div className="relative">
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="*************"
                       {...field}
                       className="transition-all"
                     />
+                                   <Button
+                    variant="link"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                    <EyeOffIcon size={18} />
+                    ) : (
+                    <EyeIcon size={18} />
+                    )}
+                  </Button>
+                  </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
