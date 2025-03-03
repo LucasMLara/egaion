@@ -181,7 +181,7 @@ export async function prepararConsultoresCredenciada(
         new File([nivel.files], nivel.areaId)
       )}</File>
                         </Documento>
-                        <Parametrizacao>${nivel.areaId}</Parametrizacao>
+                        <Parametrizacao>${nivel.areaName}</Parametrizacao>
                     </SCConsultorNivel>`;
     }
     xml += `

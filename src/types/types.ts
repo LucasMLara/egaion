@@ -40,6 +40,7 @@ export const consultantSchema = z.object({
     .array(
       z.object({
         areaId: z.string(),
+        areaName: z.string(),
         files: fileSchema,
       })
     )
@@ -102,6 +103,7 @@ export const fileInputSchema = z.object({
   arquivosTecnicos: z.array(
     z.object({
       areaId: z.string(),
+      areaName: z.string(),
       files: z
         .array(z.instanceof(File))
         .min(1, "Insira pelo menos um documento técnico"),

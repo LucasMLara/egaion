@@ -32,7 +32,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
   const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
     resolver: zodResolver(fileInputSchema),
     defaultValues: {
-      arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [] })),
+      arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [], areaName: area.label })),
     },
   });
 

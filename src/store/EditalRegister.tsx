@@ -8,6 +8,7 @@ export type Document = {
   blob: string;
   id: string;
   areaId?: string;
+  areaName? : string;
   consultorId?: string;
   category?: string;
   file?: File[];
@@ -37,6 +38,7 @@ export type Qualificacao = {
 
 type ConsultantAreaDocuments = {
   areaId: string;
+  areaName: string;
   files: File[];
 };
 
@@ -106,6 +108,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
               blob: URL.createObjectURL(file),
               id: file.name,
               areaId: doc.areaId,
+              areaName: doc.areaName,
               turnToBase64: file,
             }))
           ),
