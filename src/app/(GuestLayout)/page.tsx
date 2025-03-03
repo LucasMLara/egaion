@@ -43,12 +43,12 @@ export default function Login() {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Senha</Label>
-                <Link
+                {/* <Link
                   href="/esquecisenha"
                   className="ml-auto inline-block text-sm underline"
                 >
                   Esqueceu sua senha?
-                </Link>
+                </Link> */}
               </div>
               <div className="relative">
                 <Input
