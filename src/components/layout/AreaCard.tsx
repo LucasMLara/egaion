@@ -36,7 +36,6 @@ import { useEditalStore, Document } from "@/store/EditalRegister";
 import { mockDocumentosAreaConsultor, naturezasPrestacao } from "@/mocks";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { prepararAreasCredenciada } from "@/lib/concatEditalDocuments";
 
 export default function AreaCard({
   area,
@@ -51,6 +50,8 @@ export default function AreaCard({
   const [selectedNaturezas, setSelectedNaturezas] = useState<
     MultipleCheckBoxOptions[]
   >([]);
+
+  const [travarBotaoMap, setTravarBotaoMap] = useState<Record<string, boolean>>({});
 
   const {
     removerArea,
@@ -89,19 +90,29 @@ export default function AreaCard({
     clearNaturezaPrestacao(activeArea);
   };
 
-  const areaHasFiles = Qualificacao.map(
-    (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
-  ).includes(true);
-  const areaHasNatureza = Qualificacao.map(
-    (area) => area.areaId === activeArea && area.naturezaPrestacao.length > 0
-  ).includes(true);
-  const travarBotao = !areaHasFiles || !areaHasNatureza;
+useEffect(() => {
+  const areaHasFiles = Qualificacao.some(
+    (area) => area.areaId === areaId && area.AreaDocuments.length > 0
+  );
+  const areaHasNatureza = Qualificacao.some(
+    (area) => area.areaId === areaId && area.naturezaPrestacao.length > 0
+  );
+
+  setTravarBotaoMap((prev) => ({
+    ...prev,
+    [areaId]: !areaHasFiles || !areaHasNatureza,
+  }));
+}, [Qualificacao, areaId]);
+
+
+  
 
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
       toast.error("Insira todos os dados necessários para prosseguir");
     }
   }, [form.formState.errors]);
+
   useEffect(() => {
     const areaHasFiles = Qualificacao.some(
       (area) => area.areaId === activeArea && area.AreaDocuments.length > 0
@@ -159,6 +170,7 @@ export default function AreaCard({
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle>{area}</CardTitle>
+              {!travarBotaoMap[areaId] ? <Check  className="ml-2"/> : null}
             </div>
           </CardHeader>
         </Card>
@@ -300,7 +312,7 @@ export default function AreaCard({
               </DialogDescription>
               {Object.keys(form.formState.errors).length > 0 ||
                 checkboxHasError ||
-                (travarBotao && (
+                (travarBotaoMap[areaId] && (
                   <Label className="text-md text-center text-neutral-700  transition-all uppercase bg-auxiliary-warning-500 flex flex-col justify-center rounded-lg">
                     Insira todos os dados necessários acima
                   </Label>
@@ -316,10 +328,10 @@ export default function AreaCard({
                   disabled={
                     Object.keys(form.formState.errors).length > 0 ||
                     checkboxHasError ||
-                    travarBotao
+                    travarBotaoMap[areaId]
                   }
                 >
-                  <Check />
+                  OK
                 </Button>
               </DialogFooter>
             </DialogContent>
