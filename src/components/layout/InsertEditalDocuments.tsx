@@ -111,9 +111,6 @@ export default function InsertEditalDocuments({
                             <FormLabel className="text-md my-1">
                               {inputLabel}
                             </FormLabel>
-                            <FormLabel className="text-sm font-light">
-                              Selecione seu arquivo clicando na área abaixo
-                            </FormLabel>
                           </div>
                           <FormControl>
                             <div className="flex gap-1">
@@ -164,7 +161,7 @@ export default function InsertEditalDocuments({
                                       )
                                     }
                                   >
-                                    Carregar Documento
+                                    Validar Documento
                                   </Button>
                                 </>
                               )}
