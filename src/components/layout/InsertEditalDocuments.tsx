@@ -108,7 +108,7 @@ export default function InsertEditalDocuments({
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex flex-col">
-                            <FormLabel className="text-md my-1">
+                            <FormLabel className="text-md my-3">
                               {inputLabel}
                             </FormLabel>
                           </div>
