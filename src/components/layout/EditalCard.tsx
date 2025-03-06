@@ -91,13 +91,17 @@ export default function EditalCard({
               <DialogContent>
                 <DialogTitle>Atenção!</DialogTitle>
                 <DialogDescription>
-                  Você está prestes a abrir um novo edital. Deseja continuar?
+                  Você está prestes a se cadastrar em um novo edital. Só é permitido o cadastro em um edital por vez.
                 </DialogDescription>
 
                 <DialogDescription>
-                  Caso você continue, todos os dados preenchidos serão perdidos.
+                  Caso você continue, todos os dados que você já cadastrou no edital {currentEditalId} serão perdidos.
+                </DialogDescription>
+                <DialogDescription>
+                  Deseja continuar?
                 </DialogDescription>
                 <DialogFooter>
+
                   <Link href={`/${editalId}`}>
                     <Button
                       variant="destructive"
@@ -110,6 +114,12 @@ export default function EditalCard({
                       Sim
                     </Button>
                   </Link>
+                  <Button
+                      variant="ghost"
+                      className="hover:shadow-md transition-all"
+                    >
+                      Não
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -122,7 +132,7 @@ export default function EditalCard({
                 onClick={() => setEditalId(editalId)}
                 className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
               >
-                Ver Detalhes
+                Continuar cadastro
               </Button>
             </Link>
           </DialogFooter>
