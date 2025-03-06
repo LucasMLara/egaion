@@ -233,7 +233,7 @@ export default function EditalId({
               do edital.
             </h1>
             <ul className="my-3">
-              <li className="text-center text-lg font-bold ">
+              <li className="text-center text-lg font-bold text-blue-600 underline ">
                 <a
                   href={createBlobUrl(
                     currentEdital.ObjetoEditalBase64,
