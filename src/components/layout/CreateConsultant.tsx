@@ -246,9 +246,6 @@ export default function CreateConsultant() {
                       <FormLabel>
                         Documentos Pessoais (Carteira de Trabalho e/ou CPF){" "}
                       </FormLabel>
-                      <FormLabel className="text-sm font-light ">
-                        Selecione seu arquivo clicando na área abaixo
-                      </FormLabel>
                     </div>
                     <FormControl>
                       <Input
@@ -274,9 +271,6 @@ export default function CreateConsultant() {
                   <FormItem>
                     <div className="flex flex-col items-center my-4">
                       <FormLabel>Comprovante de Vínculo com PJ</FormLabel>
-                      <FormLabel className="text-sm font-light ">
-                        Selecione seu arquivo clicando na área abaixo
-                      </FormLabel>
                     </div>
                     <FormControl>
                       <Input
@@ -302,9 +296,6 @@ export default function CreateConsultant() {
                   <FormItem>
                     <div className="flex flex-col items-center my-4">
                       <FormLabel>Comprovante de Formação Acadêmica</FormLabel>
-                      <FormLabel className="text-sm font-light ">
-                        Selecione seu arquivo clicando na área abaixo
-                      </FormLabel>
                     </div>
                     <FormControl>
                       <Input
@@ -331,9 +322,6 @@ export default function CreateConsultant() {
                     <div className="flex flex-col items-center my-4">
                       <FormLabel>
                         Registro Profissional em Órgão de Classe
-                      </FormLabel>
-                      <FormLabel className="text-sm font-light ">
-                        Selecione seu arquivo clicando na área abaixo
                       </FormLabel>
                     </div>
                     <FormControl>
