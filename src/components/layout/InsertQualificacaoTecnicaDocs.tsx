@@ -43,6 +43,9 @@ export default function InsertQualificacaoTecnicaDocs({
       <AccreditationForm data={areas} />
       {Qualificacao.length > 0 && (
         <div className="flex flex-wrap gap-3">
+          <h1 className="text-2xl font-bold  bg-auxiliary-warning-400 p-5 rounded-lg text-center w-full">
+            Clique nas linhas abaixo para preencher os demais dados e subir a documentação técnica de cada área
+          </h1>
           {Qualificacao.map((area) => (
             <AreaCard key={area.areaId} area={area.name} areaId={area.areaId} />
           ))}
