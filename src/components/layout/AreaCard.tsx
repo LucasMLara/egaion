@@ -268,7 +268,6 @@ export default function AreaCard({
                                             }}
                                           />
                                         </FormControl>
-                                        {/* <FormMessage /> */}
                                       </FormItem>
                                     )}
                                   />
@@ -283,7 +282,7 @@ export default function AreaCard({
                         type="submit"
                         disabled={Object.keys(form.formState.errors).length > 0}
                       >
-                        Carregar Documentos
+                        Validar Documentos
                       </Button>
                     </form>
                   </Form>
