@@ -74,7 +74,6 @@ export default function ConfirmaDados() {
     };
 
     try{
-      console.log(fetchOptions.body)
       setLoading(true)
       const response = await fetch(url, fetchOptions);
       if (!response.ok) {
