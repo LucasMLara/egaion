@@ -3,6 +3,7 @@ import AreaCard from "./AreaCard";
 import { useEditalStore } from "@/store/EditalRegister";
 import { useEffect } from "react";
 import { OutputItem } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 export default function InsertQualificacaoTecnicaDocs({
   areas,
@@ -15,6 +16,7 @@ export default function InsertQualificacaoTecnicaDocs({
     Documentos,
     Consultores,
     RequiredDocumentsQty,
+    checkQualificacaoConsultants
   } = useEditalStore();
 
   useEffect(() => {
@@ -23,7 +25,8 @@ export default function InsertQualificacaoTecnicaDocs({
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
-        Documentos.length !== RequiredDocumentsQty
+        Documentos.length !== RequiredDocumentsQty ||
+        !checkQualificacaoConsultants()
       ) {
         alterarPermissaoEdital(false);
       } else {
@@ -36,11 +39,13 @@ export default function InsertQualificacaoTecnicaDocs({
     Documentos,
     Consultores,
     RequiredDocumentsQty,
+    checkQualificacaoConsultants
   ]);
 
   return (
     <div className="max-h-screen overflow-auto">
       <AccreditationForm data={areas} />
+      <Button onClick={() => console.log(Qualificacao)}>Logar qualificação</Button>
       {Qualificacao.length > 0 && (
         <div className="flex flex-wrap gap-3">
           <h1 className="text-2xl font-bold  bg-auxiliary-warning-400 p-5 rounded-lg text-center w-full">
