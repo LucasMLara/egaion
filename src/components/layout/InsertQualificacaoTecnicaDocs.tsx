@@ -45,7 +45,6 @@ export default function InsertQualificacaoTecnicaDocs({
   return (
     <div className="max-h-screen overflow-auto">
       <AccreditationForm data={areas} />
-      <Button onClick={() => console.log(Qualificacao)}>Logar qualificação</Button>
       {Qualificacao.length > 0 && (
         <div className="flex flex-wrap gap-3">
           <h1 className="text-2xl font-bold  bg-auxiliary-warning-400 p-5 rounded-lg text-center w-full">
