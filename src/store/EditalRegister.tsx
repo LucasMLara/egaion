@@ -80,6 +80,7 @@ type editalActions = {
   ) => void;
   clearNaturezaPrestacao: (areaId: string) => void;
   setDocumentsQty: (qty: number) => void;
+  checkQualificacaoConsultants: () => boolean;
 };
 
 const initialState: IEditalStore = {
@@ -98,7 +99,7 @@ const initialState: IEditalStore = {
 
 export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       insertConsultantAreaDocuments: (documents) =>
         set({
@@ -208,6 +209,14 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
             (qualificacao) => qualificacao.areaId !== areaId
           ),
         })),
+      checkQualificacaoConsultants: () => {
+        const state = get();
+        return state.Qualificacao.every((qualificacao) =>
+          state.Consultores.some(
+            (consultor) => consultor.areaId?.includes(qualificacao.areaId)
+          )
+        );
+      },
     }),
     { name: "editalStorage" }
   )
