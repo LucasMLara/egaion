@@ -135,35 +135,32 @@ export default function InsertEditalDocuments({
                                   </Button>
                                 </div>
                               ) : (
-                                <>
                                   <Input
-                                    accept="application/pdf, image/jpeg, image/jpg"
-                                    type="file"
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0];
-                                      field.onChange(file);
-                                      if (file) {
-                                        form.clearErrors(
-                                          inputName as `editalDocs.${number}.${string}`
-                                        );
+                                  accept="application/pdf, image/jpeg, image/jpg"
+                                  type="file"
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    field.onChange(file);
+                                    if (file) {
+                                    form.clearErrors(
+                                      inputName as `editalDocs.${number}.${string}`
+                                    );
+                                    await handleFieldSubmit(
+                                      inputName,
+                                      file,
+                                      idSCDocumentacao
+                                    );
+                                    } else {
+                                    form.setError(
+                                      inputName as `editalDocs.${number}.${string}`,
+                                      {
+                                      type: "manual",
+                                      message: "Arquivo Inválido",
                                       }
-                                    }}
-                                  />
-                                  <Button
-                                    type="button"
-                                    onClick={() =>
-                                      handleFieldSubmit(
-                                        inputName,
-                                        field.value as unknown as
-                                          | File
-                                          | undefined,
-                                        idSCDocumentacao
-                                      )
+                                    );
                                     }
-                                  >
-                                    Validar Documento
-                                  </Button>
-                                </>
+                                  }}
+                                  />
                               )}
                             </div>
                           </FormControl>
