@@ -7,6 +7,16 @@ import {
   transformData,
   InputItem,
 } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Attachments from "@/components/layout/Attachments";
 import InsertEditalDocuments from "@/components/layout/InsertEditalDocuments";
@@ -19,7 +29,12 @@ import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 import EditalHistory from "@/components/layout/EditalHistory";
 import { HistoryItem, AttachmentItem, RequiredDocuments } from "@/types/types";
 import { LoaderIcon } from "lucide-react";
-
+import { useSession } from "next-auth/react";
+import {
+  prepararDocumentosCredenciada,
+  prepararConsultoresCredenciada,
+  prepararAreasCredenciada,
+} from "@/lib/concatEditalDocuments";
 
 export default function EditalId({
   params,
@@ -32,6 +47,7 @@ export default function EditalId({
   const {
     permissaoDeCadastroEdital,
     setDocumentsQty,
+    Consultores, Qualificacao, Documentos, currentEditalId, reset
   } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
@@ -165,6 +181,72 @@ export default function EditalId({
     setDocumentsQty(requiredEditalDocs.length);
   }, [requiredEditalDocs.length, setDocumentsQty]);
 
+    const { data } = useSession()
+  
+    const idScCredenciada = data?.user.idSCCredenciada
+
+  async function enviarDadosEdital() {
+    const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
+    const body = `
+        <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
+          <soap:Header/>
+            <soap:Body>
+                <tem:createCases>
+                  <tem:casesInfo>
+                    <BizAgiWSParam>
+                        <Cases>
+                          <Case>
+                        <Process>CadastrarCredenciadaNoEdit</Process>
+                                  <Entities>
+                                      <SCCredenciadasEdital>
+                                        <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='3'"/>
+                                            <SCEdital businessKey="idSCEdital='${currentEditalId}'"/>
+                                            <Credenciada entityName="SCCredenciada" businessKey="idSCCredenciada='${idScCredenciada}'"/>
+                                              ${await prepararDocumentosCredenciada(Documentos)}
+                                            ${await prepararAreasCredenciada(Qualificacao)}
+                                                ${await prepararConsultoresCredenciada(Consultores, idScCredenciada)}
+                                      </SCCredenciadasEdital>
+                            </Entities>
+                            </Case>
+                          </Cases>
+                        </BizAgiWSParam>
+                      </tem:casesInfo>
+                    </tem:createCases>
+            </soap:Body>
+  </soap:Envelope>
+    `;
+
+    const fetchOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
+        "Accept-Encoding": "gzip,deflate",
+      },
+      body,
+    };
+
+    try{
+      setLoading(true)
+      const response = await fetch(url, fetchOptions);
+      if (!response.ok) {
+        throw new Error("Erro ao se Registrar no Edital.");
+      }
+      toast.success('Registro no Edital Bem sucedido!')
+      router.push('/')
+      setLoading(false)
+      reset();
+    }catch(e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+      console.error(e)
+      setLoading(false)
+    }
+}
+
   if (loading) {
     return (
       <div className="h-full flex justify-center items-center">
@@ -249,13 +331,29 @@ export default function EditalId({
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
-        <Button
-          className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
-          disabled={!permissaoDeCadastroEdital}
-          onClick={() => router.push(`/${params.editalId}/confirmarDados`)}>
-          
-          Confirmar Dados de Cadastro
-        </Button>
+        <Dialog>
+                  <DialogTrigger asChild>
+                    <Button disabled={!permissaoDeCadastroEdital} className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none">Confirmar Dados de Cadastro</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Tem Certeza?</DialogTitle>
+                      <DialogDescription>
+                        Após confirmar, você não poderá alterar os dados cadastrados.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        onClick={ () => enviarDadosEdital()}
+                        disabled={loading}
+                        className="bg-gradient-primary"
+        
+                      >
+                        {loading ? <LoaderIcon className="animate-spin" /> : "Confirmar"}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
       </div>
     </section>
   );
