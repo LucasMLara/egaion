@@ -155,7 +155,7 @@ export default function InsertEditalDocuments({
                                       inputName as `editalDocs.${number}.${string}`,
                                       {
                                       type: "manual",
-                                      message: "Arquivo Inválido",
+                                      message: "Campo Obrigatório",
                                       }
                                     );
                                     }
