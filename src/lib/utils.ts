@@ -4,9 +4,11 @@ import { IEditalCard, IDocCard } from "@/types/types";
 import Dayjs from "dayjs";
 
 export function formatDate(date: string) {
-  return Dayjs(date).format("DD/MM/YYYY");
+  const parsedDate = Dayjs(date);
+  return parsedDate.isValid()
+    ? parsedDate.format("DD/MM/YYYY")
+    : "Data não definida.";
 }
-
 export function sanitizeData(data: any[]) {
   return data.map((edital) =>
     Object.fromEntries(
