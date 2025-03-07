@@ -166,15 +166,26 @@ useEffect(() => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Card className="size-full cursor-pointer hover:shadow-xl transition-all">
+        <Card className="size-full cursor-pointer hover:shadow-xl transition-all relative">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle>{area}</CardTitle>
-              {!travarBotaoMap[areaId] ? <Check  className="ml-2"/> : null}
+              {!travarBotaoMap[areaId] ? <Check className="ml-2" /> : null}
             </div>
+            <Button
+              variant="destructive"
+              className="absolute top-2 right-2 size-1"
+              onClick={(e) => {
+          e.stopPropagation();
+          handleRemoveArea(areaId);
+              }}
+            >
+              X
+            </Button>
           </CardHeader>
         </Card>
       </DialogTrigger>
+
       <DialogContent>
         <DialogTitle className="my-3">{area}</DialogTitle>
         <DialogHeader className="my-3">
@@ -336,7 +347,7 @@ useEffect(() => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Dialog>
+          {/* <Dialog>
             <DialogTrigger asChild>
               <Button variant="ghost">Remover Área</Button>
             </DialogTrigger>
@@ -354,7 +365,7 @@ useEffect(() => {
                 </Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </DialogFooter>
       </DialogContent>
     </Dialog>
