@@ -21,6 +21,7 @@ export default function ConsultantsArea() {
     Documentos,
     alterarPermissaoEdital,
     RequiredDocumentsQty,
+    checkQualificacaoConsultants
   } = useEditalStore();
 
   useEffect(() => {
@@ -29,7 +30,8 @@ export default function ConsultantsArea() {
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
-        Documentos.length !== RequiredDocumentsQty
+        Documentos.length !== RequiredDocumentsQty ||
+        !checkQualificacaoConsultants()
       ) {
         alterarPermissaoEdital(false);
       } else {
@@ -39,6 +41,7 @@ export default function ConsultantsArea() {
   }, [
     Qualificacao,
     alterarPermissaoEdital,
+    checkQualificacaoConsultants,
     Documentos,
     Consultores,
     RequiredDocumentsQty,
