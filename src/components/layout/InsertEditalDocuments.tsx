@@ -34,6 +34,7 @@ export default function InsertEditalDocuments({
     Qualificacao,
     Consultores,
     RequiredDocumentsQty,
+    checkQualificacaoConsultants
   } = useEditalStore();
 
   async function handleFieldSubmit(
@@ -65,14 +66,15 @@ export default function InsertEditalDocuments({
         naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
-        !allFilesUploaded
+        !allFilesUploaded ||
+        !checkQualificacaoConsultants()
       ) {
         alterarPermissaoEdital(false);
       } else {
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores]);
+  }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores, checkQualificacaoConsultants]);
 
   function handleRemoveFile(documentId: string) {
     const documentToRemove = Documentos.find((doc) => doc.id === documentId);
