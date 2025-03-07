@@ -119,7 +119,7 @@ export default function CheckboxFormMultiplo({
           className="w-full"
           disabled={Object.keys(form.formState.errors).length > 0}
         >
-          Confirmar Seleção
+          Inserir documentos
         </Button>
       </form>
     </Form>

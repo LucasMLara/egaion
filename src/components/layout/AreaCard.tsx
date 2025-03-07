@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "@/components/ui/dialog";
 
 import {
@@ -185,7 +186,6 @@ useEffect(() => {
           </CardHeader>
         </Card>
       </DialogTrigger>
-
       <DialogContent>
         <DialogTitle className="my-3">{area}</DialogTitle>
         <DialogHeader className="my-3">
@@ -199,6 +199,11 @@ useEffect(() => {
                 Inserir Documentos
               </Button>
             </DialogTrigger>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+              Cancelar
+              </Button>
+            </DialogClose>
             <DialogContent className=" overflow-auto h-5/6">
               <DialogTitle>Inserir Documentos e Consultores</DialogTitle>
               <DialogDescription className="text-center text-xl">

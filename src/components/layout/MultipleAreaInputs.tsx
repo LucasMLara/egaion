@@ -133,7 +133,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
               className="w-full"
               disabled={Object.keys(errors).length > 0}
             >
-              Inserir Documentos
+              Informar dados do consultor
             </Button>
           </div>
         </form>
