@@ -101,17 +101,19 @@ export default function EditalCard({
                 </DialogDescription>
                 <DialogFooter>
 
-                  <Link href={`/${editalId}`}>
+                    <Link href={`/${editalId}`}>
                     <Button
                       variant="destructive"
                       className="hover:shadow-md transition-all"
                       onClick={() => {
+                      setTimeout(() => {
                         reset();
+                      }, 250);
                       }}
                     >
                       Sim
                     </Button>
-                  </Link>
+                    </Link>
                   <Button
                       variant="ghost"
                       className="hover:shadow-md transition-all"
