@@ -21,6 +21,7 @@ export async function GET() {
       sce.SCEdital,
       sce.StatusCadastro,
       sce.JustificativaNaoAprovacao,
+      se.ResumoEdital,
       se.NomeEdital,
       se.InicioEdital,
       se.FimEdital,

@@ -14,6 +14,7 @@ const fetchMyEditals = useCallback(async () => {
   try{
     const response = await fetch('api/myEditals');
     const { meusEditais } = await response.json();
+    console.log(meusEditais)
     setListMyEditals(meusEditais)
     setLoading(false)
   }catch(e) {
