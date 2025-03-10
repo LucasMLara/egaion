@@ -53,6 +53,7 @@ export type IEditalStore = {
   permissaoDeCadastroConsultor: boolean;
   activeArea: string;
   currentEditalId: string;
+  currentEditalName: string;
   consultantAreaDocuments: Document[];
 };
 
@@ -74,6 +75,7 @@ type editalActions = {
   insertConsultantAreaDocuments: (documents: ConsultantAreaDocuments[]) => void;
   removeConsultantAreaDocuments: () => void;
   setEditalId: (editalId: string) => void;
+  setEditalName: (editalName: string) => void;
   setNaturezaPrestacao: (
     naturezaPrestacao: NaturezaPrestacao[],
     areaId: string
@@ -94,6 +96,7 @@ const initialState: IEditalStore = {
   permissaoDeCadastroConsultor: false,
   activeArea: "",
   currentEditalId: "",
+  currentEditalName: "",
   Consultores: [],
 };
 
@@ -156,6 +159,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           Documentos: [...state.Documentos, documento],
         })),
       setEditalId: (editalId) => set({ currentEditalId: editalId }),
+      setEditalName: (editalName) => set({ currentEditalName: editalName }),
       removerDocumento: (id) =>
         set((state) => ({
           Documentos: state.Documentos.filter(
