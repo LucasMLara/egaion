@@ -47,7 +47,7 @@ export default function EditalId({
   const {
     permissaoDeCadastroEdital,
     setDocumentsQty,
-    Consultores, Qualificacao, Documentos, currentEditalId, reset
+    Consultores, Qualificacao, Documentos, currentEditalId, reset, setEditalName, setEditalId
   } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
@@ -180,6 +180,11 @@ export default function EditalId({
   useEffect(() => {
     setDocumentsQty(requiredEditalDocs.length);
   }, [requiredEditalDocs.length, setDocumentsQty]);
+
+  useEffect(() => {
+    setEditalName(currentEdital.NomeEdital);
+    setEditalId(currentEdital.idSCEdital);
+  }, [currentEdital.NomeEdital, currentEdital.idSCEdital, setEditalId, setEditalName])
 
     const { data } = useSession()
   

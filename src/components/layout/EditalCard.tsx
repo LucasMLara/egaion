@@ -39,17 +39,17 @@ export default function EditalCard({
   editalId,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
-  const [avisoDeReset, setAvisoDeReset] = useState(false);
-  const { currentEditalId, setEditalId, reset } = useEditalStore();
+  const [sameCurrentEdital, setSameCurrentEdital] = useState(false);
+  const { currentEditalId,  reset, currentEditalName } = useEditalStore();
 
   function validateEditalId(id: string) {
-    if (id !== currentEditalId && currentEditalId !== "") {
-      toast.warning("Abrindo um novo edital");
-      setAvisoDeReset(true);
-    } else {
-      setEditalId(id);
-      setAvisoDeReset(false);
+    const mesmoEdital = id === currentEditalId;
+    if (mesmoEdital) {
+      setSameCurrentEdital(true);
       toast.success("Abrindo edital");
+    } else {
+      toast.warning("Abrindo um novo edital");
+      setSameCurrentEdital(false);
     }
   }
 
@@ -77,13 +77,12 @@ export default function EditalCard({
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
-        {avisoDeReset ? (
+        {!sameCurrentEdital ? (
           <DialogFooter>
             <Dialog>
               <DialogTrigger>
                 <Button
                   className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
-                  onClick={() => setEditalId(editalId)}
                 >
                   Preencher Dados de outro edital?
                 </Button>
@@ -95,7 +94,7 @@ export default function EditalCard({
                 </DialogDescription>
 
                 <DialogDescription>
-                  Caso você continue, todos os dados que você já cadastrou no edital {currentEditalId} serão perdidos.
+                  Caso você continue, todos os dados que você já cadastrou no edital <span className="font-bold text-lg">{currentEditalName}</span> serão perdidos.
                 </DialogDescription>
                 <DialogDescription>
                   Deseja continuar?
@@ -108,7 +107,6 @@ export default function EditalCard({
                       className="hover:shadow-md transition-all"
                       onClick={() => {
                         reset();
-                        setEditalId(editalId);
                       }}
                     >
                       Sim
@@ -129,7 +127,6 @@ export default function EditalCard({
             <Link href={`/${editalId}`}>
               <Button
                 type="submit"
-                onClick={() => setEditalId(editalId)}
                 className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
               >
                 Continuar cadastro
