@@ -5,7 +5,21 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const editais = await prisma.sCEdital.findMany();
+
+        const editais: Array<{ [key: string]: any }> = await prisma.$queryRaw`
+        SELECT 
+            se.idSCEdital,
+            se.NomeEdital,
+            se.Objetivos,
+            se.ResumoEdital,
+            se.InicioEdital,
+            se.FimEdital,
+            stc.Descricao as TipodeCredenciamento
+        FROM sCEdital se
+        JOIN SCTipoCredenciame stc ON se.TipodeCredenciamento = stc.idSCTipoCredenciame
+        `;
+
+
         const sanitizedEditais = editais.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
