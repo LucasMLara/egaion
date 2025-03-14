@@ -53,9 +53,9 @@ export default function MyEditalCard({
       </DialogTrigger>
       <DialogContent className="h-2/5 overflow-y-scroll">
         <DialogHeader>
-          <DialogTitle>{editalDialogTitle}</DialogTitle>
+          <DialogTitle className="text-center">{editalDialogTitle}</DialogTitle>
           <DialogDescription className="font-ubuntu">
-            <span className="flex flex-col gap-2">
+            <span className="flex flex-col gap-2 justify-center items-center">
               <span>{editalDialogDescription}</span>
               <span>{editalType}</span>
             </span>
