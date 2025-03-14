@@ -7,25 +7,22 @@ import { formatDate } from "@/lib/utils";
 
 export default function Home() {
   const { myEditals, setListMyEditals } = useMyEditals();
-    const [loading, setLoading] = useState(true);
-  
+  const [loading, setLoading] = useState(true);
 
-const fetchMyEditals = useCallback(async () => {
-  try{
-    const response = await fetch('api/myEditals');
-    const { meusEditais } = await response.json();
-    console.log(meusEditais)
-    setListMyEditals(meusEditais)
-    setLoading(false)
-  }catch(e) {
-    console.log('Erro desconhecido', e)
-  }
-} , [setListMyEditals ])
+  const fetchMyEditals = useCallback(async () => {
+    try {
+      const response = await fetch("api/myEditals");
+      const { meusEditais } = await response.json();
+      setListMyEditals(meusEditais);
+      setLoading(false);
+    } catch (e) {
+      console.log("Erro desconhecido", e);
+    }
+  }, [setListMyEditals]);
 
   useEffect(() => {
-  fetchMyEditals()
-
-}, [fetchMyEditals])
+    fetchMyEditals();
+  }, [fetchMyEditals]);
 
   useEffect(() => {
     setListMyEditals(myEditals);
@@ -51,19 +48,22 @@ const fetchMyEditals = useCallback(async () => {
         Meus Editais
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
-        {myEditals.map((card) => (
-          <MyEditalCard
-            status={card.Status}
-                key={card.idSCCredenciadasEdital}
-                editalCardContent={card.ResumoEdital}
-                editalCardTitle={card.NomeEdital}
-                editalCardDate={formatDate(card.InicioEdital)}
-                editalDialogTitle={card.NomeEdital}
-                editalDialogDescription={card.Objetivos}
-                editalDialogContent={card.Objetivos}
-                editalId={card.idSCEdital}
-          />
-        )).reverse()}
+        {myEditals
+          .map((card) => (
+            <MyEditalCard
+              status={card.Status}
+              key={card.idSCCredenciadasEdital}
+              editalCardContent={card.ResumoEdital}
+              editalCardTitle={card.NomeEdital}
+              editalCardDate={formatDate(card.InicioEdital)}
+              editalDialogTitle={card.NomeEdital}
+              editalDialogDescription={formatDate(card.InicioEdital)}
+              editalDialogContent={card.ResumoEdital}
+              editalId={card.idSCEdital}
+              editalType={card.TipodeCredenciamento}
+            />
+          ))
+          .reverse()}
       </div>
     </section>
   );
