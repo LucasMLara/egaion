@@ -37,6 +37,7 @@ export default function EditalCard({
   editalDialogDescription,
   editalDialogContent,
   editalId,
+  editalType,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
   const [sameCurrentEdital, setSameCurrentEdital] = useState(false);
@@ -73,7 +74,10 @@ export default function EditalCard({
         <DialogHeader>
           <DialogTitle>Detalhes do Edital: {editalDialogTitle}</DialogTitle>
           <DialogDescription className="font-ubuntu">
-            {editalDialogDescription}
+            <span className="flex flex-col gap-2 justify-center items-center">
+              <span>{editalDialogDescription}</span>
+              <span>{editalType}</span>
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
