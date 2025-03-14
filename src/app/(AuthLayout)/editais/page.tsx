@@ -37,19 +37,22 @@ export default function Editais() {
         Editais disponíveis
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
-        {availableEditals.map((card) => (
-          <EditalCard
-            status={null}
-            key={card.idSCEdital}
-            editalCardContent={card.ResumoEdital}
-            editalCardTitle={card.NomeEdital}
-            editalCardDate={formatDate(card.InicioEdital)}
-            editalDialogTitle={card.NomeEdital}
-            editalDialogDescription={card.Objetivos}
-            editalDialogContent={card.Objetivos}
-            editalId={card.idSCEdital}
-          />
-        )).reverse()}
+        {availableEditals
+          .map((card) => (
+            <EditalCard
+              status={null}
+              key={card.idSCEdital}
+              editalCardContent={card.ResumoEdital}
+              editalCardTitle={card.NomeEdital}
+              editalCardDate={formatDate(card.InicioEdital)}
+              editalDialogTitle={card.NomeEdital}
+              editalDialogDescription={card.Objetivos}
+              editalDialogContent={card.Objetivos}
+              editalId={card.idSCEdital}
+              editalType={card.TipodeCredenciamento}
+            />
+          ))
+          .reverse()}
       </div>
     </section>
   );
