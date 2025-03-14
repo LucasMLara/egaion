@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-import Link from "next/link";
-
 import {
   Card,
   CardContent,
@@ -12,7 +9,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -35,8 +31,8 @@ export default function MyEditalCard({
   editalDialogContent,
   editalDialogDescription,
   editalDialogTitle,
-  editalId,
   status,
+  editalType,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
 
@@ -59,7 +55,10 @@ export default function MyEditalCard({
         <DialogHeader>
           <DialogTitle>{editalDialogTitle}</DialogTitle>
           <DialogDescription className="font-ubuntu">
-            {editalDialogDescription}
+            <span className="flex flex-col gap-2">
+              <span>{editalDialogDescription}</span>
+              <span>{editalType}</span>
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
