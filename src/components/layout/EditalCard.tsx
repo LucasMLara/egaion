@@ -40,7 +40,7 @@ export default function EditalCard({
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
   const [sameCurrentEdital, setSameCurrentEdital] = useState(false);
-  const { currentEditalId,  reset, currentEditalName } = useEditalStore();
+  const { currentEditalId, reset, currentEditalName } = useEditalStore();
 
   function validateEditalId(id: string) {
     const mesmoEdital = id === currentEditalId;
@@ -81,44 +81,43 @@ export default function EditalCard({
           <DialogFooter>
             <Dialog>
               <DialogTrigger>
-                <Button
-                  className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait"
-                >
+                <Button className="bg-gradient-primary hover:shadow-md transition-all disabled:cursor-wait">
                   Preencher Dados de outro edital?
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogTitle>Atenção!</DialogTitle>
                 <DialogDescription>
-                  Você está prestes a se cadastrar em um novo edital. Só é permitido o cadastro em um edital por vez.
+                  Você está prestes a se cadastrar em um novo edital. Só é
+                  permitido o cadastro em um edital por vez.
                 </DialogDescription>
 
                 <DialogDescription>
-                  Caso você continue, todos os dados que você já cadastrou no edital <span className="font-bold text-lg">{currentEditalName}</span> serão perdidos.
+                  Caso você continue, todos os dados que você já cadastrou no
+                  edital{" "}
+                  <span className="font-bold text-lg">{currentEditalName}</span>{" "}
+                  serão perdidos.
                 </DialogDescription>
-                <DialogDescription>
-                  Deseja continuar?
-                </DialogDescription>
+                <DialogDescription>Deseja continuar?</DialogDescription>
                 <DialogFooter>
-
-                    <Link href={`/${editalId}`}>
+                  <Link href={`/${editalId}`}>
                     <Button
                       variant="destructive"
                       className="hover:shadow-md transition-all"
                       onClick={() => {
-                      setTimeout(() => {
-                        reset();
-                      }, 250);
+                        setTimeout(() => {
+                          reset();
+                        }, 250);
                       }}
                     >
                       Sim
                     </Button>
-                    </Link>
+                  </Link>
                   <Button
-                      variant="ghost"
-                      className="hover:shadow-md transition-all"
-                    >
-                      Não
+                    variant="ghost"
+                    className="hover:shadow-md transition-all"
+                  >
+                    Não
                   </Button>
                 </DialogFooter>
               </DialogContent>
