@@ -193,6 +193,7 @@ export const EditalSchema = z.object({
     z.literal("error"),
     z.literal(null),
   ]),
+  editalType: z.string().optional(),
   editalCardContent: z.string(),
   editalCardTitle: z.string(),
   editalCardDate: z.string(),
