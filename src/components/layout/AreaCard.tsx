@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check } from "lucide-react";
+import { Check, Trash2Icon } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { nanoid } from "nanoid";
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
 
 import {
@@ -52,7 +52,9 @@ export default function AreaCard({
     MultipleCheckBoxOptions[]
   >([]);
 
-  const [travarBotaoMap, setTravarBotaoMap] = useState<Record<string, boolean>>({});
+  const [travarBotaoMap, setTravarBotaoMap] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const {
     removerArea,
@@ -91,22 +93,19 @@ export default function AreaCard({
     clearNaturezaPrestacao(activeArea);
   };
 
-useEffect(() => {
-  const areaHasFiles = Qualificacao.some(
-    (area) => area.areaId === areaId && area.AreaDocuments.length > 0
-  );
-  const areaHasNatureza = Qualificacao.some(
-    (area) => area.areaId === areaId && area.naturezaPrestacao.length > 0
-  );
+  useEffect(() => {
+    const areaHasFiles = Qualificacao.some(
+      (area) => area.areaId === areaId && area.AreaDocuments.length > 0
+    );
+    const areaHasNatureza = Qualificacao.some(
+      (area) => area.areaId === areaId && area.naturezaPrestacao.length > 0
+    );
 
-  setTravarBotaoMap((prev) => ({
-    ...prev,
-    [areaId]: !areaHasFiles || !areaHasNatureza,
-  }));
-}, [Qualificacao, areaId]);
-
-
-  
+    setTravarBotaoMap((prev) => ({
+      ...prev,
+      [areaId]: !areaHasFiles || !areaHasNatureza,
+    }));
+  }, [Qualificacao, areaId]);
 
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
@@ -143,7 +142,7 @@ useEffect(() => {
                     id: nanoid(10),
                     areaId: activeArea,
                     category: fieldKey,
-                    turnToBase64: file
+                    turnToBase64: file,
                   });
                 }
               });
@@ -173,16 +172,13 @@ useEffect(() => {
               <CardTitle>{area}</CardTitle>
               {!travarBotaoMap[areaId] ? <Check className="ml-2" /> : null}
             </div>
-            <Button
-              variant="destructive"
-              className="absolute top-2 right-2 size-1"
+            <Trash2Icon
+              className="absolute top-2 right-2 hover:text-red-500 hover:scale-110 transition-all cursor-pointer"
               onClick={(e) => {
-          e.stopPropagation();
-          handleRemoveArea(areaId);
+                e.stopPropagation();
+                handleRemoveArea(areaId);
               }}
-            >
-              X
-            </Button>
+            />
           </CardHeader>
         </Card>
       </DialogTrigger>
@@ -200,8 +196,12 @@ useEffect(() => {
               </Button>
             </DialogTrigger>
             <DialogClose asChild>
-              <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
-              Cancelar
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setOpen(false)}
+              >
+                Cancelar
               </Button>
             </DialogClose>
             <DialogContent className=" overflow-auto h-5/6">
