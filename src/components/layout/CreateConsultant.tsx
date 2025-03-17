@@ -9,7 +9,7 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 import { nanoid } from "nanoid";
 
-import { defineStepper } from '@stepperize/react';
+import { defineStepper } from "@stepperize/react";
 
 import {
   Form,
@@ -30,19 +30,19 @@ import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
 
 const { useStepper, steps, utils } = defineStepper(
   {
-    id: 'consultantAreaDocuments',
-    title: 'Documentos de Área do consultor',
-    description: 'Insira os documentos das áreas atuadas pelo consultor',
+    id: "consultantAreaDocuments",
+    title: "Documentos de Área do consultor",
+    description: "Insira os documentos das áreas atuadas pelo consultor",
   },
   {
-    id: 'consultor',
-    title: 'Consultor',
-    description: 'Insira os dados do Consultor',
+    id: "consultor",
+    title: "Consultor",
+    description: "Insira os dados do Consultor",
   }
 );
 
 export default function CreateConsultant() {
-  const stepper = useStepper()
+  const stepper = useStepper();
   const currentIndex = utils.getIndex(stepper.current.id);
   const {
     cadastrarConsultor,
@@ -110,6 +110,7 @@ export default function CreateConsultant() {
     setAreasSelecionadas([]);
     removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
+    stepper.prev();
   }
 
   const handleConsultantAreas = useMemo(() => {
@@ -149,7 +150,7 @@ export default function CreateConsultant() {
         areaDocuments: consultantAreaDocuments.map((doc) => ({
           areaId: doc.areaId as string,
           files: doc.turnToBase64,
-          areaName: doc.areaName as string
+          areaName: doc.areaName as string,
         })),
       };
       cadastrarConsultor(newConsultant);
@@ -175,11 +176,13 @@ export default function CreateConsultant() {
                     <Input
                       placeholder="Insira o nome do consultor"
                       {...field}
-                      className="transition-all" />
+                      className="transition-all"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="CPF"
@@ -192,14 +195,16 @@ export default function CreateConsultant() {
                         const { value } = e.target;
                         e.target.value = formatCpf(value) ?? "";
                         onChange(e);
-                      } }
+                      }}
                       placeholder="Insira CPF do consultor"
                       {...props}
-                      className="transition-all" />
+                      className="transition-all"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="email.email"
@@ -210,11 +215,13 @@ export default function CreateConsultant() {
                     <Input
                       placeholder="Insira o email do consultor"
                       {...field}
-                      className="transition-all" />
+                      className="transition-all"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="email.emailConfirmation"
@@ -225,11 +232,13 @@ export default function CreateConsultant() {
                     <Input
                       placeholder="Confirme o email do consultor"
                       {...field}
-                      className="transition-all" />
+                      className="transition-all"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="contato"
@@ -242,14 +251,16 @@ export default function CreateConsultant() {
                         const { value } = e.target;
                         e.target.value = formatPhone(value) ?? "";
                         onChange(e);
-                      } }
+                      }}
                       placeholder="Insira o telefone para contato do consultor"
                       {...props}
-                      className="transition-all" />
+                      className="transition-all"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
           </div>
           <Separator />
           <div>
@@ -273,11 +284,13 @@ export default function CreateConsultant() {
                         if (e.target.files && e.target.files[0]) {
                           field.onChange(e.target.files[0]);
                         }
-                      } } />
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="comprovanteVinculoCNPJ"
@@ -296,11 +309,13 @@ export default function CreateConsultant() {
                         if (e.target.files && e.target.files[0]) {
                           field.onChange(e.target.files[0]);
                         }
-                      } } />
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="comprovanteFormacaoAcademica"
@@ -319,11 +334,13 @@ export default function CreateConsultant() {
                         if (e.target.files && e.target.files[0]) {
                           field.onChange(e.target.files[0]);
                         }
-                      } } />
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <FormField
               control={form.control}
               name="registroProfissionalClasse"
@@ -344,11 +361,13 @@ export default function CreateConsultant() {
                         if (e.target.files && e.target.files[0]) {
                           field.onChange(e.target.files[0]);
                         }
-                      } } />
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
             <div className="flex place-content-center mt-3">
               <Button
                 className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
@@ -363,7 +382,6 @@ export default function CreateConsultant() {
       </Form>
     );
   };
-
 
   return (
     <div>
@@ -384,9 +402,9 @@ export default function CreateConsultant() {
                   type="button"
                   role="tab"
                   disabled={index > currentIndex}
-                  variant={index <= currentIndex ? 'default' : 'secondary'}
+                  variant={index <= currentIndex ? "default" : "secondary"}
                   aria-current={
-                    stepper.current.id === step.id ? 'step' : undefined
+                    stepper.current.id === step.id ? "step" : undefined
                   }
                   aria-posinset={index + 1}
                   aria-setsize={steps.length}
@@ -401,7 +419,7 @@ export default function CreateConsultant() {
               {index < array.length - 1 && (
                 <Separator
                   className={`flex-1 ${
-                    index < currentIndex ? 'bg-primary' : 'bg-muted'
+                    index < currentIndex ? "bg-primary" : "bg-muted"
                   }`}
                 />
               )}
@@ -411,15 +429,17 @@ export default function CreateConsultant() {
       </nav>
       <div className="space-y-4">
         {stepper.switch({
-          consultantAreaDocuments: () => <div>
-          <CheckboxFormMultiplo
-            labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
-            opcoes={areasPreSelecionadas}
-            onSubmit={handleAreasSubmit}
-            onReset={handleReset}
-            opcoesSelecionadas={areasSelecionadas}
-          />
-        </div>,
+          consultantAreaDocuments: () => (
+            <div>
+              <CheckboxFormMultiplo
+                labelSelecionados="Áreas selecionadas para o seu consultor à cadastrar:"
+                opcoes={areasPreSelecionadas}
+                onSubmit={handleAreasSubmit}
+                onReset={handleReset}
+                opcoesSelecionadas={areasSelecionadas}
+              />
+            </div>
+          ),
           consultor: () => <ConsultantForm />,
         })}
         {!stepper.isLast ? (
@@ -431,13 +451,18 @@ export default function CreateConsultant() {
             >
               Voltar
             </Button>
-            <Button onClick={stepper.next} disabled={!permissaoDeCadastroConsultor}>
-              {stepper.isLast ? 'Finalizar' : 'Próximo'}
+            <Button
+              onClick={stepper.next}
+              disabled={!permissaoDeCadastroConsultor}
+            >
+              {stepper.isLast ? "Finalizar" : "Próximo"}
             </Button>
           </div>
         ) : (
           <div className="flex justify-end gap-4">
-            <Button variant="secondary" onClick={stepper.reset}>Voltar</Button>
+            <Button variant="secondary" onClick={stepper.reset}>
+              Voltar
+            </Button>
           </div>
         )}
       </div>
