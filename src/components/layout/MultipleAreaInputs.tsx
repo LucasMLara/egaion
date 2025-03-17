@@ -32,7 +32,11 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
   const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
     resolver: zodResolver(fileInputSchema),
     defaultValues: {
-      arquivosTecnicos: areas.map((area) => ({ areaId: area.id, files: [], areaName: area.label })),
+      arquivosTecnicos: areas.map((area) => ({
+        areaId: area.id,
+        files: [],
+        areaName: area.label,
+      })),
     },
   });
 
@@ -133,7 +137,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
               className="w-full"
               disabled={Object.keys(errors).length > 0}
             >
-              Informar dados do consultor
+              Validar Documentos
             </Button>
           </div>
         </form>
