@@ -48,7 +48,7 @@ export const consultantSchema = z.object({
   areaId: z.array(z.string()).optional(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
-  localidades: z.array(z.object({ idSCLocalidade: z.string(), prioridade: z.string() })),
+  localidades: z.array(z.object({ idSCLocalidade: z.string(), prioridade: z.string() })).optional(),
   CPF: z
     .string()
     .refine(
