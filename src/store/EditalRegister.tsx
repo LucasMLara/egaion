@@ -8,12 +8,12 @@ export type Document = {
   blob: string;
   id: string;
   areaId?: string;
-  areaName? : string;
+  areaName?: string;
   consultorId?: string;
   category?: string;
   file?: File[];
   turnToBase64: File;
-  fileName? : string,
+  fileName?: string;
 };
 
 type History = {
@@ -42,6 +42,11 @@ type ConsultantAreaDocuments = {
   files: File[];
 };
 
+type Localidade = {
+  idSCLocalidade: string;
+  nome: string;
+};
+
 export type IEditalStore = {
   Consultores: IConsultant[];
   Documentos: Document[];
@@ -55,6 +60,11 @@ export type IEditalStore = {
   currentEditalId: string;
   currentEditalName: string;
   consultantAreaDocuments: Document[];
+  Localidades: Localidade[];
+  limitesDeLocalidade: {
+    QuantidadeMinimaLocalidade: number;
+    QuantidadeMaximaLocalidade: number;
+  };
 };
 
 type editalActions = {
@@ -83,9 +93,21 @@ type editalActions = {
   clearNaturezaPrestacao: (areaId: string) => void;
   setDocumentsQty: (qty: number) => void;
   checkQualificacaoConsultants: () => boolean;
+  carregarLimitesDeLocalidade: (limites: {
+    QuantidadeMinimaLocalidade: number;
+    QuantidadeMaximaLocalidade: number;
+  }) => void;
+  carregarLocalidades: (
+    localidades: { Nome: string; idSCLocalidade: string }[]
+  ) => void;
 };
 
 const initialState: IEditalStore = {
+  limitesDeLocalidade: {
+    QuantidadeMinimaLocalidade: 0,
+    QuantidadeMaximaLocalidade: 0,
+  },
+  Localidades: [],
   RequiredDocumentsQty: 0,
   consultantAreaDocuments: [],
   Documentos: [],
@@ -104,6 +126,15 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+      carregarLimitesDeLocalidade: (limites) =>
+        set({ limitesDeLocalidade: limites }),
+      carregarLocalidades: (localidades) =>
+        set({
+          Localidades: localidades.map((localidade) => ({
+            idSCLocalidade: localidade.idSCLocalidade,
+            nome: localidade.Nome,
+          })),
+        }),
       insertConsultantAreaDocuments: (documents) =>
         set({
           consultantAreaDocuments: documents.flatMap((doc) =>
@@ -216,8 +247,8 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       checkQualificacaoConsultants: () => {
         const state = get();
         return state.Qualificacao.every((qualificacao) =>
-          state.Consultores.some(
-            (consultor) => consultor.areaId?.includes(qualificacao.areaId)
+          state.Consultores.some((consultor) =>
+            consultor.areaId?.includes(qualificacao.areaId)
           )
         );
       },
