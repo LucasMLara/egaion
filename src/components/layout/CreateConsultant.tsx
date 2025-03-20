@@ -52,6 +52,8 @@ export default function CreateConsultant() {
     alterarPermissaoConsultor,
     consultantAreaDocuments,
     removeConsultantAreaDocuments,
+    localidadesDoConsultor,
+    removerLocalidadesDoConsultor,
   } = useEditalStore();
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
@@ -111,6 +113,7 @@ export default function CreateConsultant() {
     setAreasSelecionadas([]);
     removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
+    removerLocalidadesDoConsultor();
     stepper.prev();
   }
 
@@ -149,15 +152,17 @@ export default function CreateConsultant() {
         ...data,
         areaId: handleConsultantAreas,
         id: uniqueId,
-        localidades: [
-          { idSCLocalidade: "z.string()", nome: "", prioridade: "" },
-        ],
+        localidades: localidadesDoConsultor.map((localidade, index) => ({
+          idSCLocalidade: localidade.idSCLocalidade,
+          prioridade: String(index + 1),
+        })),
         areaDocuments: consultantAreaDocuments.map((doc) => ({
           areaId: doc.areaId as string,
           files: doc.turnToBase64,
           areaName: doc.areaName as string,
         })),
       };
+      console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");
@@ -170,8 +175,8 @@ export default function CreateConsultant() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4 h-96 overflow-auto px-2"
         >
+          <LocalidadesForm />
           <div>
-            <LocalidadesForm />
             <FormField
               control={form.control}
               name="nome"
@@ -378,7 +383,10 @@ export default function CreateConsultant() {
               <Button
                 className="bg-gradient-primary w-96 hover:shadow-lg hover:shadow-gray-500/40 transition-all"
                 type="submit"
-                disabled={Object.keys(errors).length > 0}
+                disabled={
+                  Object.keys(errors).length > 0 ||
+                  localidadesDoConsultor.length === 0
+                }
               >
                 Cadastrar Consultor
               </Button>
