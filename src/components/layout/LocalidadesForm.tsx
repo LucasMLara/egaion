@@ -58,6 +58,10 @@ export default function LocalidadesForm() {
 
   return (
     <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold  bg-auxiliary-warning-400 p-5 rounded-lg text-center w-full">
+        Certifique-se de definir a prioridade das localidades antes de preencher
+        os dados do seu consultor
+      </h1>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
