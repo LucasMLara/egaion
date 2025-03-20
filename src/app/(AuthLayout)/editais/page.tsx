@@ -14,7 +14,6 @@ export default function Editais() {
       try {
         const response = await fetch("/api/editais");
         const { editais } = await response.json();
-        console.log(editais);
         setListEditals(editais);
         setLoading(false);
       } catch (error) {
