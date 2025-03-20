@@ -339,12 +339,7 @@ export default function EditalId({
           <Attachments anexos={attachments} />
         </TabsContent>
         <TabsContent value="content" className="py-5">
-          {Localidades.length > 0 ? (
-            <LocalidadesForm />
-          ) : (
-            <p>Sem Localidades para esse edital</p>
-          )}
-          {/* <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
+          <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
             <h1 className="text-center m-4 text-2xl font-bold">
               {" "}
               Edital : {currentEdital.NomeEdital}{" "}
@@ -369,7 +364,7 @@ export default function EditalId({
                 </a>
               </li>
             </ul>
-          </div> */}
+          </div>
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
