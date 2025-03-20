@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 
 import { formatCpf, formatPhone } from "@/lib/formatters";
 import CheckboxFormMultiplo from "./CheckBoxInputAreaForm";
+import LocalidadesForm from "./LocalidadesForm";
 
 const { useStepper, steps, utils } = defineStepper(
   {
@@ -121,6 +122,7 @@ export default function CreateConsultant() {
     const form = useForm<IConsultant>({
       resolver: zodResolver(consultantSchema),
       defaultValues: {
+        localidades: [],
         nome: "",
         email: {
           email: "",
@@ -147,6 +149,9 @@ export default function CreateConsultant() {
         ...data,
         areaId: handleConsultantAreas,
         id: uniqueId,
+        localidades: [
+          { idSCLocalidade: "z.string()", nome: "", prioridade: "" },
+        ],
         areaDocuments: consultantAreaDocuments.map((doc) => ({
           areaId: doc.areaId as string,
           files: doc.turnToBase64,
@@ -166,6 +171,7 @@ export default function CreateConsultant() {
           className="flex flex-col gap-4 h-96 overflow-auto px-2"
         >
           <div>
+            <LocalidadesForm />
             <FormField
               control={form.control}
               name="nome"

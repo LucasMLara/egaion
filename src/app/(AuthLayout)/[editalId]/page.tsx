@@ -35,6 +35,7 @@ import {
   prepararConsultoresCredenciada,
   prepararAreasCredenciada,
 } from "@/lib/concatEditalDocuments";
+import LocalidadesForm from "@/components/layout/LocalidadesForm";
 
 export default function EditalId({
   params,
@@ -47,7 +48,17 @@ export default function EditalId({
   const {
     permissaoDeCadastroEdital,
     setDocumentsQty,
-    Consultores, Qualificacao, Documentos, currentEditalId, reset, setEditalName, setEditalId
+    Consultores,
+    Qualificacao,
+    Documentos,
+    currentEditalId,
+    reset,
+    setEditalName,
+    setEditalId,
+    LocalidadesDisponiveis: Localidades,
+    carregarLocalidadesDisponiveis: carregarLocalidades,
+    limitesDeLocalidade,
+    carregarLimitesDeLocalidade,
   } = useEditalStore();
 
   const initialCurrentEditalState: IAvailableEdital = {
@@ -151,7 +162,7 @@ export default function EditalId({
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
-  
+
   useEffect(() => {
     async function fetchEdital() {
       try {
@@ -162,6 +173,13 @@ export default function EditalId({
         } else {
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
+          carregarLimitesDeLocalidade({
+            QuantidadeMaximaLocalidade:
+              data.serializedEdital.QuantidadeMaximaLocalidade,
+            QuantidadeMinimaLocalidade:
+              data.serializedEdital.QuantidadeMinimaLocalidade,
+          });
+          carregarLocalidades(data.serializedEditalLocalidades);
           setEditalHistory(data.serializedEditalHistory);
           setEditalAttachments(data.serializedEditalAttachments);
           setDocumentCategories(data.serializedEditalDocCategorias);
@@ -176,7 +194,8 @@ export default function EditalId({
     if (params.editalId) {
       fetchEdital();
     }
-  }, [params.editalId]);
+  }, [carregarLimitesDeLocalidade, carregarLocalidades, params.editalId]);
+
   useEffect(() => {
     setDocumentsQty(requiredEditalDocs.length);
   }, [requiredEditalDocs.length, setDocumentsQty]);
@@ -184,14 +203,20 @@ export default function EditalId({
   useEffect(() => {
     setEditalName(currentEdital.NomeEdital);
     setEditalId(currentEdital.idSCEdital);
-  }, [currentEdital.NomeEdital, currentEdital.idSCEdital, setEditalId, setEditalName])
+  }, [
+    currentEdital.NomeEdital,
+    currentEdital.idSCEdital,
+    setEditalId,
+    setEditalName,
+  ]);
 
-    const { data } = useSession()
-  
-    const idScCredenciada = data?.user.idSCCredenciada
+  const { data } = useSession();
+
+  const idScCredenciada = data?.user.idSCCredenciada;
 
   async function enviarDadosEdital() {
-    const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
+    const url =
+      "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
     const body = `
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
           <soap:Header/>
@@ -207,9 +232,16 @@ export default function EditalId({
                                         <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='3'"/>
                                             <SCEdital businessKey="idSCEdital='${currentEditalId}'"/>
                                             <Credenciada entityName="SCCredenciada" businessKey="idSCCredenciada='${idScCredenciada}'"/>
-                                              ${await prepararDocumentosCredenciada(Documentos)}
-                                            ${await prepararAreasCredenciada(Qualificacao)}
-                                                ${await prepararConsultoresCredenciada(Consultores, idScCredenciada)}
+                                              ${await prepararDocumentosCredenciada(
+                                                Documentos
+                                              )}
+                                            ${await prepararAreasCredenciada(
+                                              Qualificacao
+                                            )}
+                                                ${await prepararConsultoresCredenciada(
+                                                  Consultores,
+                                                  idScCredenciada
+                                                )}
                                       </SCCredenciadasEdital>
                             </Entities>
                             </Case>
@@ -231,26 +263,26 @@ export default function EditalId({
       body,
     };
 
-    try{
-      setLoading(true)
+    try {
+      setLoading(true);
       const response = await fetch(url, fetchOptions);
       if (!response.ok) {
         throw new Error("Erro ao se Registrar no Edital.");
       }
-      toast.success('Registro no Edital Bem sucedido!')
-      router.push('/')
-      setLoading(false)
+      toast.success("Registro no Edital Bem sucedido!");
+      router.push("/");
+      setLoading(false);
       reset();
-    }catch(e) {
+    } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
       } else {
         toast.error("An unknown error occurred.");
       }
-      console.error(e)
-      setLoading(false)
+      console.error(e);
+      setLoading(false);
     }
-}
+  }
 
   if (loading) {
     return (
@@ -307,7 +339,12 @@ export default function EditalId({
           <Attachments anexos={attachments} />
         </TabsContent>
         <TabsContent value="content" className="py-5">
-          <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
+          {Localidades.length > 0 ? (
+            <LocalidadesForm />
+          ) : (
+            <p>Sem Localidades para esse edital</p>
+          )}
+          {/* <div className="border-2 rounded-xl overflow-auto m-4 bg-neutral-300 text-neutral-600 h-full">
             <h1 className="text-center m-4 text-2xl font-bold">
               {" "}
               Edital : {currentEdital.NomeEdital}{" "}
@@ -332,33 +369,41 @@ export default function EditalId({
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </TabsContent>
       </Tabs>
       <div className="flex justify-end p-5">
         <Dialog>
-                  <DialogTrigger asChild>
-                    <Button disabled={!permissaoDeCadastroEdital} className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none">Confirmar Dados de Cadastro</Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Tem Certeza?</DialogTitle>
-                      <DialogDescription>
-                        Após confirmar, você não poderá alterar os dados cadastrados.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <Button
-                        onClick={ () => enviarDadosEdital()}
-                        disabled={loading}
-                        className="bg-gradient-primary"
-        
-                      >
-                        {loading ? <LoaderIcon className="animate-spin" /> : "Confirmar"}
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+          <DialogTrigger asChild>
+            <Button
+              disabled={!permissaoDeCadastroEdital}
+              className="float-end  bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
+            >
+              Confirmar Dados de Cadastro
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Tem Certeza?</DialogTitle>
+              <DialogDescription>
+                Após confirmar, você não poderá alterar os dados cadastrados.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                onClick={() => enviarDadosEdital()}
+                disabled={loading}
+                className="bg-gradient-primary"
+              >
+                {loading ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Confirmar"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
