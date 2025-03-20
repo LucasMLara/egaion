@@ -48,6 +48,7 @@ type Localidade = {
 };
 
 export type IEditalStore = {
+  localidadesDoConsultor: Localidade[];
   Consultores: IConsultant[];
   Documentos: Document[];
   RequiredDocumentsQty: number;
@@ -66,7 +67,7 @@ export type IEditalStore = {
     QuantidadeMaximaLocalidade: number;
   };
 };
-// TODO adicionar a funcao e o dado q manipula a funcao das localidades do consultor para que seja utilizado como prop no localidade form e enviado ao createConsultanto , como é feito nas areas
+
 type editalActions = {
   limparConsultores: () => void;
   cadastrarConsultor: (consultor: IConsultant) => void;
@@ -93,6 +94,8 @@ type editalActions = {
   clearNaturezaPrestacao: (areaId: string) => void;
   setDocumentsQty: (qty: number) => void;
   checkQualificacaoConsultants: () => boolean;
+  inserirLocalidadesDoConsultor: (localidades: Localidade[]) => void;
+  removerLocalidadesDoConsultor: () => void;
   carregarLimitesDeLocalidade: (limites: {
     QuantidadeMinimaLocalidade: number;
     QuantidadeMaximaLocalidade: number;
@@ -103,6 +106,7 @@ type editalActions = {
 };
 
 const initialState: IEditalStore = {
+  localidadesDoConsultor: [],
   limitesDeLocalidade: {
     QuantidadeMinimaLocalidade: 0,
     QuantidadeMaximaLocalidade: 0,
@@ -126,6 +130,9 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+      removerLocalidadesDoConsultor: () => set({ localidadesDoConsultor: [] }),
+      inserirLocalidadesDoConsultor: (localidades) =>
+        set({ localidadesDoConsultor: localidades }),
       carregarLimitesDeLocalidade: (limites) =>
         set({ limitesDeLocalidade: limites }),
       carregarLocalidadesDisponiveis: (localidades) =>
