@@ -20,16 +20,13 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 
 export default function LocalidadesForm() {
-  const { LocalidadesDisponiveis, limitesDeLocalidade } = useEditalStore();
+  const {
+    LocalidadesDisponiveis,
+    limitesDeLocalidade,
+    inserirLocalidadesDoConsultor,
+    localidadesDoConsultor,
+  } = useEditalStore();
   const [open, setOpen] = useState(false);
-
-  type Localidade = {
-    idSCLocalidade: string;
-    nome: string;
-  };
-  const [localidadesDoConsultor, setLocalidadesDoConsultor] = useState<
-    Localidade[]
-  >([]);
 
   function handleSelectLocalidade(localidade: { nome: string; id: string }) {
     const localidadeJaAdicionada = localidadesDoConsultor.find(
@@ -40,7 +37,7 @@ export default function LocalidadesForm() {
       return;
     }
 
-    setLocalidadesDoConsultor([
+    inserirLocalidadesDoConsultor([
       ...localidadesDoConsultor,
       { nome: localidade.nome, idSCLocalidade: localidade.id },
     ]);
@@ -112,7 +109,7 @@ export default function LocalidadesForm() {
             {`${index + 1} - ${localidade.nome}`}
             <Trash2Icon
               onClick={() =>
-                setLocalidadesDoConsultor(
+                inserirLocalidadesDoConsultor(
                   localidadesDoConsultor.filter((loc) => loc !== localidade)
                 )
               }
