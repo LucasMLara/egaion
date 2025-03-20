@@ -266,12 +266,22 @@ export default function EditalId({
     try {
       setLoading(true);
       const response = await fetch(url, fetchOptions);
-      if (!response.ok) {
+
+      const text = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "application/xml");
+      const errorMessage =
+        xmlDoc.getElementsByTagName("ErrorMessage")[0]?.textContent;
+
+      if (errorMessage || !response.ok) {
+        console.error(errorMessage);
+        setLoading(false);
         throw new Error("Erro ao se Registrar no Edital.");
+      } else {
+        toast.success("Registro no Edital Bem sucedido!");
+        router.push("/");
+        setLoading(false);
       }
-      toast.success("Registro no Edital Bem sucedido!");
-      router.push("/");
-      setLoading(false);
       reset();
     } catch (e) {
       if (e instanceof Error) {
