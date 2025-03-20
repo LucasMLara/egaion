@@ -80,11 +80,10 @@ export async function prepararAreasCredenciada(
 
         for (const doc of categorizedDocuments[category]) {
           if (doc.title && doc.blob) {
-            xml += `\n            <File fileName="${
-              doc.title
-            }">${await getBase64(
-              new File([doc.turnToBase64], doc.title)
-            )}</File>`;
+            xml += `\n            <File fileName="${doc.title
+              }">${await getBase64(
+                new File([doc.turnToBase64], doc.title)
+              )}</File>`;
           }
         }
 
@@ -124,55 +123,63 @@ export async function prepararConsultoresCredenciada(
   let xml = "<Consultores>";
   for (const consultor of consultants) {
     xml += `
-            <SCConsultorEdital>
-                <SCTecnico entityName="SCTecnico">
-                    <Email>${consultor.email.email}</Email>
-                    <Whatsapp>${formatDocEntry(consultor.contato)}</Whatsapp>
-                    <CPF>${formatDocEntry(consultor.CPF)}</CPF>
-                    <Assinante>True</Assinante>
-                    <Telefone>${formatDocEntry(consultor.contato)}</Telefone>
-                    <SCCredenciada>${idSCCredenciada}</SCCredenciada>
-                    <EResponsavelLegal>True</EResponsavelLegal>
-                    <Nome>${consultor.nome}</Nome>
-                    <DocumentosPessoais>
-                        <File fileName="${
-                          consultor.consultantCPF.name
-                        }">${await getBase64(
-      new File([consultor.consultantCPF], consultor.consultantCPF.name)
-    )}</File>
-                    </DocumentosPessoais>
-                    <ComprovanteVinculoPJ>
-                        <File fileName="${
-                          consultor.comprovanteVinculoCNPJ.name
-                        }">${await getBase64(
-      new File(
-        [consultor.comprovanteVinculoCNPJ],
-        consultor.comprovanteVinculoCNPJ.name
-      )
-    )}</File>
-                    </ComprovanteVinculoPJ>
-                    <CompFormacaoAcademica>
-                        <File fileName="${
-                          consultor.comprovanteFormacaoAcademica.name
-                        }">${await getBase64(
-      new File(
-        [consultor.comprovanteFormacaoAcademica],
-        consultor.comprovanteFormacaoAcademica.name
-      )
-    )}</File>
-                    </CompFormacaoAcademica>
-                    <RegistroProfissional>
-                        <File fileName="${
-                          consultor.registroProfissionalClasse.name
-                        }">${await getBase64(
-      new File(
-        [consultor.registroProfissionalClasse],
-        consultor.registroProfissionalClasse.name
-      )
-    )}</File>
-                    </RegistroProfissional>
-                </SCTecnico>
-                <NiveisParametrizacao>`;
+        <SCConsultorEdital>
+          <SCTecnico entityName="SCTecnico">
+            <Email>${consultor.email.email}</Email>
+            <Whatsapp>${formatDocEntry(consultor.contato)}</Whatsapp>
+            <CPF>${formatDocEntry(consultor.CPF)}</CPF>
+            <Assinante>True</Assinante>
+            <Telefone>${formatDocEntry(consultor.contato)}</Telefone>
+            <SCCredenciada>${idSCCredenciada}</SCCredenciada>
+            <EResponsavelLegal>True</EResponsavelLegal>
+            <Nome>${consultor.nome}</Nome>
+            <Localidades>`;
+
+    for (const localidade of consultor.localidades || []) {
+      xml += `
+                      <SCLocalidadeConsult>
+                        <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
+                        <Prioridade>${localidade.prioridade}</Prioridade>
+                      </SCLocalidadeConsult>`;
+    }
+
+    xml += `
+                      </Localidades>
+                      <DocumentosPessoais>
+              <File fileName="${consultor.consultantCPF.name
+      }">${await getBase64(
+        new File([consultor.consultantCPF], consultor.consultantCPF.name)
+      )}</File>
+            </DocumentosPessoais>
+            <ComprovanteVinculoPJ>
+              <File fileName="${consultor.comprovanteVinculoCNPJ.name
+      }">${await getBase64(
+        new File(
+          [consultor.comprovanteVinculoCNPJ],
+          consultor.comprovanteVinculoCNPJ.name
+        )
+      )}</File>
+            </ComprovanteVinculoPJ>
+            <CompFormacaoAcademica>
+              <File fileName="${consultor.comprovanteFormacaoAcademica.name
+      }">${await getBase64(
+        new File(
+          [consultor.comprovanteFormacaoAcademica],
+          consultor.comprovanteFormacaoAcademica.name
+        )
+      )}</File>
+            </CompFormacaoAcademica>
+            <RegistroProfissional>
+              <File fileName="${consultor.registroProfissionalClasse.name
+      }">${await getBase64(
+        new File(
+          [consultor.registroProfissionalClasse],
+          consultor.registroProfissionalClasse.name
+        )
+      )}</File>
+            </RegistroProfissional>
+          </SCTecnico>
+          <NiveisParametrizacao>`;
     for (const nivel of consultor.areaDocuments || []) {
       xml += `
                     <SCConsultorNivel>
@@ -200,13 +207,12 @@ export async function prepararDocumentosCredenciada(
   for (const document of documents) {
     xml += `
             <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
-            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${
-              document.idSCDocumentacao
-            }"/>
+            <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.idSCDocumentacao
+      }"/>
                 <Arquivo>
                     <File fileName="${document.fileName}">${await getBase64(
-      new File([document.turnToBase64], document.fileName as string)
-    )}</File>
+        new File([document.turnToBase64], document.fileName as string)
+      )}</File>
                 </Arquivo>
             </SCDocCredenciadaEdital>
         `;
