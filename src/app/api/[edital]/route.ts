@@ -15,13 +15,26 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             },
         });
 
+        const foundEditalLocalidades = await prisma.sCLocalidade.findMany({
+            where: {
+                SCEdital: parseInt(edital),
+            }
+        })
+
         const editalAreaParameters = await prisma.$queryRaw`SELECT * FROM vw_nivel_edital WHERE SCEdital = ${edital}`;
+
+        const serializedEditalLocalidades = JSON.parse(
+            JSON.stringify(foundEditalLocalidades, (_, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
 
         const serializedEditalParameters = JSON.parse(
             JSON.stringify(editalAreaParameters, (_, value) =>
                 typeof value === "bigint" ? value.toString() : value
             )
         );
+
 
         const foundEditalAttachments = await prisma.anexo.findMany({
             where: {
@@ -34,6 +47,12 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
                 idSCEdital: parseInt(edital),
             },
         });
+
+        const serializedFoundEdital = JSON.parse(
+            JSON.stringify(foundEdital, (_, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
 
         const foundEditalDocuments = await prisma.sCDocumentacao.findMany({
             where: {
@@ -74,7 +93,7 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             JSON.stringify(foundEditalDocuments, (_, value) => typeof value === "bigint" ? value.toString() : value)
         )
 
-        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters });
+        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters, serializedEditalLocalidades, serializedFoundEdital });
 
     } catch (error: any) {
         console.error("Error fetching data:", error);
