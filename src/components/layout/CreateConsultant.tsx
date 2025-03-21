@@ -54,6 +54,7 @@ export default function CreateConsultant() {
     removeConsultantAreaDocuments,
     localidadesDoConsultor,
     removerLocalidadesDoConsultor,
+    LocalidadesDisponiveis,
   } = useEditalStore();
   const [areasSelecionadas, setAreasSelecionadas] = useState<
     MultipleCheckBoxOptions[]
@@ -175,7 +176,7 @@ export default function CreateConsultant() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4 h-96 overflow-auto px-2"
         >
-          <LocalidadesForm />
+          {LocalidadesDisponiveis.length > 0 && <LocalidadesForm />}
           <div>
             <FormField
               control={form.control}
@@ -385,7 +386,8 @@ export default function CreateConsultant() {
                 type="submit"
                 disabled={
                   Object.keys(errors).length > 0 ||
-                  localidadesDoConsultor.length === 0
+                  (localidadesDoConsultor.length === 0 &&
+                    LocalidadesDisponiveis.length > 0)
                 }
               >
                 Cadastrar Consultor
