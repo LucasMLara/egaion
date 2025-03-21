@@ -20,7 +20,7 @@ import { currentDate } from "@/lib/utils";
 import { IEditalCard } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const statusClasses = {
   ok: "bg-auxiliary-success-400 text-neutral-600",
@@ -42,10 +42,11 @@ export default function EditalCard({
   const statusClass = status ? statusClasses[status] : "";
   const [sameCurrentEdital, setSameCurrentEdital] = useState(false);
   const { currentEditalId, reset, currentEditalName } = useEditalStore();
+  const [open, setOpen] = useState(false);
 
   function validateEditalId(id: string) {
     const mesmoEdital = id === currentEditalId;
-    if (mesmoEdital) {
+    if (mesmoEdital || !currentEditalId) {
       setSameCurrentEdital(true);
       toast.success("Abrindo edital");
     } else {
@@ -55,7 +56,7 @@ export default function EditalCard({
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Card
           onClick={() => validateEditalId(editalId)}
@@ -120,6 +121,7 @@ export default function EditalCard({
                   <Button
                     variant="ghost"
                     className="hover:shadow-md transition-all"
+                    onClick={() => setOpen(false)}
                   >
                     Não
                   </Button>
