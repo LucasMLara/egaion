@@ -267,7 +267,6 @@ export default function EditalId({
     try {
       setLoading(true);
       const response = await fetch(url, fetchOptions);
-
       const text = await response.text();
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "application/xml");
