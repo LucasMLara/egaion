@@ -177,24 +177,29 @@ export async function prepararConsultoresCredenciada(
       )}</File>
                         </Documento>
                         <Parametrizacao>${nivel.areaName}</Parametrizacao>
-                    </SCConsultorNivel>`;
+                    </SCConsultorNivel>
+                    </NiveisParametrizacao>`;
     }
-    xml += `
-                </NiveisParametrizacao>
-                <Localidades>`;
-
-    for (const localidade of consultor.localidades || []) {
+    if (consultor.localidades && consultor.localidades.length > 0) {
       xml += `
-                      <SCLocalidadeConsult>
-                        <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
-                        <Prioridade>${localidade.prioridade}</Prioridade>
-                      </SCLocalidadeConsult>`;
+          
+          <Localidades>`;
+
+      for (const localidade of consultor.localidades) {
+        xml += `
+              <SCLocalidadeConsult>
+              <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
+              <Prioridade>${localidade.prioridade}</Prioridade>
+              </SCLocalidadeConsult>`;
+      }
+
+      xml += `
+              </Localidades>`;
     }
 
     xml += `
-                      </Localidades>
-            </SCConsultorEdital>
-        `;
+        </SCConsultorEdital>
+      `;
   }
   xml += `</Consultores>`;
   return xml;
