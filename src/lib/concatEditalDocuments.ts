@@ -133,19 +133,7 @@ export async function prepararConsultoresCredenciada(
             <SCCredenciada>${idSCCredenciada}</SCCredenciada>
             <EResponsavelLegal>True</EResponsavelLegal>
             <Nome>${consultor.nome}</Nome>
-            <Localidades>`;
-
-    for (const localidade of consultor.localidades || []) {
-      xml += `
-                      <SCLocalidadeConsult>
-                        <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
-                        <Prioridade>${localidade.prioridade}</Prioridade>
-                      </SCLocalidadeConsult>`;
-    }
-
-    xml += `
-                      </Localidades>
-                      <DocumentosPessoais>
+            <DocumentosPessoais>
               <File fileName="${consultor.consultantCPF.name
       }">${await getBase64(
         new File([consultor.consultantCPF], consultor.consultantCPF.name)
@@ -193,6 +181,18 @@ export async function prepararConsultoresCredenciada(
     }
     xml += `
                 </NiveisParametrizacao>
+                <Localidades>`;
+
+    for (const localidade of consultor.localidades || []) {
+      xml += `
+                      <SCLocalidadeConsult>
+                        <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
+                        <Prioridade>${localidade.prioridade}</Prioridade>
+                      </SCLocalidadeConsult>`;
+    }
+
+    xml += `
+                      </Localidades>
             </SCConsultorEdital>
         `;
   }
