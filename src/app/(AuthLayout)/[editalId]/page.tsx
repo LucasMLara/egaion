@@ -35,7 +35,6 @@ import {
   prepararConsultoresCredenciada,
   prepararAreasCredenciada,
 } from "@/lib/concatEditalDocuments";
-import LocalidadesForm from "@/components/layout/LocalidadesForm";
 
 export default function EditalId({
   params,
@@ -55,9 +54,7 @@ export default function EditalId({
     reset,
     setEditalName,
     setEditalId,
-    LocalidadesDisponiveis: Localidades,
-    carregarLocalidadesDisponiveis: carregarLocalidades,
-    limitesDeLocalidade,
+    carregarLocalidadesDisponiveis,
     carregarLimitesDeLocalidade,
   } = useEditalStore();
 
@@ -179,7 +176,7 @@ export default function EditalId({
             QuantidadeMinimaLocalidade:
               data.serializedEdital.QuantidadeMinimaLocalidade,
           });
-          carregarLocalidades(data.serializedEditalLocalidades);
+          carregarLocalidadesDisponiveis(data.serializedEditalLocalidades);
           setEditalHistory(data.serializedEditalHistory);
           setEditalAttachments(data.serializedEditalAttachments);
           setDocumentCategories(data.serializedEditalDocCategorias);
@@ -194,7 +191,11 @@ export default function EditalId({
     if (params.editalId) {
       fetchEdital();
     }
-  }, [carregarLimitesDeLocalidade, carregarLocalidades, params.editalId]);
+  }, [
+    carregarLimitesDeLocalidade,
+    carregarLocalidadesDisponiveis,
+    params.editalId,
+  ]);
 
   useEffect(() => {
     setDocumentsQty(requiredEditalDocs.length);
