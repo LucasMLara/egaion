@@ -177,9 +177,10 @@ export async function prepararConsultoresCredenciada(
       )}</File>
                         </Documento>
                         <Parametrizacao>${nivel.areaName}</Parametrizacao>
-                    </SCConsultorNivel>
-                    </NiveisParametrizacao>`;
+                    </SCConsultorNivel>`;
+
     }
+    xml += `</NiveisParametrizacao>`;
     if (consultor.localidades && consultor.localidades.length > 0) {
       xml += `
           
