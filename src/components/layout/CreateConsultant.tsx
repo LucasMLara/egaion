@@ -32,12 +32,12 @@ import LocalidadesForm from "./LocalidadesForm";
 const { useStepper, steps, utils } = defineStepper(
   {
     id: "consultantAreaDocuments",
-    title: "Documentos de Área do consultor",
+    title: "Informações da Área do Consultor",
     description: "Insira os documentos das áreas atuadas pelo consultor",
   },
   {
     id: "consultor",
-    title: "Consultor",
+    title: "Dados do Consultor",
     description: "Insira os dados do Consultor",
   }
 );
@@ -163,7 +163,6 @@ export default function CreateConsultant() {
           areaName: doc.areaName as string,
         })),
       };
-      console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");
