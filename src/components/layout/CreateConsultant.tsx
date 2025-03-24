@@ -459,13 +459,11 @@ export default function CreateConsultant() {
         })}
         {!stepper.isLast ? (
           <div className="flex justify-end gap-4">
-            <Button
-              variant="secondary"
-              onClick={stepper.prev}
-              disabled={stepper.isFirst}
-            >
-              Voltar
-            </Button>
+            {stepper.isFirst ?? (
+              <Button variant="secondary" onClick={stepper.prev}>
+                Voltar
+              </Button>
+            )}
             <Button
               onClick={stepper.next}
               disabled={!permissaoDeCadastroConsultor}
