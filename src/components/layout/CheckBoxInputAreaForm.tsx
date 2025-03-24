@@ -22,8 +22,6 @@ import MultipleAreaInputs from "./MultipleAreaInputs";
 import { useEditalStore } from "@/store/EditalRegister";
 import { useEffect } from "react";
 
-
-
 interface CheckboxFormMultiploProps {
   opcoes: MultipleCheckBoxOptions[];
   onSubmit: (opcoes: MultipleCheckBoxOptions[]) => void;
@@ -39,18 +37,17 @@ export default function CheckboxFormMultiplo({
   opcoesSelecionadas,
 }: CheckboxFormMultiploProps) {
   const { alterarPermissaoConsultor } = useEditalStore();
-  
+
   const form = useForm<IMultipleForm>({
     resolver: zodResolver(MultipleFormSchema),
     defaultValues: {
       options: opcoesSelecionadas.map((opcao) => opcao.label),
     },
   });
-  
+
   useEffect(() => {
     alterarPermissaoConsultor(false);
-
-  } ,[alterarPermissaoConsultor]);
+  }, [alterarPermissaoConsultor]);
 
   function handleSubmit(data: IMultipleForm) {
     onSubmit(
@@ -68,7 +65,7 @@ export default function CheckboxFormMultiplo({
     <div className="flex flex-col gap-4">
       <MultipleAreaInputs areas={opcoesSelecionadas} />
       <Button onClick={onReset} variant="ghost">
-        Selecionar Novamente
+        Selecionar áreas novamente
       </Button>
     </div>
   ) : (
