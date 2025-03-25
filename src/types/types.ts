@@ -45,7 +45,10 @@ export const consultantSchema = z.object({
       })
     )
     .optional(),
-  areaId: z.array(z.string()).optional(),
+  areas: z.array(z.object({
+    label: z.string(),
+    id: z.string()
+  })).optional(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
   localidades: z.array(z.object({ idSCLocalidade: z.string(), prioridade: z.string() })).optional(),
@@ -224,6 +227,7 @@ export type ConsultantRowDisplay = {
   email: string;
   nome: string;
   contato: string;
+  areas: { id: string; label: string }[];
 };
 
 export const MockDocCardSchema = z.object({
