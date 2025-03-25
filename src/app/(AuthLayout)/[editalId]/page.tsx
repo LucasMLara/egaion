@@ -263,7 +263,6 @@ export default function EditalId({
       },
       body,
     };
-
     try {
       setLoading(true);
       const response = await fetch(url, fetchOptions);
@@ -303,7 +302,7 @@ export default function EditalId({
   }
   return (
     <section className="h-full">
-      <Tabs defaultValue="content" className="w-auto m-4">
+      <Tabs defaultValue="consultants" className="w-auto m-4">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="content" className="text-center">
             <span className="hidden lg:inline">Edital</span>
