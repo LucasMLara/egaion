@@ -91,7 +91,7 @@ export default function CreateConsultant() {
       contato: "",
       CPF: "",
       id: "",
-      areaId: [],
+      areas: [],
     },
   });
 
@@ -119,7 +119,7 @@ export default function CreateConsultant() {
   }
 
   const handleConsultantAreas = useMemo(() => {
-    return areasSelecionadas.map(({ id }) => id);
+    return areasSelecionadas.map(({ id, label }) => ({ id, label }));
   }, [areasSelecionadas]);
 
   const ConsultantForm = () => {
@@ -139,7 +139,7 @@ export default function CreateConsultant() {
         contato: "",
         CPF: "",
         id: "",
-        areaId: [],
+        areas: [],
       },
     });
 
@@ -151,7 +151,7 @@ export default function CreateConsultant() {
       const uniqueId = nanoid();
       const newConsultant = {
         ...data,
-        areaId: handleConsultantAreas,
+        areas: handleConsultantAreas,
         id: uniqueId,
         localidades: localidadesDoConsultor.map((localidade, index) => ({
           idSCLocalidade: localidade.idSCLocalidade,
@@ -163,6 +163,7 @@ export default function CreateConsultant() {
           areaName: doc.areaName as string,
         })),
       };
+      console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");
