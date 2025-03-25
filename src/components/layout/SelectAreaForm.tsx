@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 import { toast } from "sonner";
-import { nanoid } from "nanoid";
 
 interface Level {
   id: number;
@@ -24,6 +23,7 @@ interface SelectAreaProps {
 const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   const [selectedAreas, setSelectedAreas] = useState<Level[]>([]);
   const { inserirArea, Qualificacao } = useEditalStore();
+  const [existeSubniveis, setExisteSubniveis] = useState(false);
 
   const handleSelect = (levelId: number, name: string, depth: number) => {
     const newSelection = [...selectedAreas];
@@ -69,6 +69,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
               (level) => level.id === Number(value)
             );
             if (selectedLevel) {
+              setExisteSubniveis(selectedLevel.subLevels.length > 0);
               handleSelect(selectedLevel.id, selectedLevel.name, depth);
             }
           }}
@@ -111,7 +112,7 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
       <Button
         className="m-5 bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none"
         onClick={setAreaOnStore}
-        disabled={selectedAreas.length === 0}
+        disabled={selectedAreas.length === 0 || existeSubniveis}
       >
         Confirmar Seleção
       </Button>
