@@ -34,6 +34,7 @@ export type Qualificacao = {
   naturezaPrestacao: NaturezaPrestacao[];
   AreaDocuments: Document[];
   subLevels: string[];
+  Consultores: IConsultant[];
 };
 
 type ConsultantAreaDocuments = {
@@ -207,6 +208,17 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       cadastrarConsultor: (consultor) => {
         set((state) => ({
           Consultores: [...state.Consultores, consultor],
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (
+              consultor.areas?.some((area) => area.id === qualificacao.areaId)
+            ) {
+              return {
+                ...qualificacao,
+                Consultores: [...qualificacao.Consultores, consultor],
+              };
+            }
+            return qualificacao;
+          }),
         }));
       },
       removerConsultor: (consultorId) => {
