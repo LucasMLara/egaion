@@ -18,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ConsultantRowDisplay } from "@/types/types";
@@ -96,6 +97,9 @@ const ConsultantActionsCell = ({
               </TabsContent>
             </Tabs>
           </DialogDescription>
+          <DialogFooter>
+            <Button onClick={() => setOpen(false)}>Fechar</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
