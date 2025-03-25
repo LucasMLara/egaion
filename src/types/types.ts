@@ -227,7 +227,7 @@ export type ConsultantRowDisplay = {
   email: string;
   nome: string;
   contato: string;
-  areas: { id: string; label: string }[];
+  areas?: { id: string; label: string }[];
 };
 
 export const MockDocCardSchema = z.object({
