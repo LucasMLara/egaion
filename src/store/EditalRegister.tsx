@@ -255,7 +255,7 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
         const state = get();
         return state.Qualificacao.every((qualificacao) =>
           state.Consultores.some((consultor) =>
-            consultor.areaId?.includes(qualificacao.areaId)
+            consultor.areas?.some((area) => area.id === qualificacao.areaId)
           )
         );
       },
