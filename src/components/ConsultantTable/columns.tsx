@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,10 +14,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ConsultantRowDisplay } from "@/types/types";
 
-const ConsultantActionsCell = ({ memberId }: { memberId: string }) => {
+const ConsultantActionsCell = ({
+  consultant,
+}: {
+  consultant: ConsultantRowDisplay;
+}) => {
   const removerConsultor = useEditalStore((state) => state.removerConsultor);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="text-center flex justify-end">
@@ -30,14 +42,62 @@ const ConsultantActionsCell = ({ memberId }: { memberId: string }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Opções</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <Link href={`/team/${memberId}`}>
-            <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
-          </Link> */}
-          <DropdownMenuItem onClick={() => removerConsultor(memberId)}>
+          <DropdownMenuItem
+            onClick={() => {
+              console.log(consultant);
+              setOpen(true);
+            }}
+          >
+            Ver Detalhes
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => removerConsultor(consultant.id)}>
             Remover Consultor
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogTitle>Detalhes do Consultor</DialogTitle>
+          <DialogDescription>
+            <Tabs defaultValue="consultor">
+              <TabsList>
+                <TabsTrigger value="consultor">Dados Pessoais</TabsTrigger>
+                <TabsTrigger value="areas">Áreas Cadastradas</TabsTrigger>
+              </TabsList>
+              <TabsContent value="consultor">
+                <ul className="flex flex-col gap-2 h-full">
+                  <li>
+                    <strong>Nome:</strong> {consultant.nome}
+                  </li>
+                  <li>
+                    <strong>CPF:</strong> {maskCpf(consultant.CPF)}
+                  </li>
+                  <li>
+                    <strong>Email:</strong> {consultant.email}
+                  </li>
+                  <li>
+                    <strong>Contato:</strong> {consultant.contato}
+                  </li>
+                </ul>
+              </TabsContent>
+              <TabsContent value="areas">
+                <div className="flex flex-col gap-2">
+                  {consultant.areas && consultant.areas.length > 0 ? (
+                    consultant.areas.map((area, index) => (
+                      <div key={index} className="border p-2 rounded">
+                        {area.label}
+                      </div>
+                    ))
+                  ) : (
+                    <p>Nenhuma área cadastrada</p>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
@@ -73,6 +133,6 @@ export const columns: ColumnDef<ConsultantRowDisplay>[] = [
   {
     accessorKey: "Opçoes",
     header: () => <div className="text-right">Opções</div>,
-    cell: ({ row }) => <ConsultantActionsCell memberId={row.original.id} />,
+    cell: ({ row }) => <ConsultantActionsCell consultant={row.original} />,
   },
 ];
