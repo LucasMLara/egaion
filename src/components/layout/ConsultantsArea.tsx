@@ -1,7 +1,6 @@
 import CreateConsultant from "./CreateConsultant";
 import ConsultantTable from "../ConsultantTable/ConsultantTable";
 
-import { MultipleCheckBoxOptions } from "@/types/types";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +12,6 @@ import {
 import { useEditalStore } from "@/store/EditalRegister";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { prepararConsultoresCredenciada } from "@/lib/concatEditalDocuments";
 export default function ConsultantsArea() {
   const {
     Consultores,
@@ -21,7 +19,7 @@ export default function ConsultantsArea() {
     Documentos,
     alterarPermissaoEdital,
     RequiredDocumentsQty,
-    checkQualificacaoConsultants
+    checkQualificacaoConsultants,
   } = useEditalStore();
 
   useEffect(() => {
