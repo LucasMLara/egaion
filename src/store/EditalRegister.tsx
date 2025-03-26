@@ -268,6 +268,9 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           Qualificacao: state.Qualificacao.filter(
             (qualificacao) => qualificacao.areaId !== areaId
           ),
+          Consultores: state.Consultores.filter(
+            (consultor) => !consultor.areas?.some((area) => area.id === areaId)
+          ),
         })),
       checkQualificacaoConsultants: () => {
         const state = get();
