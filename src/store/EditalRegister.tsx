@@ -226,6 +226,12 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           Consultores: state.Consultores.filter(
             (consultor) => consultor.id !== consultorId
           ),
+          Qualificacao: state.Qualificacao.map((area) => ({
+            ...area,
+            Consultores: area.Consultores.filter(
+              (consultor) => consultor.id !== consultorId
+            ),
+          })),
         }));
       },
 
