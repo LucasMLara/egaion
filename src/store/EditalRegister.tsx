@@ -222,17 +222,25 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
         }));
       },
       removerConsultor: (consultorId) => {
-        set((state) => ({
-          Consultores: state.Consultores.filter(
-            (consultor) => consultor.id !== consultorId
-          ),
-          Qualificacao: state.Qualificacao.map((area) => ({
-            ...area,
-            Consultores: area.Consultores.filter(
+        set((state) => {
+          const areasWithConsultor = state.Qualificacao.filter((area) =>
+            area.Consultores.some((consultor) => consultor.id === consultorId)
+          ).length;
+          if (areasWithConsultor > 1) {
+            return state;
+          }
+          return {
+            Consultores: state.Consultores.filter(
               (consultor) => consultor.id !== consultorId
             ),
-          })),
-        }));
+            Qualificacao: state.Qualificacao.map((area) => ({
+              ...area,
+              Consultores: area.Consultores.filter(
+                (consultor) => consultor.id !== consultorId
+              ),
+            })),
+          };
+        });
       },
 
       cadastrarDocumentosTecnicos: (areaId, documento) => {
