@@ -30,6 +30,7 @@ const ConsultantActionsCell = ({
 }) => {
   const removerConsultor = useEditalStore((state) => state.removerConsultor);
   const [open, setOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   return (
     <div className="text-center flex justify-end">
@@ -45,17 +46,39 @@ const ConsultantActionsCell = ({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              console.log(consultant);
               setOpen(true);
             }}
           >
             Ver Detalhes
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => removerConsultor(consultant.id)}>
+          <DropdownMenuItem onClick={() => setDeleteConfirmation(true)}>
             Remover Consultor
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={deleteConfirmation} onOpenChange={setDeleteConfirmation}>
+        <DialogContent>
+          <DialogTitle>Remover Consultor</DialogTitle>
+          <DialogDescription>
+            <p>Tem certeza que deseja remover o consultor?</p>
+          </DialogDescription>
+          <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                removerConsultor(consultant.id);
+                setDeleteConfirmation(false);
+              }}
+            >
+              Remover
+            </Button>
+            <Button onClick={() => setDeleteConfirmation(false)}>
+              Cancelar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
