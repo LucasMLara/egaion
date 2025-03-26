@@ -46,7 +46,7 @@ export default function ConsultantTable() {
         className="block mx-auto my-5 p-2 text-center w-2/5"
         onClick={() => setShowConsultores(!showConsultores)}
       >
-        {showConsultores ? "Áreas" : "Detalhes dos Consultores"}
+        {showConsultores ? "Visualizar por Área" : "Vizualizar por Consultor"}
       </Button>
 
       <div className="flex justify-center">
