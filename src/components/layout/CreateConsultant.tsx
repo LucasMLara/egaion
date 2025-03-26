@@ -174,7 +174,7 @@ export default function CreateConsultant() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 h-96 overflow-auto px-2"
+          className="flex flex-col gap-4 overflow-auto px-2  h-5/6"
         >
           {LocalidadesDisponiveis.length > 0 && <LocalidadesForm />}
           <div>

@@ -65,7 +65,7 @@ export default function ConsultantsArea() {
             Adicionar Membro de Equipe
           </Button>
         </DialogTrigger>
-        <DialogContent className="md:min-w-[720px] overflow-y-auto h-2/6 md:h-1/2">
+        <DialogContent className="md:min-w-[720px] overflow-y-auto h-5/6 md:h-3/4">
           <DialogTitle>Insira os Dados do seu consultor:</DialogTitle>
           <DialogDescription>
             Atente-se aos dados inseridos antes de submeter as informações
