@@ -73,7 +73,10 @@ const ConsultantActionsCell = ({
             >
               Remover
             </Button>
-            <Button onClick={() => setDeleteConfirmation(false)}>
+            <Button
+              onClick={() => setDeleteConfirmation(false)}
+              variant={"ghost"}
+            >
               Cancelar
             </Button>
           </DialogFooter>
