@@ -55,16 +55,16 @@ export default function ConsultantTable() {
               <Collapsible
                 key={area.areaId}
                 open={openAreas[area.areaId] || false}
-                className="rounded-lg mb-3"
+                className="border border-gray-200 rounded-lg mb-3"
               >
                 <CollapsibleTrigger
                   onClick={() => toggleArea(area.areaId)}
-                  className="flex justify-between items-center w-full px-4 py-2 bg-neutral-400 rounded-lg"
+                  className="flex justify-between items-center w-full px-4 py-2 bg-gray-100 rounded-lg"
                 >
                   <span className="font-semibold">{area.name}</span>
-                  <ChevronsUpDown className="size-5 hover:shadow-lg transition-all" />
+                  <ChevronsUpDown className="w-5 h-5" />
                 </CollapsibleTrigger>
-                <CollapsibleContent className="px-4 py-2 bg-neutral-500 rounded-lg">
+                <CollapsibleContent className="px-4 py-2">
                   <ul className="list-disc list-inside">
                     {area.Consultores.map((consultor) => (
                       <li key={consultor.id} className="py-1">
