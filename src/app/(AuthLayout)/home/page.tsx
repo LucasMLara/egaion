@@ -59,7 +59,7 @@ export default function Home() {
               editalDialogTitle={card.NomeEdital}
               editalDialogDescription={formatDate(card.InicioEdital)}
               editalDialogContent={card.ResumoEdital}
-              editalId={card.idSCEdital}
+              editalId={card.idSCCredenciadasEdital}
               editalType={card.TipodeCredenciamento}
             />
           ))
