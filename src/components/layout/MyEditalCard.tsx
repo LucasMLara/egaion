@@ -5,10 +5,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,6 +35,7 @@ export default function MyEditalCard({
   editalDialogTitle,
   status,
   editalType,
+  editalId,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
 
@@ -62,6 +65,11 @@ export default function MyEditalCard({
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
+        <DialogFooter className="flex justify-center items-end gap-4">
+          <Link href={`/meuEdital/${editalId}`}>
+            <Button className="hover:shadow-md transition-all">Detalhes</Button>
+          </Link>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
