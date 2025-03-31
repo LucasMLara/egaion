@@ -106,6 +106,7 @@ export const consultantSchema = z.object({
 export const fileInputSchema = z.object({
   arquivosTecnicos: z.array(
     z.object({
+      naturezas: z.array(z.string()).min(1, "Selecione pelo menos uma natureza"),
       areaId: z.string(),
       areaName: z.string(),
       files: z
@@ -258,7 +259,7 @@ export const AreaDocSchema = z.object({
           z.object({
             file: z
               .array(fileSchema)
-              .min(1, "É necessário carregar pelo menos um arquivo"), // At least one file is required
+              .min(1, "É necessário carregar pelo menos um arquivo"),
           })
         )
       )
