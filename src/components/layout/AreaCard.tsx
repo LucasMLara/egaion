@@ -185,8 +185,10 @@ export default function AreaCard({
       <DialogContent>
         <DialogTitle className="my-3">{area}</DialogTitle>
         <DialogHeader className="my-3">
-          Prossiga para a inserção dos dados necessários da área correspondente
-          ou remova a área caso tenha inserido por engano.
+          <DialogDescription>
+            Prossiga para a inserção dos dados necessários da área
+            correspondente ou remova a área caso tenha inserido por engano.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Dialog>
