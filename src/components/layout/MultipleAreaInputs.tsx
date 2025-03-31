@@ -3,9 +3,12 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { fileInputSchema, FileInputForm } from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
+import { Checkbox } from "@/components/ui/checkbox";
+import { naturezasPrestacao } from "@/mocks";
 
 interface MultipleAreaInputsProps {
   areas: { id: string; label: string }[];
@@ -26,7 +29,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     alterarPermissaoConsultor,
     removeConsultantAreaDocuments,
     insertConsultantAreaDocuments,
-    consultantAreaDocuments,
+    Qualificacao,
   } = useEditalStore();
 
   const { control, handleSubmit, formState, reset } = useForm<FileInputForm>({
@@ -36,6 +39,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
         areaId: area.id,
         files: [],
         areaName: area.label,
+        naturezas: [],
       })),
     },
   });
@@ -70,6 +74,14 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
   };
+
+  const todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada = Qualificacao.every(
+    (area) => area.naturezaPrestacao.length > 0
+  );
+
+  const areasSemNatureza = Qualificacao.filter(
+    ({ naturezaPrestacao }) => naturezaPrestacao.length === 0
+  );
 
   return (
     <div>
@@ -124,6 +136,50 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
                   />
                 )}
               />
+              <Controller
+                name={`arquivosTecnicos.${index}.naturezas`}
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <span className="my-2 block">
+                      Prestação de Serviços para {area.label}
+                    </span>
+                    <div className="flex gap-3 items-center justify-center">
+                      {naturezasPrestacao.map(({ id, label }) => {
+                        const uniqueId = `${id}-${area.id}`;
+                        return (
+                          <Label
+                            key={uniqueId}
+                            className="text-center m-2"
+                            htmlFor={uniqueId}
+                          >
+                            {label}
+                            <Checkbox
+                              id={uniqueId}
+                              className="mx-2"
+                              checked={field.value?.includes(id)}
+                              onCheckedChange={(checked) => {
+                                field.onChange(
+                                  checked
+                                    ? [...(field.value || []), id]
+                                    : field.value?.filter(
+                                        (value) => value !== id
+                                      )
+                                );
+                              }}
+                            />
+                          </Label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              />
+              {errors.arquivosTecnicos?.[index]?.naturezas && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.arquivosTecnicos[index].naturezas.message}
+                </p>
+              )}
               {errors.arquivosTecnicos?.[index]?.files && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.arquivosTecnicos[index].files.message}
@@ -135,13 +191,31 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
             <Button
               type="submit"
               className="w-full"
-              disabled={Object.keys(errors).length > 0}
+              disabled={
+                Object.keys(errors).length > 0 ||
+                !todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada
+              }
             >
               Validar Documentos
             </Button>
           </div>
         </form>
       )}
+      {!todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada ? (
+        <div className="bg-auxiliary-warning-400 p-5 rounded-lg w-full my-2 ">
+          <h1 className="text-xl font-bold  text-center">
+            Selecione a natureza da prestação de todas as áreas selecionadas
+          </h1>
+          <span className="text-lg">Áreas Pendentes:</span>
+          <ul>
+            {areasSemNatureza.map(({ name, areaId }) => (
+              <li key={areaId} className="list-disc list-inside">
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 };
