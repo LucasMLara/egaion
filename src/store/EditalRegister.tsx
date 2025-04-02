@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IConsultant } from "@/types/types";
+import { IConsultant, MultipleCheckBoxOptions } from "@/types/types";
 import { persist } from "zustand/middleware";
 
 export type Document = {
@@ -49,6 +49,7 @@ type Localidade = {
 };
 
 export type IEditalStore = {
+  consultantNaturezasPorAreas: MultipleCheckBoxOptions[];
   localidadesDoConsultor: Localidade[];
   Consultores: IConsultant[];
   Documentos: Document[];
@@ -70,6 +71,8 @@ export type IEditalStore = {
 };
 
 type editalActions = {
+  setConsultantNaturezasPorAreas: (areas: MultipleCheckBoxOptions[]) => void;
+  removeConsultantNaturezasPorAreas: () => void;
   limparConsultores: () => void;
   cadastrarConsultor: (consultor: IConsultant) => void;
   reset: () => void;
@@ -107,6 +110,7 @@ type editalActions = {
 };
 
 const initialState: IEditalStore = {
+  consultantNaturezasPorAreas: [],
   localidadesDoConsultor: [],
   limitesDeLocalidade: {
     QuantidadeMinimaLocalidade: 0,
@@ -131,6 +135,10 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+      setConsultantNaturezasPorAreas: (areas) =>
+        set({ consultantNaturezasPorAreas: areas }),
+      removeConsultantNaturezasPorAreas: () =>
+        set({ consultantNaturezasPorAreas: [] }),
       removerLocalidadesDoConsultor: () => set({ localidadesDoConsultor: [] }),
       inserirLocalidadesDoConsultor: (localidades) =>
         set({ localidadesDoConsultor: localidades }),
