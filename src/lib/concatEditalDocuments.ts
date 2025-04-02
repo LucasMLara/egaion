@@ -134,77 +134,81 @@ export async function prepararConsultoresCredenciada(
             <EResponsavelLegal>True</EResponsavelLegal>
             <Nome>${consultor.nome}</Nome>
             <DocumentosPessoais>
-              <File fileName="${consultor.consultantCPF.name
-      }">${await getBase64(
-        new File([consultor.consultantCPF], consultor.consultantCPF.name)
-      )}</File>
+              <File fileName="${consultor.consultantCPF.name}">
+                ${await getBase64(new File([consultor.consultantCPF], consultor.consultantCPF.name))}
+              </File>
             </DocumentosPessoais>
             <ComprovanteVinculoPJ>
-              <File fileName="${consultor.comprovanteVinculoCNPJ.name
-      }">${await getBase64(
-        new File(
-          [consultor.comprovanteVinculoCNPJ],
-          consultor.comprovanteVinculoCNPJ.name
-        )
-      )}</File>
+              <File fileName="${consultor.comprovanteVinculoCNPJ.name}">
+                ${await getBase64(new File([consultor.comprovanteVinculoCNPJ], consultor.comprovanteVinculoCNPJ.name))}
+              </File>
             </ComprovanteVinculoPJ>
             <CompFormacaoAcademica>
-              <File fileName="${consultor.comprovanteFormacaoAcademica.name
-      }">${await getBase64(
-        new File(
-          [consultor.comprovanteFormacaoAcademica],
-          consultor.comprovanteFormacaoAcademica.name
-        )
-      )}</File>
+              <File fileName="${consultor.comprovanteFormacaoAcademica.name}">
+                ${await getBase64(new File([consultor.comprovanteFormacaoAcademica], consultor.comprovanteFormacaoAcademica.name))}
+              </File>
             </CompFormacaoAcademica>
             <RegistroProfissional>
-              <File fileName="${consultor.registroProfissionalClasse.name
-      }">${await getBase64(
-        new File(
-          [consultor.registroProfissionalClasse],
-          consultor.registroProfissionalClasse.name
-        )
-      )}</File>
+              <File fileName="${consultor.registroProfissionalClasse.name}">
+                ${await getBase64(new File([consultor.registroProfissionalClasse], consultor.registroProfissionalClasse.name))}
+              </File>
             </RegistroProfissional>
           </SCTecnico>
           <NiveisParametrizacao>`;
-    for (const nivel of consultor.areaDocuments || []) {
-      xml += `
-                    <SCConsultorNivel>
-                        <Documento>
-                        <File fileName="${nivel.files.name}">${await getBase64(
-        new File([nivel.files], nivel.areaId)
-      )}</File>
-                        </Documento>
-                        <Parametrizacao>${nivel.areaName}</Parametrizacao>
-                    </SCConsultorNivel>`;
 
-    }
-    xml += `</NiveisParametrizacao>`;
-    if (consultor.localidades && consultor.localidades.length > 0) {
+    for (const nivel of consultor.areaDocuments || []) {
+      // Find matching area in consultor.areas
+      const area = consultor.areas?.find(a => a.id === nivel.areaId);
+
+      // Ensure `naturezas` exists
+      const naturezas = area?.naturezas ?? [];
+
+      // Generate XML for `naturezas`
+      const naturezasXML = naturezas
+        .map(
+          (natureza: string) => `
+              <SCNaturezaNivel>
+                <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza}'"/>
+              </SCNaturezaNivel>`
+        )
+        .join("");
+
       xml += `
-          
-          <Localidades>`;
+            <SCConsultorNivel>
+              <Documento>
+                <File fileName="${nivel.files.name}">
+                  ${await getBase64(new File([nivel.files], nivel.files.name))}
+                </File>
+              </Documento>
+              <Parametrizacao>${nivel.areaName}</Parametrizacao>
+              <NaturezasPrestacao>
+                ${naturezasXML} 
+              </NaturezasPrestacao>
+            </SCConsultorNivel>`;
+    }
+
+    xml += `</NiveisParametrizacao>`;
+
+    if (consultor.localidades && consultor.localidades.length > 0) {
+      xml += `<Localidades>`;
 
       for (const localidade of consultor.localidades) {
         xml += `
-              <SCLocalidadeConsult>
+            <SCLocalidadeConsult>
               <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
               <Prioridade>${localidade.prioridade}</Prioridade>
-              </SCLocalidadeConsult>`;
+            </SCLocalidadeConsult>`;
       }
 
-      xml += `
-              </Localidades>`;
+      xml += `</Localidades>`;
     }
 
-    xml += `
-        </SCConsultorEdital>
-      `;
+    xml += `</SCConsultorEdital>`;
   }
   xml += `</Consultores>`;
   return xml;
 }
+
 
 export async function prepararDocumentosCredenciada(
   documents: Document[]
