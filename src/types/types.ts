@@ -47,7 +47,8 @@ export const consultantSchema = z.object({
     .optional(),
   areas: z.array(z.object({
     label: z.string(),
-    id: z.string()
+    id: z.string(),
+    naturezas: z.array(z.string()),
   })).optional(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
@@ -306,4 +307,5 @@ export type MultipleCheckBoxOptions = {
   label: string;
   value: string;
   id: string;
+  naturezas?: string[];
 };
