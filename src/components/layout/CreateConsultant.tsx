@@ -55,10 +55,10 @@ export default function CreateConsultant() {
     localidadesDoConsultor,
     removerLocalidadesDoConsultor,
     LocalidadesDisponiveis,
+    setConsultantNaturezasPorAreas,
+    consultantNaturezasPorAreas,
+    removeConsultantNaturezasPorAreas,
   } = useEditalStore();
-  const [areasSelecionadas, setAreasSelecionadas] = useState<
-    MultipleCheckBoxOptions[]
-  >([]);
 
   const areasPreSelecionadas = Qualificacao.map(({ name, areaId }) => ({
     value: name,
@@ -67,11 +67,11 @@ export default function CreateConsultant() {
   }));
 
   function handleAreasSubmit(areas: MultipleCheckBoxOptions[]) {
-    setAreasSelecionadas(areas);
+    setConsultantNaturezasPorAreas(areas);
   }
 
   function handleReset() {
-    setAreasSelecionadas([]);
+    removeConsultantNaturezasPorAreas();
     alterarPermissaoConsultor(false);
     removeConsultantAreaDocuments();
   }
@@ -111,7 +111,7 @@ export default function CreateConsultant() {
     if (registroProfissionalClasseRef.current)
       registroProfissionalClasseRef.current.value = "";
     form.reset();
-    setAreasSelecionadas([]);
+    removeConsultantNaturezasPorAreas();
     removeConsultantAreaDocuments();
     alterarPermissaoConsultor(false);
     removerLocalidadesDoConsultor();
@@ -119,8 +119,11 @@ export default function CreateConsultant() {
   }
 
   const handleConsultantAreas = useMemo(() => {
-    return areasSelecionadas.map(({ id, label }) => ({ id, label }));
-  }, [areasSelecionadas]);
+    return consultantNaturezasPorAreas.map(({ id, label }) => ({
+      id,
+      label,
+    }));
+  }, [consultantNaturezasPorAreas]);
 
   const ConsultantForm = () => {
     const form = useForm<IConsultant>({
@@ -149,9 +152,18 @@ export default function CreateConsultant() {
 
     function onSubmit(data: IConsultant) {
       const uniqueId = nanoid();
+      const naturezasMap = new Map(
+        consultantNaturezasPorAreas.map((area) => [area.id, area.naturezas])
+      );
       const newConsultant = {
         ...data,
-        areas: handleConsultantAreas,
+        areas: handleConsultantAreas.map((area) => ({
+          ...area,
+          naturezas:
+            consultantNaturezasPorAreas.find(
+              (naturezaArea) => naturezaArea.id === area.id
+            )?.naturezas || [],
+        })),
         id: uniqueId,
         localidades: localidadesDoConsultor.map((localidade, index) => ({
           idSCLocalidade: localidade.idSCLocalidade,
@@ -161,9 +173,11 @@ export default function CreateConsultant() {
           areaId: doc.areaId as string,
           files: doc.turnToBase64,
           areaName: doc.areaName as string,
+          naturezas: naturezasMap.get(doc.areaId as string) || [],
         })),
       };
-      console.log(newConsultant);
+
+      // console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");
@@ -452,7 +466,7 @@ export default function CreateConsultant() {
                 opcoes={areasPreSelecionadas}
                 onSubmit={handleAreasSubmit}
                 onReset={handleReset}
-                opcoesSelecionadas={areasSelecionadas}
+                opcoesSelecionadas={consultantNaturezasPorAreas}
               />
             </div>
           ),
