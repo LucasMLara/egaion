@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { fileInputSchema, FileInputForm } from "@/types/types";
+import {
+  fileInputSchema,
+  FileInputForm,
+  MultipleCheckBoxOptions,
+} from "@/types/types";
 import { useEditalStore } from "@/store/EditalRegister";
 import { Checkbox } from "@/components/ui/checkbox";
 import { naturezasPrestacao } from "@/mocks";
@@ -29,6 +33,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     alterarPermissaoConsultor,
     removeConsultantAreaDocuments,
     insertConsultantAreaDocuments,
+    setConsultantNaturezasPorAreas,
     Qualificacao,
   } = useEditalStore();
 
@@ -46,8 +51,8 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
 
   const { errors } = formState;
 
-  const onSubmit = (data: FileInputForm) => {
-    const hasFilesForAllAreas = data.arquivosTecnicos.every(
+  const onSubmit = ({ arquivosTecnicos }: FileInputForm) => {
+    const hasFilesForAllAreas = arquivosTecnicos.every(
       (input) => input.files.length > 0
     );
 
@@ -55,13 +60,23 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
       toast.error("Por favor, insira um arquivo para cada área selecionada!");
       return;
     }
-    setSubmittedData(data);
+    setSubmittedData({ arquivosTecnicos });
 
     toast.success("Arquivos preparados com sucesso!");
     if (onFormSubmit) {
-      onFormSubmit(data);
+      onFormSubmit({ arquivosTecnicos });
     }
-    insertConsultantAreaDocuments(data.arquivosTecnicos);
+    const transformedData: MultipleCheckBoxOptions[] = arquivosTecnicos.map(
+      (item) => ({
+        id: item.areaId,
+        label: item.areaName,
+        value: item.areaId,
+        naturezas: item.naturezas,
+      })
+    );
+
+    insertConsultantAreaDocuments(arquivosTecnicos);
+    setConsultantNaturezasPorAreas(transformedData);
     alterarPermissaoConsultor(true);
   };
 
