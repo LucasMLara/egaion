@@ -156,11 +156,20 @@ export async function prepararConsultoresCredenciada(
           </SCTecnico>
           <NiveisParametrizacao>`;
 
-    for (const nivel of consultor.areaDocuments || []) {
-      // Find matching area in consultor.areas
-      const area = consultor.areas?.find(a => a.id === nivel.areaId);
+    // ** Group documents by areaId **
+    const groupedAreas = new Map<string, { areaName: string; documents: File[] }>();
 
-      // Ensure `naturezas` exists
+    for (const nivel of consultor.areaDocuments || []) {
+      if (!groupedAreas.has(nivel.areaId)) {
+        groupedAreas.set(nivel.areaId, { areaName: nivel.areaName, documents: [] });
+      }
+      groupedAreas.get(nivel.areaId)?.documents.push(nivel.files);
+    }
+
+    // ** Process grouped areas ** (Fix iteration over Map)
+    for (const [areaId, { areaName, documents }] of Array.from(groupedAreas.entries())) {
+      // Find matching area in consultor.areas
+      const area = consultor.areas?.find(a => a.id === areaId);
       const naturezas = area?.naturezas ?? [];
 
       // Generate XML for `naturezas`
@@ -173,14 +182,22 @@ export async function prepararConsultoresCredenciada(
         )
         .join("");
 
+      // Generate XML for all `Documento` inside one `SCConsultorNivel`
+      const documentosXML = await Promise.all(
+        documents.map(
+          async (file: File) => `
+              <Documento>
+                <File fileName="${file.name}">
+                  ${await getBase64(new File([file], file.name))}
+                </File>
+              </Documento>`
+        )
+      );
+
       xml += `
             <SCConsultorNivel>
-              <Documento>
-                <File fileName="${nivel.files.name}">
-                  ${await getBase64(new File([nivel.files], nivel.files.name))}
-                </File>
-              </Documento>
-              <Parametrizacao>${nivel.areaName}</Parametrizacao>
+              ${documentosXML.join("")}
+              <Parametrizacao>${areaName}</Parametrizacao>
               <NaturezasPrestacao>
                 ${naturezasXML} 
               </NaturezasPrestacao>
@@ -191,7 +208,6 @@ export async function prepararConsultoresCredenciada(
 
     if (consultor.localidades && consultor.localidades.length > 0) {
       xml += `<Localidades>`;
-
       for (const localidade of consultor.localidades) {
         xml += `
             <SCLocalidadeConsult>
@@ -199,7 +215,6 @@ export async function prepararConsultoresCredenciada(
               <Prioridade>${localidade.prioridade}</Prioridade>
             </SCLocalidadeConsult>`;
       }
-
       xml += `</Localidades>`;
     }
 
