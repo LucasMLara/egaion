@@ -15,14 +15,16 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
             );
         }
 
-        // const userId = session.user.idSCCredenciada;
-
         const dadosDosDocumentos: Array<{ [key: string]: any }> = await prisma.$queryRaw`
-                SELECT sdc.DadosDocumento, scd.Nome FROM SCDocCredenciadaEdital sdc 
-                INNER JOIN SCDocumentacao scd 
-                ON scd.idSCDocumentacao = sdc.DadosDocumento
-                WHERE Aprovado IS NULL
-                AND SCCredenciadasEdital =  ${BigInt(editalId)}
+            SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
+            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome
+            FROM SCCredenciadasEdital ce
+            INNER JOIN SCDocCredenciadaEdital dce ON dce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
+            INNER JOIN SCDocumentacao d ON d.idSCDocumentacao = dce.DadosDocumento
+            INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
+            INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+            WHERE SCCredenciadasEdital = ${BigInt(editalId)}
+            AND dce.Aprovado = 0
             `;
 
 
@@ -36,8 +38,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         );
 
         const dadosQualificacaoTecnica: Array<{ [key: string]: any }> = await prisma.$queryRaw`
-                SELECT * FROM SCParametrizacaoEdital
-                where SCCredenciadasEdital = ${BigInt(editalId)}
+                SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
+                c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao,pe.ApvAtestadoCapacidadeTec, pe.ApvRelatoExperiencia
+                FROM SCCredenciadasEdital ce
+                INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
+                INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
+                INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+                WHERE SCCredenciadasEdital = ${BigInt(editalId)}
                 `
             ;
 
@@ -51,10 +58,16 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         );
 
         const documentosConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
-                SELECT * FROM SCConsultorEdital sce 
-                inner join SCTecnico st 
-                on st.idSCTecnico = sce.SCTecnico
-                where SCCredenciadasEdital = ${BigInt(editalId)}
+                SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
+                c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
+                t.ApvCompFormacaoAcademica, t.ApvComprovanteVinculoPJ, t.ApvDocumentosPessoais , t.ApvRegistroProfissional
+                FROM SCCredenciadasEdital ce
+                INNER JOIN SCConsultorEdital cce ON cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
+                INNER JOIN SCTecnico t ON t.idSCTecnico = cce.SCTecnico
+                INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
+                INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+                WHERE SCCredenciadasEdital = ${BigInt(editalId)}
+                AND (t.ApvCompFormacaoAcademica = 0 OR t.ApvComprovanteVinculoPJ = 0 OR t.ApvDocumentosPessoais = 0 OR t.ApvRegistroProfissional = 0)
                 `;
 
         const documentosConsultoresSanitizados = documentosConsultores.map((edital) =>
@@ -67,12 +80,17 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         );
 
         const docsParametrizacaoConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
-                select sn.* from SCConsultorNivel sn 
-                inner join SCConsultorEdital sce 
-                on sce.idSCConsultorEdital = sn.SCConsultorEdital
-                inner join SCTecnico st 
-                on st.idSCTecnico = sce.SCTecnico
-                where SCCredenciadasEdital = 1645
+        SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
+        c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico,t.Nome, t.CPF,
+        ccn.Parametrizacao,ccn.Aprovado
+        FROM SCCredenciadasEdital ce
+        INNER JOIN SCConsultorEdital cce ON cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
+        INNER JOIN SCConsultorNivel ccn ON ccn.SCConsultorEdital = cce.idSCConsultorEdital
+        INNER JOIN SCTecnico t ON t.idSCTecnico = cce.SCTecnico
+        INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
+        INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+        WHERE SCCredenciadasEdital = ${BigInt(editalId)}
+        AND (ccn.Aprovado = 0)
         `;
 
         const docsParametrizacaoConsultoresSanitizados = docsParametrizacaoConsultores.map((edital) =>
