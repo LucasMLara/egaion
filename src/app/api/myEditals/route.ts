@@ -25,13 +25,15 @@ export async function GET() {
       se.NomeEdital,
       se.InicioEdital,
       se.FimEdital,
-      se.Status,
+      ssce.DescricaoAplicativo as Status,
       stc.Descricao as TipodeCredenciamento
     FROM sCCredenciadasEdital sce
     JOIN sCEdital se ON sce.SCEdital = se.idSCEdital
     JOIN SCTipoCredenciame stc ON se.TipodeCredenciamento = stc.idSCTipoCredenciame
+    INNER JOIN SCStatusCredEdital ssce on ssce.idSCStatusCredEdital = sce.StatusCadastro
     WHERE sce.Credenciada = ${BigInt(userId)}
     `;
+
 
     const sanitizedEditais = editais.map((edital) =>
       Object.fromEntries(
