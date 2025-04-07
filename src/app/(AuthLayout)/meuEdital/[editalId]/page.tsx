@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 import { LoaderIcon } from "lucide-react";
 
-export default function TeamMember({
+export default function MyEditalContent({
   params,
 }: {
   params: { editalId: string };
@@ -19,17 +19,19 @@ export default function TeamMember({
   const router = useRouter();
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      try {
         const response = await fetch(`/api/myEditals/${editalId}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar dados do edital");
         }
         const data = await response.json();
         console.log(data);
-      };
-      fetchData();
-    } catch (e) {}
+      } catch (error) {
+        console.error("Erro desconhecido ao buscar dados do edital:", error);
+      }
+    };
+    fetchData();
   }, [editalId]);
 
   return (
