@@ -24,9 +24,6 @@ export default function Home() {
     fetchMyEditals();
   }, [fetchMyEditals]);
 
-  useEffect(() => {
-    setListMyEditals(myEditals);
-  }, [setListMyEditals, myEditals]);
   if (loading) {
     return (
       <div className="h-full flex justify-center items-center">
