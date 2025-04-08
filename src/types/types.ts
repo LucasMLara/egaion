@@ -321,6 +321,7 @@ export interface DocumentoSanitizado {
 }
 
 export interface QualificacaoTecnicaSanitizado {
+  Nome: string;
   idSCCredenciadasEdital: string;
   idSCEdital: string;
   NomeEdital: string;
