@@ -309,3 +309,80 @@ export type MultipleCheckBoxOptions = {
   id: string;
   naturezas?: string[];
 };
+
+export interface DocumentoSanitizado {
+  idSCCredenciadasEdital: string;
+  idSCEdital: string;
+  NomeEdital: string;
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  Aprovado: boolean;
+  Nome: string;
+}
+
+export interface QualificacaoTecnicaSanitizado {
+  idSCCredenciadasEdital: string;
+  idSCEdital: string;
+  NomeEdital: string;
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  Parametrizacao: string;
+  ApvAtestadoCapacidadeTec: boolean;
+  ApvRelatoExperiencia: boolean;
+}
+
+export interface DocumentoConsultorSanitizado {
+  idSCCredenciadasEdital: string;
+  idSCEdital: string;
+  NomeEdital: string;
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  idSCConsultorEdital: string;
+  idSCTecnico: string;
+  Nome: string;
+  CPF: string;
+  ApvCompFormacaoAcademica: boolean;
+  ApvComprovanteVinculoPJ: boolean;
+  ApvDocumentosPessoais: boolean;
+  ApvRegistroProfissional: boolean;
+}
+
+export interface DocsParametrizacaoConsultorSanitizado {
+  idSCCredenciadasEdital: string;
+  idSCEdital: string;
+  NomeEdital: string;
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  idSCConsultorEdital: string;
+  idSCTecnico: string;
+  Nome: string;
+  CPF: string;
+  Parametrizacao: string;
+  Aprovado: boolean;
+}
+
+export interface DadosSanitizados {
+  dadosDosMeusDocumentosSanitizados?: DocumentoSanitizado[];
+  dadosQualificacaoTecnicaSanitizados?: QualificacaoTecnicaSanitizado[];
+  documentosConsultoresSanitizados?: DocumentoConsultorSanitizado[];
+  docsParametrizacaoConsultoresSanitizados?: DocsParametrizacaoConsultorSanitizado[];
+}
+
+export const gerarSchemaDocumentos = (dados: Record<string, { Nome: string }[]>) => {
+  const fields: Record<string, z.ZodTypeAny> = {};
+
+  for (const [categoria, documentos] of Object.entries(dados)) {
+    fields[categoria] = z.array(
+      z.object({
+        Nome: z.string(),
+        file: z
+          .instanceof(FileList)
+          .refine((f) => f.length > 0, { message: "Arquivo obrigatório" }),
+      })
+    );
+  }
+
+
+  return z.object(fields);
+};
+
