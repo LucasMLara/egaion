@@ -373,25 +373,24 @@ export const gerarSchemaDocumentos = (dados: Record<string, { Nome: string }[]>)
   const fields: Record<string, z.ZodTypeAny> = {};
 
   for (const [categoria, documentos] of Object.entries(dados)) {
+    if (documentos.length === 0) continue;
+
     fields[categoria] = z.array(
       z.object({
         Nome: z.string(),
         file: z
-          .instanceof(FileList)
-          .refine((f) => f.length > 0, { message: "Arquivo obrigatório" })
-          .refine(
-            (f) =>
-              ["application/pdf", "image/jpg", "image/jpeg"].includes(
-                f[0]?.type
-              ),
-            {
-              message: "Formato inválido. Só é permitido PDF, JPG ou JPEG",
-            }
-          ),
+          .custom<FileList>((val) => val instanceof FileList && val.length > 0, {
+            message: "Arquivo obrigatório",
+          })
+          .refine((val) => {
+            const file = val?.[0];
+            return file && ["application/pdf", "image/jpeg", "image/jpg"].includes(file.type);
+          }, {
+            message: "Tipo de arquivo inválido (somente PDF ou JPG)",
+          }),
       })
     );
   }
-
 
   return z.object(fields);
 };
