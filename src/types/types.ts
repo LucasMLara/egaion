@@ -378,7 +378,16 @@ export const gerarSchemaDocumentos = (dados: Record<string, { Nome: string }[]>)
         Nome: z.string(),
         file: z
           .instanceof(FileList)
-          .refine((f) => f.length > 0, { message: "Arquivo obrigatório" }),
+          .refine((f) => f.length > 0, { message: "Arquivo obrigatório" })
+          .refine(
+            (f) =>
+              ["application/pdf", "image/jpg", "image/jpeg"].includes(
+                f[0]?.type
+              ),
+            {
+              message: "Formato inválido. Só é permitido PDF, JPG ou JPEG",
+            }
+          ),
       })
     );
   }
