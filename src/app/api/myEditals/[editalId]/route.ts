@@ -39,12 +39,18 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosQualificacaoTecnica: Array<{ [key: string]: any }> = await prisma.$queryRaw`
                 SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-                c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao,pe.ApvAtestadoCapacidadeTec, pe.ApvRelatoExperiencia
+                c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao,pe.ApvAtestadoCapacidadeTec as "Atestado de Capacidade Técnica", pe.ApvRelatoExperiencia as "Relato de Experiência"
                 FROM SCCredenciadasEdital ce
                 INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
                 INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
                 INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
                 WHERE SCCredenciadasEdital = ${BigInt(editalId)}
+                AND (
+                    pe.ApvAtestadoCapacidadeTec = 0 OR 
+                    pe.ApvRelatoExperiencia = 0 OR 
+                    pe.ApvAtestadoCapacidadeTec IS NOT NULL OR 
+                    pe.ApvRelatoExperiencia IS NOT NULL
+                    )
                 `
             ;
 
