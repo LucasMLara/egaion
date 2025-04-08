@@ -100,7 +100,11 @@ export default function MyEditalContent({
         {lista.map((doc, idx) => (
           <div key={idx} className="space-y-1">
             <Label>{doc.Nome}</Label>
-            <Input type="file" {...register(`${categoria}.${idx}.file`)} />
+            <Input
+              type="file"
+              accept="application/pdf, image/jpeg, image/jpg"
+              {...register(`${categoria}.${idx}.file`)}
+            />
             {(errors[categoria] as any)?.[idx]?.file && (
               <p className="text-sm text-red-500">
                 {(errors[categoria] as any)?.[idx]?.file?.message}
@@ -127,7 +131,7 @@ export default function MyEditalContent({
         {renderGrupo(
           "dadosQualificacaoTecnicaSanitizados",
           (dados.dadosQualificacaoTecnicaSanitizados || []).map((item) => ({
-            Nome: item.Parametrizacao,
+            Nome: item.Nome,
           }))
         )}
 
