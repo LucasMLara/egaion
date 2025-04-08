@@ -29,9 +29,7 @@ export default function MyEditalContent({
       dados.dadosDosMeusDocumentosSanitizados || [],
     dadosQualificacaoTecnicaSanitizados: (
       dados.dadosQualificacaoTecnicaSanitizados || []
-    ).map((item) => ({
-      Nome: item.Parametrizacao,
-    })),
+    ).map((item) => ({ Nome: item.Nome || item.Parametrizacao })),
     documentosConsultoresSanitizados:
       dados.documentosConsultoresSanitizados || [],
     docsParametrizacaoConsultoresSanitizados:
@@ -56,26 +54,24 @@ export default function MyEditalContent({
         const res = await fetch(`/api/myEditals/${editalId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados do edital");
         const data = await res.json();
+        console.log("data", data);
+
         setDados({
           dadosDosMeusDocumentosSanitizados:
             data.dadosDosMeusDocumentosSanitizados.map((doc: any) => ({
-              ...doc,
-              file: undefined,
+              Nome: doc.Nome || doc.Parametrizacao,
             })),
           dadosQualificacaoTecnicaSanitizados:
             data.dadosQualificacaoTecnicaSanitizados.map((doc: any) => ({
               Nome: doc.Parametrizacao,
-              file: undefined,
             })),
           documentosConsultoresSanitizados:
             data.documentosConsultoresSanitizados.map((doc: any) => ({
-              ...doc,
-              file: undefined,
+              Nome: doc.Nome,
             })),
           docsParametrizacaoConsultoresSanitizados:
             data.docsParametrizacaoConsultoresSanitizados.map((doc: any) => ({
-              ...doc,
-              file: undefined,
+              Nome: doc.Nome,
             })),
         });
       } catch (err) {
@@ -84,7 +80,8 @@ export default function MyEditalContent({
     };
     fetchData();
   }, [editalId]);
-
+  console.log("dados", dados);
+  console.log(errors);
   const renderGrupo = (categoria: string, lista: { Nome: string }[]) => {
     if (!lista.length) return null;
 
@@ -105,9 +102,9 @@ export default function MyEditalContent({
               accept="application/pdf, image/jpeg, image/jpg"
               {...register(`${categoria}.${idx}.file`)}
             />
-            {(errors[categoria] as any)?.[idx]?.file && (
+            {(errors as any)?.[categoria]?.[idx]?.file && (
               <p className="text-sm text-red-500">
-                {(errors[categoria] as any)?.[idx]?.file?.message}
+                {(errors as any)?.[categoria]?.[idx]?.file?.message}
               </p>
             )}
           </div>
@@ -127,19 +124,14 @@ export default function MyEditalContent({
           "dadosDosMeusDocumentosSanitizados",
           dados.dadosDosMeusDocumentosSanitizados || []
         )}
-
         {renderGrupo(
           "dadosQualificacaoTecnicaSanitizados",
-          (dados.dadosQualificacaoTecnicaSanitizados || []).map((item) => ({
-            Nome: item.Nome,
-          }))
+          dados.dadosQualificacaoTecnicaSanitizados || []
         )}
-
         {renderGrupo(
           "documentosConsultoresSanitizados",
           dados.documentosConsultoresSanitizados || []
         )}
-
         {renderGrupo(
           "docsParametrizacaoConsultoresSanitizados",
           dados.docsParametrizacaoConsultoresSanitizados || []
