@@ -1,154 +1,233 @@
 "use client";
+
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { DadosSanitizados, gerarSchemaDocumentos } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import {
+  DocumentoConsultor,
+  DocumentoConsultorPorArea,
+  DocumentoQualificacao,
+  DocumentosAgrupadosPorConsultorEArea,
+  DocumentoSimples,
+  adjustmentsSchema,
+} from "@/types/types";
 
-export default function MyEditalContent({
-  params,
-}: {
-  params: { editalId: string };
-}) {
-  const [dados, setDados] = useState<DadosSanitizados>({
-    dadosDosMeusDocumentosSanitizados: [],
-    dadosQualificacaoTecnicaSanitizados: [],
-    documentosConsultoresSanitizados: [],
-    docsParametrizacaoConsultoresSanitizados: [],
-  });
-
-  const { editalId } = params;
-  const router = useRouter();
-
-  const formSchema = gerarSchemaDocumentos({
-    dadosDosMeusDocumentosSanitizados:
-      dados.dadosDosMeusDocumentosSanitizados || [],
-    dadosQualificacaoTecnicaSanitizados: (
-      dados.dadosQualificacaoTecnicaSanitizados || []
-    ).map((item) => ({ Nome: item.Nome || item.Parametrizacao })),
-    documentosConsultoresSanitizados:
-      dados.documentosConsultoresSanitizados || [],
-    docsParametrizacaoConsultoresSanitizados:
-      dados.docsParametrizacaoConsultoresSanitizados || [],
-  });
+export default function MyEditalPage() {
+  const { editalId } = useParams();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(adjustmentsSchema),
   });
 
-  const onSubmit = (formData: any) => {
-    console.log("Formulário validado:", formData);
-  };
+  const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState<
+    DocumentoSimples[]
+  >([]);
+  const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
+    useState<Record<string, DocumentoConsultor[]>>({});
+  const [
+    documentosQualificacaoTecnicaEmpresa,
+    setDocumentosQualificacaoTecnicaEmpresa,
+  ] = useState<Record<string, DocumentoQualificacao[]>>({});
+  const [documentosDosConsultoresPorArea, setDocumentosDosConsultoresPorArea] =
+    useState<DocumentosAgrupadosPorConsultorEArea>({});
+
+  function agruparDocumentosDosConsultores(
+    docs: DocumentoConsultorPorArea[]
+  ): DocumentosAgrupadosPorConsultorEArea {
+    if (!Array.isArray(docs)) return {};
+    return docs.reduce((acc, doc) => {
+      if (doc.Aprovado === false) {
+        const consultorKey = `${doc.Nome} - ${doc.CPF}`;
+        const areaKey = doc.Parametrizacao;
+
+        if (!acc[consultorKey]) acc[consultorKey] = {};
+        if (!acc[consultorKey][areaKey]) acc[consultorKey][areaKey] = [];
+
+        acc[consultorKey][areaKey].push(doc);
+      }
+
+      return acc;
+    }, {} as DocumentosAgrupadosPorConsultorEArea);
+  }
+
+  function agruparDocsEmpresaPorParametrizacao(docs?: DocumentoQualificacao[]) {
+    if (!Array.isArray(docs)) return {};
+    return docs.reduce((acc, doc) => {
+      const key = doc.Parametrizacao;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(doc);
+      return acc;
+    }, {} as Record<string, DocumentoQualificacao[]>);
+  }
+
+  function agruparPorConsultor(
+    array: DocumentoConsultor[]
+  ): Record<string, DocumentoConsultor[]> {
+    return array.reduce((acc, doc) => {
+      if (!acc[doc.CPF]) acc[doc.CPF] = [];
+      acc[doc.CPF].push(doc);
+      return acc;
+    }, {} as Record<string, DocumentoConsultor[]>);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/myEditals/${editalId}`);
-        if (!res.ok) throw new Error("Erro ao buscar dados do edital");
+        if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
-        console.log("data", data);
 
-        setDados({
-          dadosDosMeusDocumentosSanitizados:
-            data.dadosDosMeusDocumentosSanitizados.map((doc: any) => ({
-              Nome: doc.Nome || doc.Parametrizacao,
-            })),
-          dadosQualificacaoTecnicaSanitizados:
-            data.dadosQualificacaoTecnicaSanitizados.map((doc: any) => ({
-              Nome: doc.Parametrizacao,
-            })),
-          documentosConsultoresSanitizados:
-            data.documentosConsultoresSanitizados.map((doc: any) => ({
-              Nome: doc.Nome,
-            })),
-          docsParametrizacaoConsultoresSanitizados:
-            data.docsParametrizacaoConsultoresSanitizados.map((doc: any) => ({
-              Nome: doc.Nome,
-            })),
-        });
+        setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
+
+        setDocumentosPessoaisConsultores(
+          agruparPorConsultor(data.documentosPessoaisConsultores || [])
+        );
+
+        setDocumentosDosConsultoresPorArea(
+          agruparDocumentosDosConsultores(
+            data.documentosDosConsultoresPorArea || []
+          )
+        );
+
+        setDocumentosQualificacaoTecnicaEmpresa(
+          agruparDocsEmpresaPorParametrizacao(
+            data.DocumentosQualificacaoTecnicaEmpresa || []
+          )
+        );
       } catch (err) {
-        console.error("Erro ao buscar dados:", err);
+        console.error("Erro ao carregar edital:", err);
       }
     };
+
     fetchData();
   }, [editalId]);
-  console.log("dados", dados);
-  console.log(errors);
-  const renderGrupo = (categoria: string, lista: { Nome: string }[]) => {
-    if (!lista.length) return null;
 
-    return (
-      <div className="border p-4 rounded-xl shadow-sm space-y-4">
-        <h2 className="font-semibold text-lg capitalize text-neutral-700">
-          {categoria
-            .replace(/Sanitizados$/, "")
-            .replace(/([A-Z])/g, " $1")
-            .replace(/Docs /i, "")}
-        </h2>
-
-        {lista.map((doc, idx) => (
-          <div key={idx} className="space-y-1">
-            <Label>{doc.Nome}</Label>
-            <Input
-              type="file"
-              accept="application/pdf, image/jpeg, image/jpg"
-              {...register(`${categoria}.${idx}.file`)}
-            />
-            {(errors as any)?.[categoria]?.[idx]?.file && (
-              <p className="text-sm text-red-500">
-                {(errors as any)?.[categoria]?.[idx]?.file?.message}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-    );
+  const onSubmit = (data: any) => {
+    console.log("Submissão:", data);
   };
 
   return (
-    <section className="my-6">
-      <h1 className="text-2xl font-bold text-neutral-700 text-center">
-        {dados.dadosDosMeusDocumentosSanitizados?.[0]?.NomeEdital || ""}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Enviar Documentos - Edital {editalId}
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 mt-6">
-        {renderGrupo(
-          "dadosDosMeusDocumentosSanitizados",
-          dados.dadosDosMeusDocumentosSanitizados || []
-        )}
-        {renderGrupo(
-          "dadosQualificacaoTecnicaSanitizados",
-          dados.dadosQualificacaoTecnicaSanitizados || []
-        )}
-        {renderGrupo(
-          "documentosConsultoresSanitizados",
-          dados.documentosConsultoresSanitizados || []
-        )}
-        {renderGrupo(
-          "docsParametrizacaoConsultoresSanitizados",
-          dados.docsParametrizacaoConsultoresSanitizados || []
-        )}
+      <section>
+        <h2 className="text-xl font-bold mb-2">Documentos da Empresa</h2>
+        {documentosDaEmpresa.map((doc, index) => (
+          <div key={`empresa-${doc.Nome}-${index}`} className="space-y-1">
+            <Label>{doc.Nome}</Label>
+            <Input
+              type="file"
+              {...register(`documentosDaEmpresa.${doc.Nome}`)}
+            />
+          </div>
+        ))}
+      </section>
 
-        <div className="w-full flex justify-end mt-4 gap-4">
-          <Button onClick={() => router.back()} variant="outline" type="button">
-            Voltar
-          </Button>
-          <Button
-            type="submit"
-            className="bg-gradient-primary hover:shadow-lg hover:shadow-gray-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-auto disabled:shadow-none w-64"
-          >
-            Atualizar
-          </Button>
-        </div>
-      </form>
-    </section>
+      <section>
+        <h2 className="text-xl font-bold mb-2">
+          Documentos Pessoais dos Consultores
+        </h2>
+        {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
+          <div key={cpf}>
+            <h3 className="font-semibold mt-4">
+              Consultor: {docs[0]?.Nome || cpf}
+            </h3>
+            {docs.map((doc, index) => (
+              <div
+                key={`${cpf}-${doc.NomeInput}-${index}`}
+                className="space-y-1"
+              >
+                <Label>{doc.NomeInput}</Label>
+                <Input
+                  type="file"
+                  {...register(
+                    `documentosPessoaisConsultores.${cpf}.${doc.NomeInput}`
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold mb-2">
+          Documentos de Qualificação Técnica da Empresa
+        </h2>
+        {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
+          ([param, docs]) => (
+            <div key={`qualificacao-${param}`} className="space-y-2 mt-4">
+              <h3 className="font-semibold">{param}</h3>
+              {docs.map((doc, index) => (
+                <div
+                  key={`${param}-${doc.NomeInput}-${index}`}
+                  className="space-y-1"
+                >
+                  <Label>{doc.NomeInput}</Label>
+                  <Input
+                    type="file"
+                    multiple
+                    {...register(
+                      `documentosQualificacaoTecnicaEmpresa.${param}.${doc.NomeInput}`
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+          )
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold mb-2">
+          Documentos dos Consultores por Área
+        </h2>
+        {Object.entries(documentosDosConsultoresPorArea).map(
+          ([consultorKey, areas]) => (
+            <div key={consultorKey} className="space-y-4 mt-6">
+              <h3 className="font-semibold">{consultorKey}</h3>
+              {Object.entries(areas).map(([area, docs]) => (
+                <div key={area} className="space-y-2 ml-4">
+                  <h4 className="text-sm font-medium text-gray-700">
+                    Área: {area}
+                  </h4>
+                  {docs.map((doc, index) => (
+                    <div
+                      key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
+                      className="space-y-1"
+                    >
+                      <Label>{doc.NomeInput}</Label>
+                      <Input
+                        type="file"
+                        multiple
+                        {...register(
+                          `documentosDosConsultoresPorArea.${consultorKey}.${area}.${doc.NomeInput}`
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )
+        )}
+      </section>
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white rounded px-4 py-2 mt-6"
+      >
+        Enviar
+      </button>
+    </form>
   );
 }
