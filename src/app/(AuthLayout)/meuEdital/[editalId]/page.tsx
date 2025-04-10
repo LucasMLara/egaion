@@ -14,6 +14,7 @@ import {
   DocumentoSimples,
   adjustmentsSchema,
 } from "@/types/types";
+import { Button } from "@/components/ui/button";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
@@ -44,7 +45,7 @@ export default function MyEditalPage() {
     if (!Array.isArray(docs)) return {};
     return docs.reduce((acc, doc) => {
       if (doc.Aprovado === false) {
-        const consultorKey = `${doc.Nome} - ${doc.CPF}`;
+        const consultorKey = `${doc.Nome}`;
         const areaKey = doc.Parametrizacao;
 
         if (!acc[consultorKey]) acc[consultorKey] = {};
@@ -84,6 +85,7 @@ export default function MyEditalPage() {
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
 
+        console.log(data);
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
 
         setDocumentosPessoaisConsultores(
@@ -119,90 +121,66 @@ export default function MyEditalPage() {
         Enviar Documentos - Edital {editalId}
       </h1>
 
-      <section>
-        <h2 className="text-xl font-bold mb-2">Documentos da Empresa</h2>
-        {documentosDaEmpresa.map((doc, index) => (
-          <div key={`empresa-${doc.Nome}-${index}`} className="space-y-1">
-            <Label>{doc.Nome}</Label>
-            <Input
-              type="file"
-              {...register(`documentosDaEmpresa.${doc.Nome}`)}
-            />
-          </div>
-        ))}
-      </section>
-
-      <section>
-        <h2 className="text-xl font-bold mb-2">
-          Documentos Pessoais dos Consultores
-        </h2>
-        {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
-          <div key={cpf}>
-            <h3 className="font-semibold mt-4">
-              Consultor: {docs[0]?.Nome || cpf}
-            </h3>
-            {docs.map((doc, index) => (
-              <div
-                key={`${cpf}-${doc.NomeInput}-${index}`}
-                className="space-y-1"
-              >
-                <Label>{doc.NomeInput}</Label>
-                <Input
-                  type="file"
-                  {...register(
-                    `documentosPessoaisConsultores.${cpf}.${doc.NomeInput}`
-                  )}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-      </section>
-
-      <section>
-        <h2 className="text-xl font-bold mb-2">
-          Documentos de Qualificação Técnica da Empresa
-        </h2>
-        {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
-          ([param, docs]) => (
-            <div key={`qualificacao-${param}`} className="space-y-2 mt-4">
-              <h3 className="font-semibold">{param}</h3>
-              {docs.map((doc, index) => (
-                <div
-                  key={`${param}-${doc.NomeInput}-${index}`}
-                  className="space-y-1"
-                >
-                  <Label>{doc.NomeInput}</Label>
-                  <Input
-                    type="file"
-                    multiple
-                    {...register(
-                      `documentosQualificacaoTecnicaEmpresa.${param}.${doc.NomeInput}`
-                    )}
-                  />
-                </div>
-              ))}
+      {documentosDaEmpresa.length > 0 && (
+        <section>
+          <h2 className="text-xl font-bold mb-2">Documentos da Empresa</h2>
+          {documentosDaEmpresa.map((doc, index) => (
+            <div key={`empresa-${doc.Nome}-${index}`} className="space-y-1">
+              <Label>{doc.Nome}</Label>
+              <Input
+                type="file"
+                {...register(`documentosDaEmpresa.${doc.Nome}`)}
+              />
             </div>
-          )
-        )}
-      </section>
+          ))}
+        </section>
+      )}
 
-      <section>
-        <h2 className="text-xl font-bold mb-2">
-          Documentos dos Consultores por Área
-        </h2>
-        {Object.entries(documentosDosConsultoresPorArea).map(
-          ([consultorKey, areas]) => (
-            <div key={consultorKey} className="space-y-4 mt-6">
-              <h3 className="font-semibold">{consultorKey}</h3>
-              {Object.entries(areas).map(([area, docs]) => (
-                <div key={area} className="space-y-2 ml-4">
-                  <h4 className="text-sm font-medium text-gray-700">
-                    Área: {area}
-                  </h4>
+      {documentosPessoaisConsultores &&
+        Object.keys(documentosPessoaisConsultores).length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold mb-2">
+              Documentos Pessoais dos Consultores
+            </h2>
+            {Object.entries(documentosPessoaisConsultores).map(
+              ([cpf, docs]) => (
+                <div key={cpf}>
+                  <h3 className="font-semibold mt-4">
+                    Consultor: {docs[0]?.Nome || cpf}
+                  </h3>
                   {docs.map((doc, index) => (
                     <div
-                      key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
+                      key={`${cpf}-${doc.NomeInput}-${index}`}
+                      className="space-y-1"
+                    >
+                      <Label>{doc.NomeInput}</Label>
+                      <Input
+                        type="file"
+                        {...register(
+                          `documentosPessoaisConsultores.${cpf}.${doc.NomeInput}`
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+          </section>
+        )}
+
+      {documentosQualificacaoTecnicaEmpresa &&
+        Object.keys(documentosQualificacaoTecnicaEmpresa).length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold mb-2">
+              Documentos de Qualificação Técnica da Empresa
+            </h2>
+            {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
+              ([param, docs]) => (
+                <div key={`qualificacao-${param}`} className="space-y-2 mt-4">
+                  <h3 className="font-semibold">{param}</h3>
+                  {docs.map((doc, index) => (
+                    <div
+                      key={`${param}-${doc.NomeInput}-${index}`}
                       className="space-y-1"
                     >
                       <Label>{doc.NomeInput}</Label>
@@ -210,24 +188,56 @@ export default function MyEditalPage() {
                         type="file"
                         multiple
                         {...register(
-                          `documentosDosConsultoresPorArea.${consultorKey}.${area}.${doc.NomeInput}`
+                          `documentosQualificacaoTecnicaEmpresa.${param}.${doc.NomeInput}`
                         )}
                       />
                     </div>
                   ))}
                 </div>
-              ))}
-            </div>
-          )
+              )
+            )}
+          </section>
         )}
-      </section>
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white rounded px-4 py-2 mt-6"
-      >
-        Enviar
-      </button>
+      {documentosDosConsultoresPorArea &&
+        Object.keys(documentosDosConsultoresPorArea).length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold mb-2">
+              Documentos dos Consultores por Área
+            </h2>
+            {Object.entries(documentosDosConsultoresPorArea).map(
+              ([consultorKey, areas]) => (
+                <div key={consultorKey} className="space-y-4 mt-6">
+                  <h3 className="font-semibold">{consultorKey}</h3>
+                  {Object.entries(areas).map(([area, docs]) => (
+                    <div key={area} className="space-y-2 ml-4">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Área: {area}
+                      </h4>
+                      {docs.map((doc, index) => (
+                        <div
+                          key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
+                          className="space-y-1"
+                        >
+                          <Label>{doc.NomeInput}</Label>
+                          <Input
+                            type="file"
+                            multiple
+                            {...register(
+                              `documentosDosConsultoresPorArea.${consultorKey}.${area}.${doc.NomeInput}`
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+          </section>
+        )}
+
+      <Button type="submit">Enviar</Button>
     </form>
   );
 }
