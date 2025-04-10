@@ -115,10 +115,19 @@ export default function MyEditalPage() {
     console.log("Submissão:", data);
   };
 
+  const nomeEdital =
+    documentosDosConsultoresPorArea &&
+    Object.values(documentosDosConsultoresPorArea).length > 0
+      ? Object.values(documentosDosConsultoresPorArea)[0] &&
+        Object.values(documentosDosConsultoresPorArea)[0] &&
+        Object.values(Object.values(documentosDosConsultoresPorArea)[0])[0]?.[0]
+          ?.NomeEdital
+      : null;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
-        Enviar Documentos - Edital {editalId}
+        Realizar Ajustes - Edital {nomeEdital ?? editalId}
       </h1>
 
       {documentosDaEmpresa.length > 0 && (
