@@ -310,45 +310,24 @@ export type MultipleCheckBoxOptions = {
   naturezas?: string[];
 };
 
-export interface DocumentoSanitizado {
-  idSCCredenciadasEdital: string;
-  idSCEdital: string;
-  NomeEdital: string;
-  idSCCredenciada: string;
-  RazaoSocial: string;
-  Aprovado: boolean;
+
+
+export interface DocumentoSimples {
   Nome: string;
 }
 
-export interface QualificacaoTecnicaSanitizado {
-  Nome: string;
-  idSCCredenciadasEdital: string;
-  idSCEdital: string;
-  NomeEdital: string;
-  idSCCredenciada: string;
-  RazaoSocial: string;
-  Parametrizacao: string;
-  ApvAtestadoCapacidadeTec: boolean;
-  ApvRelatoExperiencia: boolean;
-}
-
-export interface DocumentoConsultorSanitizado {
-  idSCCredenciadasEdital: string;
-  idSCEdital: string;
-  NomeEdital: string;
-  idSCCredenciada: string;
-  RazaoSocial: string;
-  idSCConsultorEdital: string;
-  idSCTecnico: string;
+export interface DocumentoConsultor {
+  NomeInput: string;
   Nome: string;
   CPF: string;
-  ApvCompFormacaoAcademica: boolean;
-  ApvComprovanteVinculoPJ: boolean;
-  ApvDocumentosPessoais: boolean;
-  ApvRegistroProfissional: boolean;
 }
 
-export interface DocsParametrizacaoConsultorSanitizado {
+export interface DocumentoQualificacao {
+  NomeInput: string;
+  Parametrizacao: string;
+}
+
+export interface DocumentoConsultorPorArea {
   idSCCredenciadasEdital: string;
   idSCEdital: string;
   NomeEdital: string;
@@ -360,38 +339,24 @@ export interface DocsParametrizacaoConsultorSanitizado {
   CPF: string;
   Parametrizacao: string;
   Aprovado: boolean;
+  NomeInput: string;
 }
 
-export interface DadosSanitizados {
-  dadosDosMeusDocumentosSanitizados?: DocumentoSanitizado[];
-  dadosQualificacaoTecnicaSanitizados?: QualificacaoTecnicaSanitizado[];
-  documentosConsultoresSanitizados?: DocumentoConsultorSanitizado[];
-  docsParametrizacaoConsultoresSanitizados?: DocsParametrizacaoConsultorSanitizado[];
-}
+export type DocumentosAgrupadosPorConsultorEArea = Record<
+  string,
+  Record<string, DocumentoConsultorPorArea[]>
+>;
 
-export const gerarSchemaDocumentos = (dados: Record<string, { Nome: string }[]>) => {
-  const fields: Record<string, z.ZodTypeAny> = {};
 
-  for (const [categoria, documentos] of Object.entries(dados)) {
-    if (documentos.length === 0) continue;
-
-    fields[categoria] = z.array(
-      z.object({
-        Nome: z.string(),
-        file: z
-          .custom<FileList>((val) => val instanceof FileList && val.length > 0, {
-            message: "Arquivo obrigatório",
-          })
-          .refine((val) => {
-            const file = val?.[0];
-            return file && ["application/pdf", "image/jpeg", "image/jpg"].includes(file.type);
-          }, {
-            message: "Tipo de arquivo inválido (somente PDF ou JPG)",
-          }),
-      })
-    );
-  }
-
-  return z.object(fields);
-};
-
+export const adjustmentsSchema = z.object({
+  documentosDaEmpresa: z.record(z.instanceof(FileList).or(z.any())),
+  documentosPessoaisConsultores: z.record(
+    z.record(z.instanceof(FileList).or(z.any()))
+  ),
+  documentosQualificacaoTecnicaEmpresa: z.record(
+    z.record(z.instanceof(FileList).or(z.any()))
+  ),
+  documentosDosConsultoresPorArea: z.record(
+    z.record(z.record(z.instanceof(FileList).or(z.any())))
+  ),
+});
