@@ -65,11 +65,15 @@ export default function MyEditalCard({
           </DialogDescription>
         </DialogHeader>
         <div className="container">{editalDialogContent}</div>
-        <DialogFooter className="flex justify-center items-end gap-4">
-          <Link href={`/meuEdital/${editalId}`}>
-            <Button className="hover:shadow-md transition-all">Detalhes</Button>
-          </Link>
-        </DialogFooter>
+        {status === "pending" && (
+          <DialogFooter className="flex justify-center items-end gap-4">
+            <Link href={`/meuEdital/${editalId}`}>
+              <Button className="hover:shadow-md transition-all">
+                Detalhes
+              </Button>
+            </Link>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
