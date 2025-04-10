@@ -58,6 +58,7 @@ export default function Home() {
               editalDialogContent={card.ResumoEdital}
               editalId={card.idSCCredenciadasEdital}
               editalType={card.TipodeCredenciamento}
+              justificativa={card.JustificativaNaoAprovacao}
             />
           ))
           .reverse()}
