@@ -402,3 +402,5 @@ export const adjustmentsSchema = z.object({
     )
   ),
 });
+
+export type IAdjustments = z.infer<typeof adjustmentsSchema>;
