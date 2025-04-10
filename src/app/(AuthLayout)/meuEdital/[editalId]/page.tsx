@@ -245,8 +245,12 @@ export default function MyEditalPage() {
             )}
           </section>
         )}
-
-      <Button type="submit">Enviar</Button>
+      <section className="mt-6 flex justify-end space-x-4">
+        <Button type="submit" variant="destructive">
+          Desistir da Inscrição
+        </Button>
+        <Button type="submit">Enviar</Button>
+      </section>
     </form>
   );
 }
