@@ -28,7 +28,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
             `;
 
 
-        const dadosDosMeusDocumentosSanitizados = dadosDosDocumentos.map((edital) =>
+        const documentosDaEmpresa = dadosDosDocumentos.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
                     key,
@@ -57,7 +57,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
                     AND pe.ApvRelatoExperiencia = 0`
             ;
 
-        const dadosQualificacaoTecnicaSanitizados = dadosQualificacaoTecnica.map((edital) =>
+        const DocumentosQualificacaoTecnicaEmpresa = dadosQualificacaoTecnica.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
                     key,
@@ -117,7 +117,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
             where SCCredenciadasEdital = ${BigInt(editalId)}
             and t.ApvRegistroProfissional = 0`;
 
-        const documentosConsultoresSanitizados = documentosConsultores.map((edital) =>
+        const documentosPessoaisConsultores = documentosConsultores.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
                     key,
@@ -140,7 +140,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         AND (ccn.Aprovado = 0)
         `;
 
-        const docsParametrizacaoConsultoresSanitizados = docsParametrizacaoConsultores.map((edital) =>
+        const documentosDosConsultoresPorArea = docsParametrizacaoConsultores.map((edital) =>
             Object.fromEntries(
                 Object.entries(edital).map(([key, value]) => [
                     key,
@@ -149,7 +149,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
             )
         );
 
-        return NextResponse.json({ dadosDosMeusDocumentosSanitizados, dadosQualificacaoTecnicaSanitizados, documentosConsultoresSanitizados, docsParametrizacaoConsultoresSanitizados });
+        return NextResponse.json({ documentosDaEmpresa, DocumentosQualificacaoTecnicaEmpresa, documentosPessoaisConsultores, documentosDosConsultoresPorArea });
     } catch (error) {
         console.error("Error fetching data:", error);
         return NextResponse.json(
