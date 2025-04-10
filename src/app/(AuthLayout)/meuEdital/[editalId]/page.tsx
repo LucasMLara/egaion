@@ -1,18 +1,17 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   DocumentoConsultor,
   DocumentoConsultorPorArea,
   DocumentoQualificacao,
   DocumentosAgrupadosPorConsultorEArea,
   DocumentoSimples,
-  adjustmentsSchema,
 } from "@/types/types";
 import {
   Dialog,
@@ -23,19 +22,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(adjustmentsSchema),
-  });
+  const router = useRouter();
 
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState<
     DocumentoSimples[]
@@ -49,28 +39,52 @@ export default function MyEditalPage() {
   const [documentosDosConsultoresPorArea, setDocumentosDosConsultoresPorArea] =
     useState<DocumentosAgrupadosPorConsultorEArea>({});
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/myEditals/${editalId}`);
+        if (!res.ok) throw new Error("Erro ao buscar dados");
+        const data = await res.json();
+
+        setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
+        setDocumentosPessoaisConsultores(
+          agruparPorConsultor(data.documentosPessoaisConsultores || [])
+        );
+        setDocumentosDosConsultoresPorArea(
+          agruparDocumentosDosConsultores(
+            data.documentosDosConsultoresPorArea || []
+          )
+        );
+        setDocumentosQualificacaoTecnicaEmpresa(
+          agruparDocsEmpresaPorParametrizacao(
+            data.DocumentosQualificacaoTecnicaEmpresa || []
+          )
+        );
+      } catch (err) {
+        console.error("Erro ao carregar edital:", err);
+      }
+    };
+
+    fetchData();
+  }, [editalId]);
+
   function agruparDocumentosDosConsultores(
     docs: DocumentoConsultorPorArea[]
   ): DocumentosAgrupadosPorConsultorEArea {
-    if (!Array.isArray(docs)) return {};
     return docs.reduce((acc, doc) => {
       if (doc.Aprovado === false) {
         const consultorKey = `${doc.Nome}`;
         const areaKey = doc.Parametrizacao;
-
         if (!acc[consultorKey]) acc[consultorKey] = {};
         if (!acc[consultorKey][areaKey]) acc[consultorKey][areaKey] = [];
-
         acc[consultorKey][areaKey].push(doc);
       }
-
       return acc;
     }, {} as DocumentosAgrupadosPorConsultorEArea);
   }
 
   function agruparDocsEmpresaPorParametrizacao(docs?: DocumentoQualificacao[]) {
-    if (!Array.isArray(docs)) return {};
-    return docs.reduce((acc, doc) => {
+    return (docs || []).reduce((acc, doc) => {
       const key = doc.Parametrizacao;
       if (!acc[key]) acc[key] = [];
       acc[key].push(doc);
@@ -88,56 +102,38 @@ export default function MyEditalPage() {
     }, {} as Record<string, DocumentoConsultor[]>);
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/myEditals/${editalId}`);
-        if (!res.ok) throw new Error("Erro ao buscar dados");
-        const data = await res.json();
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
 
-        console.log(data);
-        setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
+    const fileInputs =
+      document.querySelectorAll<HTMLInputElement>('input[type="file"]');
+    const allFilled = Array.from(fileInputs).every(
+      (input) => input.files && input.files.length > 0
+    );
 
-        setDocumentosPessoaisConsultores(
-          agruparPorConsultor(data.documentosPessoaisConsultores || [])
-        );
+    if (!allFilled) {
+      toast.error(
+        "Você deve preencher todos os campos de arquivo antes de enviar."
+      );
+      return;
+    }
 
-        setDocumentosDosConsultoresPorArea(
-          agruparDocumentosDosConsultores(
-            data.documentosDosConsultoresPorArea || []
-          )
-        );
+    console.log("Formulário válido. Pronto para envio.");
+    // Aqui você pode montar seu FormData e enviar como quiser
+  }
 
-        setDocumentosQualificacaoTecnicaEmpresa(
-          agruparDocsEmpresaPorParametrizacao(
-            data.DocumentosQualificacaoTecnicaEmpresa || []
-          )
-        );
-      } catch (err) {
-        console.error("Erro ao carregar edital:", err);
-      }
-    };
-
-    fetchData();
-  }, [editalId]);
-
-  const onSubmit = (data: any) => {
-    console.log("Submissão:", data);
-  };
-  const router = useRouter();
-  const nomeEdital =
-    documentosDosConsultoresPorArea &&
-    Object.values(documentosDosConsultoresPorArea).length > 0
-      ? Object.values(documentosDosConsultoresPorArea)[0] &&
-        Object.values(documentosDosConsultoresPorArea)[0] &&
-        Object.values(Object.values(documentosDosConsultoresPorArea)[0])[0]?.[0]
-          ?.NomeEdital
-      : null;
+  const nomeEdital = (() => {
+    const values = Object.values(documentosDosConsultoresPorArea);
+    if (!values.length) return null;
+    const firstAreaDocs = Object.values(values[0]);
+    if (!firstAreaDocs.length) return null;
+    return firstAreaDocs[0]?.[0]?.NomeEdital ?? null;
+  })();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
+    <form onSubmit={handleSubmit} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
-        Realizar Ajustes - Edital {nomeEdital ?? editalId}
+        Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
 
       {documentosDaEmpresa.length > 0 && (
@@ -146,115 +142,90 @@ export default function MyEditalPage() {
           {documentosDaEmpresa.map((doc, index) => (
             <div key={`empresa-${doc.Nome}-${index}`} className="space-y-1">
               <Label>{doc.Nome}</Label>
-              <Input
-                type="file"
-                {...register(`documentosDaEmpresa.${doc.Nome}`)}
-              />
+              <Input type="file" name={`empresa-${doc.Nome}`} />
             </div>
           ))}
         </section>
       )}
 
-      {documentosPessoaisConsultores &&
-        Object.keys(documentosPessoaisConsultores).length > 0 && (
-          <section>
-            <h2 className="text-xl font-bold mb-2">
-              Documentos Pessoais dos Consultores
-            </h2>
-            {Object.entries(documentosPessoaisConsultores).map(
-              ([cpf, docs]) => (
-                <div key={cpf}>
-                  <h3 className="font-semibold mt-4">
-                    Consultor: {docs[0]?.Nome || cpf}
-                  </h3>
-                  {docs.map((doc, index) => (
-                    <div
-                      key={`${cpf}-${doc.NomeInput}-${index}`}
-                      className="space-y-1"
-                    >
-                      <Label>{doc.NomeInput}</Label>
-                      <Input
-                        type="file"
-                        {...register(
-                          `documentosPessoaisConsultores.${cpf}.${doc.NomeInput}`
-                        )}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )
-            )}
-          </section>
-        )}
+      {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
+        <section key={cpf}>
+          <h2 className="text-xl font-bold mb-2">
+            Documentos Pessoais dos Consultores
+          </h2>
+          <div>
+            <h3 className="font-semibold mt-4">
+              Consultor: {docs[0]?.Nome || cpf}
+            </h3>
+            {docs.map((doc, index) => (
+              <div
+                key={`${cpf}-${doc.NomeInput}-${index}`}
+                className="space-y-1"
+              >
+                <Label>{doc.NomeInput}</Label>
+                <Input type="file" name={`pessoal-${cpf}-${doc.NomeInput}`} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
 
-      {documentosQualificacaoTecnicaEmpresa &&
-        Object.keys(documentosQualificacaoTecnicaEmpresa).length > 0 && (
-          <section>
+      {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
+        ([param, docs]) => (
+          <section key={param}>
             <h2 className="text-xl font-bold mb-2">
               Documentos de Qualificação Técnica da Empresa
             </h2>
-            {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
-              ([param, docs]) => (
-                <div key={`qualificacao-${param}`} className="space-y-2 mt-4">
-                  <h3 className="font-semibold">{param}</h3>
-                  {docs.map((doc, index) => (
-                    <div
-                      key={`${param}-${doc.NomeInput}-${index}`}
-                      className="space-y-1"
-                    >
-                      <Label>{doc.NomeInput}</Label>
-                      <Input
-                        type="file"
-                        multiple
-                        {...register(
-                          `documentosQualificacaoTecnicaEmpresa.${param}.${doc.NomeInput}`
-                        )}
-                      />
-                    </div>
-                  ))}
+            <div className="space-y-2 mt-4">
+              <h3 className="font-semibold">{param}</h3>
+              {docs.map((doc, index) => (
+                <div
+                  key={`${param}-${doc.NomeInput}-${index}`}
+                  className="space-y-1"
+                >
+                  <Label>{doc.NomeInput}</Label>
+                  <Input
+                    type="file"
+                    multiple
+                    name={`qualificacao-${param}-${doc.NomeInput}`}
+                  />
                 </div>
-              )
-            )}
+              ))}
+            </div>
           </section>
-        )}
+        )
+      )}
 
-      {documentosDosConsultoresPorArea &&
-        Object.keys(documentosDosConsultoresPorArea).length > 0 && (
-          <section>
+      {Object.entries(documentosDosConsultoresPorArea).map(
+        ([consultorKey, areas]) => (
+          <section key={consultorKey} className="space-y-4 mt-6">
             <h2 className="text-xl font-bold mb-2">
               Documentos dos Consultores por Área
             </h2>
-            {Object.entries(documentosDosConsultoresPorArea).map(
-              ([consultorKey, areas]) => (
-                <div key={consultorKey} className="space-y-4 mt-6">
-                  <h3 className="font-semibold">{consultorKey}</h3>
-                  {Object.entries(areas).map(([area, docs]) => (
-                    <div key={area} className="space-y-2 ml-4">
-                      <h4 className="text-sm font-medium text-gray-700">
-                        Área: {area}
-                      </h4>
-                      {docs.map((doc, index) => (
-                        <div
-                          key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
-                          className="space-y-1"
-                        >
-                          <Label>{doc.NomeInput}</Label>
-                          <Input
-                            type="file"
-                            multiple
-                            {...register(
-                              `documentosDosConsultoresPorArea.${consultorKey}.${area}.${doc.NomeInput}`
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )
-            )}
+            <h3 className="font-semibold">{consultorKey}</h3>
+            {Object.entries(areas).map(([area, docs]) => (
+              <div key={area} className="space-y-2 ml-4">
+                <h4 className="text-sm font-medium text-gray-700">
+                  Área: {area}
+                </h4>
+                {docs.map((doc, index) => (
+                  <div
+                    key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
+                    className="space-y-1"
+                  >
+                    <Label>{doc.NomeInput}</Label>
+                    <Input
+                      type="file"
+                      multiple
+                      name={`consultor-area-${consultorKey}-${area}-${doc.NomeInput}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </section>
-        )}
+        )
+      )}
       <section className="mt-6 flex justify-end space-x-4">
         <Button onClick={() => router.back()} variant="outline" type="button">
           Voltar
