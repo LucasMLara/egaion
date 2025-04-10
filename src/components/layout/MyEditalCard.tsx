@@ -36,6 +36,7 @@ export default function MyEditalCard({
   status,
   editalType,
   editalId,
+  justificativa,
 }: IEditalCard) {
   const statusClass = status ? statusClasses[status] : "";
 
@@ -64,6 +65,12 @@ export default function MyEditalCard({
             </span>
           </DialogDescription>
         </DialogHeader>
+        {justificativa && (
+          <div className="flex justify-center items-center gap-2 flex-col">
+            <span className="font-bold">Observações:</span>
+            <span>{justificativa}</span>
+          </div>
+        )}
         <div className="container">{editalDialogContent}</div>
         {status === "pending" && (
           <DialogFooter className="flex justify-center items-end gap-4">
