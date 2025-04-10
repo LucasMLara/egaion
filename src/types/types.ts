@@ -207,6 +207,7 @@ export const EditalSchema = z.object({
   editalDialogDescription: z.string(),
   editalDialogContent: z.string(),
   editalId: z.string(),
+  justificativa: z.string().optional(),
 });
 
 export const PasswordRecoverySchema = z.object({
@@ -349,14 +350,55 @@ export type DocumentosAgrupadosPorConsultorEArea = Record<
 
 
 export const adjustmentsSchema = z.object({
-  documentosDaEmpresa: z.record(z.instanceof(FileList).or(z.any())),
+  // 1. Documento único por campo
+  documentosDaEmpresa: z.record(
+    z
+      .instanceof(File)
+      .refine((file) => file instanceof File, {
+        message: "Arquivo obrigatório",
+      })
+  ),
+
+  // 2. Um arquivo único por campo de cada consultor
   documentosPessoaisConsultores: z.record(
-    z.record(z.instanceof(FileList).or(z.any()))
+    z.record(
+      z
+        .instanceof(File)
+        .refine((file) => file instanceof File, {
+          message: "Arquivo obrigatório",
+        })
+    )
   ),
+
+  // 3. Vários arquivos por campo por parametrização
   documentosQualificacaoTecnicaEmpresa: z.record(
-    z.record(z.instanceof(FileList).or(z.any()))
+    z.record(
+      z
+        .array(
+          z
+            .instanceof(File)
+            .refine((file) => file instanceof File, {
+              message: "Arquivo obrigatório",
+            })
+        )
+        .min(1, "Envie pelo menos um arquivo")
+    )
   ),
+
+  // 4. Vários arquivos por campo de cada consultor por parametrização (quando Aprovado === false)
   documentosDosConsultoresPorArea: z.record(
-    z.record(z.record(z.instanceof(FileList).or(z.any())))
+    z.record(
+      z.record(
+        z
+          .array(
+            z
+              .instanceof(File)
+              .refine((file) => file instanceof File, {
+                message: "Arquivo obrigatório",
+              })
+          )
+          .min(1, "Envie pelo menos um arquivo")
+      )
+    )
   ),
 });
