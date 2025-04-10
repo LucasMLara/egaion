@@ -14,6 +14,16 @@ import {
   DocumentoSimples,
   adjustmentsSchema,
 } from "@/types/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function MyEditalPage() {
@@ -114,7 +124,7 @@ export default function MyEditalPage() {
   const onSubmit = (data: any) => {
     console.log("Submissão:", data);
   };
-
+  const router = useRouter();
   const nomeEdital =
     documentosDosConsultoresPorArea &&
     Object.values(documentosDosConsultoresPorArea).length > 0
@@ -246,9 +256,28 @@ export default function MyEditalPage() {
           </section>
         )}
       <section className="mt-6 flex justify-end space-x-4">
-        <Button type="submit" variant="destructive">
-          Desistir da Inscrição
+        <Button onClick={() => router.back()} variant="outline" type="button">
+          Voltar
         </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Cancelar Inscrição</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Cancelar Inscrição</DialogTitle>
+              <DialogDescription>
+                Tem certeza de que deseja cancelar a inscrição? Esta ação não
+                pode ser desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button type="button" variant="destructive">
+                Confirmar Cancelamento da Inscrição
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <Button type="submit">Enviar</Button>
       </section>
     </form>
