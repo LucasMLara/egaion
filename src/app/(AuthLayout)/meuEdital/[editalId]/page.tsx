@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { LoaderIcon } from "lucide-react";
+
 import { toast } from "sonner";
 import {
   DocumentoConsultor,
@@ -26,6 +28,7 @@ import {
 export default function MyEditalPage() {
   const { editalId } = useParams();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState<
     DocumentoSimples[]
@@ -60,6 +63,7 @@ export default function MyEditalPage() {
             data.DocumentosQualificacaoTecnicaEmpresa || []
           )
         );
+        setLoading(false);
       } catch (err) {
         console.error("Erro ao carregar edital:", err);
       }
@@ -105,8 +109,9 @@ export default function MyEditalPage() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
+    const form = event.target as HTMLFormElement;
     const fileInputs =
-      document.querySelectorAll<HTMLInputElement>('input[type="file"]');
+      form.querySelectorAll<HTMLInputElement>('input[type="file"]');
     const allFilled = Array.from(fileInputs).every(
       (input) => input.files && input.files.length > 0
     );
@@ -118,8 +123,21 @@ export default function MyEditalPage() {
       return;
     }
 
-    console.log("Formulário válido. Pronto para envio.");
-    // Aqui você pode montar seu FormData e enviar como quiser
+    const formData = new FormData();
+
+    fileInputs.forEach((input) => {
+      const name = input.name; // já está nomeado no render por tipo
+      const files = input.files!;
+
+      if (input.multiple) {
+        Array.from(files).forEach((file, idx) => {
+          formData.append(`${name}[${idx}]`, file);
+        });
+      } else {
+        formData.append(name, files[0]);
+      }
+    });
+    console.log("FormData:", formData);
   }
 
   const nomeEdital = (() => {
@@ -130,6 +148,13 @@ export default function MyEditalPage() {
     return firstAreaDocs[0]?.[0]?.NomeEdital ?? null;
   })();
 
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <LoaderIcon className="animate-spin size-8" />
+      </div>
+    );
+  }
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
