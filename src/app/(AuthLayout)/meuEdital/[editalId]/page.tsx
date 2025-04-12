@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LoaderIcon } from "lucide-react";
+import DocsEmpresaAdj from "@/components/layout/Ajustes/DocsEmpresaAdj";
+import DocsPessoaisConsultAdj from "@/components/layout/Ajustes/DocsPessoaisConsultAdj";
+import DocsQualifTecEmpresaAdj from "@/components/layout/Ajustes/DocsQualifTecEmpresaAdj";
+import DocsAreaConsultsAdj from "@/components/layout/Ajustes/DocsAreaConsultsAdj";
 
 import { toast } from "sonner";
 import {
@@ -24,15 +28,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState<
-    DocumentoSimples[]
-  >([]);
+  const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
     useState<Record<string, DocumentoConsultor[]>>({});
   const [
@@ -108,36 +113,38 @@ export default function MyEditalPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    console.log("Form submitted");
+    // event.preventDefault();
 
-    const form = event.target as HTMLFormElement;
-    const fileInputs =
-      form.querySelectorAll<HTMLInputElement>('input[type="file"]');
-    const allFilled = Array.from(fileInputs).every(
-      (input) => input.files && input.files.length > 0
-    );
+    // const form = event.target as HTMLFormElement;
+    // const fileInputs =
+    //   form.querySelectorAll<HTMLInputElement>('input[type="file"]');
+    // const allFilled = Array.from(fileInputs).every(
+    //   (input) => input.files && input.files.length > 0
+    // );
 
-    if (!allFilled) {
-      toast.error(
-        "Você deve preencher todos os campos de arquivo antes de enviar."
-      );
-      return;
-    }
+    // if (!allFilled) {
+    //   toast.error(
+    //     "Você deve preencher todos os campos de arquivo antes de enviar."
+    //   );
+    //   return;
+    // }
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    fileInputs.forEach((input) => {
-      const name = input.name; // já está nomeado no render por tipo
-      const files = input.files!;
+    // fileInputs.forEach((input) => {
+    //   const name = input.name; // já está nomeado no render por tipo
+    //   const files = input.files!;
 
-      if (input.multiple) {
-        Array.from(files).forEach((file, idx) => {
-          formData.append(`${name}[${idx}]`, file);
-        });
-      } else {
-        formData.append(name, files[0]);
-      }
-    });
-    console.log("FormData:", formData);
+    //   if (input.multiple) {
+    //     Array.from(files).forEach((file, idx) => {
+    //       formData.append(`${name}[${idx}]`, file);
+    //     });
+    //   } else {
+    //     formData.append(name, files[0]);
+    //   }
+    // });
+    // console.log("FormData:", formData);
   }
 
   const nomeEdital = (() => {
@@ -148,20 +155,53 @@ export default function MyEditalPage() {
     return firstAreaDocs[0]?.[0]?.NomeEdital ?? null;
   })();
 
-  if (loading) {
-    return (
-      <div className="h-full flex justify-center items-center">
-        <LoaderIcon className="animate-spin size-8" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="h-full flex justify-center items-center">
+  //       <LoaderIcon className="animate-spin size-8" />
+  //     </div>
+  //   );
+  // }
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
-
-      {documentosDaEmpresa.length > 0 && (
+      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
+            <span className="hidden lg:inline">Documentos da Empresa</span>
+            <FileText className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="docspessoaisconsultores" className="text-center">
+            <span className="hidden lg:inline">
+              Docs. Pessoais dos Consultores
+            </span>
+            <File className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="docsqualificacaotecnica" className="text-center">
+            <span className="hidden lg:inline">Qualificações Técnicas</span>
+            <UserCheck className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+          <TabsTrigger value="docsequipetecnica" className="text-center">
+            <span className="hidden lg:inline">Equipe Técnica</span>
+            <UserCheck className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="ajustesDocumentosEmpresa">
+          <DocsEmpresaAdj documentosParaAjustes={documentosDaEmpresa} />
+        </TabsContent>
+        <TabsContent value="docspessoaisconsultores">
+          <DocsPessoaisConsultAdj />
+        </TabsContent>
+        <TabsContent value="docsqualificacaotecnica">
+          <DocsQualifTecEmpresaAdj />
+        </TabsContent>
+        <TabsContent value="docsequipetecnica">
+          <DocsAreaConsultsAdj />
+        </TabsContent>
+      </Tabs>
+      {/* {documentosDaEmpresa.length > 0 && (
         <section>
           <h2 className="text-xl font-bold mb-2">Documentos da Empresa</h2>
           {documentosDaEmpresa.map((doc, index) => (
@@ -171,9 +211,9 @@ export default function MyEditalPage() {
             </div>
           ))}
         </section>
-      )}
+      )} */}
 
-      {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
+      {/* {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
         <section key={cpf}>
           <h2 className="text-xl font-bold mb-2">
             Documentos Pessoais dos Consultores
@@ -193,9 +233,9 @@ export default function MyEditalPage() {
             ))}
           </div>
         </section>
-      ))}
+      ))} */}
 
-      {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
+      {/* {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
         ([param, docs]) => (
           <section key={param}>
             <h2 className="text-xl font-bold mb-2">
@@ -219,9 +259,9 @@ export default function MyEditalPage() {
             </div>
           </section>
         )
-      )}
+      )} */}
 
-      {Object.entries(documentosDosConsultoresPorArea).map(
+      {/* {Object.entries(documentosDosConsultoresPorArea).map(
         ([consultorKey, areas]) => (
           <section key={consultorKey} className="space-y-4 mt-6">
             <h2 className="text-xl font-bold mb-2">
@@ -250,7 +290,7 @@ export default function MyEditalPage() {
             ))}
           </section>
         )
-      )}
+      )} */}
       <section className="mt-6 flex justify-end space-x-4">
         <Button onClick={() => router.back()} variant="outline" type="button">
           Voltar
