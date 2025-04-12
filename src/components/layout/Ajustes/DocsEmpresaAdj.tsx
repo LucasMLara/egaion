@@ -1,0 +1,99 @@
+import { useMemo, useEffect } from "react";
+import { generateEmpresaDocsSchema } from "@/types/types";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEditalStore } from "@/store/EditalRegister";
+
+export default function DocsEmpresaAdj({
+  documentosParaAjustes,
+}: {
+  documentosParaAjustes: any[];
+}) {
+  const schema = generateEmpresaDocsSchema(documentosParaAjustes);
+  const {
+    documentosEmpresaAjustes,
+    inserirDocumentosEmpresaAjustes,
+    removerDocumentosEmpresaAjustes,
+  } = useEditalStore();
+
+  const {
+    control,
+    formState: { errors },
+    watch,
+    setValue,
+    trigger,
+  } = useForm({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: {},
+  });
+
+  const documentosPendentes = useMemo(
+    () => documentosParaAjustes.filter((doc) => !doc.Aprovado),
+    [documentosParaAjustes]
+  );
+  useEffect(() => {
+    const subscription = watch((values, { name }) => {
+      if (name) {
+        trigger(name);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, trigger]);
+
+  async function handleFieldSubmit(
+    fieldName: string,
+    file: File | undefined,
+    idSCDocumentacao: string
+  ) {
+    // const isValid = await form.trigger(fieldName as keyof IEditalDoc);
+
+    if (file) {
+      const blobUrl = URL.createObjectURL(file);
+      const documento: any = {
+        Nome: fieldName,
+        fileName: file.name,
+        blob: blobUrl,
+        id: idSCDocumentacao,
+        turnToBase64: file,
+      };
+      console.log(documento);
+    }
+  }
+
+  function handleRemoveFile(documentId: string) {}
+
+  if (documentosParaAjustes.length === 0) return <p>n tem nada</p>;
+  console.log(documentosParaAjustes);
+  return (
+    <div className="space-y-4">
+      {documentosPendentes.map((doc) => (
+        <div key={doc.Nome}>
+          <Label className="block font-semibold">{doc.Nome}</Label>
+          <Controller
+            name={doc.Nome}
+            control={control}
+            render={({ field }) => (
+              <Input
+                type="file"
+                accept=".pdf,image/jpeg,image/jpg"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  setValue(doc.Nome, file); // atualiza o valor
+                }}
+              />
+            )}
+          />
+          {errors[doc.Nome] && (
+            <p className="text-red-500 text-sm">
+              {(errors[doc.Nome] as any)?.message}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
