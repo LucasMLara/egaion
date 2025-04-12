@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosDosDocumentos: Array<{ [key: string]: any }> = await prisma.$queryRaw`
             SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome
+            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome, d.idSCDocumentacao
             FROM SCCredenciadasEdital ce
             INNER JOIN SCDocCredenciadaEdital dce ON dce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             INNER JOIN SCDocumentacao d ON d.idSCDocumentacao = dce.DadosDocumento
