@@ -77,7 +77,7 @@ export default function DocsEmpresaAdj({
       removerDocumentosEmpresaAjustes(documentId);
     }
   }
-
+  //TODO usar essa variavel abaixo para bloquear o botao de envio
   const allFilesUploaded = documentosPendentes.every((doc) =>
     documentosEmpresaAjustes.some((d) => d.id === doc.idSCDocumentacao)
   );
