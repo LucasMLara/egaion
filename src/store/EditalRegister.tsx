@@ -49,6 +49,7 @@ type Localidade = {
 };
 
 export type IEditalStore = {
+  documentosEmpresaAjustes: Document[];
   consultantNaturezasPorAreas: MultipleCheckBoxOptions[];
   localidadesDoConsultor: Localidade[];
   Consultores: IConsultant[];
@@ -107,9 +108,13 @@ type editalActions = {
   carregarLocalidadesDisponiveis: (
     localidades: { Nome: string; idSCLocalidade: string }[]
   ) => void;
+
+  inserirDocumentosEmpresaAjustes: (documento: Document) => void;
+  removerDocumentosEmpresaAjustes: (id: string) => void;
 };
 
 const initialState: IEditalStore = {
+  documentosEmpresaAjustes: [],
   consultantNaturezasPorAreas: [],
   localidadesDoConsultor: [],
   limitesDeLocalidade: {
@@ -135,6 +140,21 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+      inserirDocumentosEmpresaAjustes: (documento) => {
+        set((state) => ({
+          documentosEmpresaAjustes: [
+            ...state.documentosEmpresaAjustes,
+            documento,
+          ],
+        }));
+      },
+      removerDocumentosEmpresaAjustes: (id: string) => {
+        set((state) => ({
+          documentosEmpresaAjustes: state.documentosEmpresaAjustes.filter(
+            (documento) => documento.id !== id
+          ),
+        }));
+      },
       setConsultantNaturezasPorAreas: (areas) =>
         set({ consultantNaturezasPorAreas: areas }),
       removeConsultantNaturezasPorAreas: () =>
