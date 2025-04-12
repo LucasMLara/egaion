@@ -7,10 +7,16 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditalStore } from "@/store/EditalRegister";
 
+type DocumentosParaAjustes = {
+  Aprovado: boolean;
+  Nome: string;
+  idSCDocumentacao: string;
+};
+
 export default function DocsEmpresaAdj({
   documentosParaAjustes,
 }: {
-  documentosParaAjustes: any[];
+  documentosParaAjustes: DocumentosParaAjustes[];
 }) {
   const schema = generateEmpresaDocsSchema(documentosParaAjustes);
 
