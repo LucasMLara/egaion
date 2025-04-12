@@ -306,6 +306,7 @@ export type IConsultant = z.infer<typeof consultantSchema>;
 export type IFile = z.infer<typeof fileSchema>;
 export type IEditalDoc = z.infer<typeof DocSchema>;
 export type IMultipleForm = z.infer<typeof MultipleFormSchema>;
+export type IGenerateEmpresaDocs = z.infer<ReturnType<typeof generateEmpresaDocsSchema>>;
 
 export type MultipleCheckBoxOptions = {
   label: string;
