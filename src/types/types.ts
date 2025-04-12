@@ -18,6 +18,18 @@ export const fileSchema = z
     return ACCEPTED_FILE_TYPES.includes(file.type);
   }, "Insira somente arquivos em PDF, JPEG ou JPG");
 
+export const generateEmpresaDocsSchema = (docs: { Nome: string; Aprovado: boolean }[]) => {
+  const shape: Record<string, z.ZodTypeAny> = {};
+
+  docs
+    .filter((doc) => doc.Aprovado === false)
+    .forEach((doc) => {
+      shape[doc.Nome] = fileSchema;
+    });
+
+  return z.object(shape);
+};
+
 export const DocSchema = z.object({
   areaId: z.string().optional(),
   editalDocs: z.array(
@@ -183,14 +195,6 @@ export const SignUpSchema = z.object({
     ),
 });
 
-export const DocInputSchema = z.object({
-  padrao: z.boolean().optional(),
-  titulo: z.string(),
-  label: z.string(),
-  arquivo: z.string(),
-  onchange: z.function(),
-  accept: z.string().optional(),
-});
 
 export const EditalSchema = z.object({
   status: z.union([
@@ -296,7 +300,6 @@ export type FileInputForm = z.infer<typeof fileInputSchema>;
 export type IPassWordRecovery = z.infer<typeof PasswordRecoverySchema>;
 export type IEditalCard = z.infer<typeof EditalSchema>;
 export type IDocCard = z.infer<typeof MockDocCardSchema>;
-export type IDocInput = z.infer<typeof DocInputSchema>;
 export type ISignUp = z.infer<typeof SignUpSchema>;
 export type IForgetPassword = z.infer<typeof forgetPasswordSchema>;
 export type IConsultant = z.infer<typeof consultantSchema>;
