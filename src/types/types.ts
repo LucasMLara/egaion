@@ -326,6 +326,19 @@ export interface DocumentoConsultor {
   Nome: string;
   CPF: string;
 }
+export type GrupoConsultor = {
+  nome: string;
+  cpf: string;
+  documentos: DocumentoConsultor[];
+};
+
+export const schemaDocsPessoais = z.object({
+  documentos: z.record(z.string(), z.instanceof(File).refine(file => file.size > 0, {
+    message: "Arquivo obrigatório",
+  }))
+});
+
+export type IDocumentoConsultor = z.infer<typeof schemaDocsPessoais>;
 
 export interface DocumentoQualificacao {
   NomeInput: string;
