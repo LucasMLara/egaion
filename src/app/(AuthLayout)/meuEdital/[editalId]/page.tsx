@@ -17,7 +17,7 @@ import {
   DocumentoConsultorPorArea,
   DocumentoQualificacao,
   DocumentosAgrupadosPorConsultorEArea,
-  DocumentoSimples,
+  GrupoConsultor,
 } from "@/types/types";
 import {
   Dialog,
@@ -39,7 +39,7 @@ export default function MyEditalPage() {
 
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
-    useState<Record<string, DocumentoConsultor[]>>({});
+    useState<GrupoConsultor[]>([]);
   const [
     documentosQualificacaoTecnicaEmpresa,
     setDocumentosQualificacaoTecnicaEmpresa,
@@ -53,7 +53,6 @@ export default function MyEditalPage() {
         const res = await fetch(`/api/myEditals/${editalId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
-
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
         setDocumentosPessoaisConsultores(
           agruparPorConsultor(data.documentosPessoaisConsultores || [])
@@ -101,14 +100,19 @@ export default function MyEditalPage() {
     }, {} as Record<string, DocumentoQualificacao[]>);
   }
 
-  function agruparPorConsultor(
-    array: DocumentoConsultor[]
-  ): Record<string, DocumentoConsultor[]> {
-    return array.reduce((acc, doc) => {
-      if (!acc[doc.CPF]) acc[doc.CPF] = [];
-      acc[doc.CPF].push(doc);
-      return acc;
-    }, {} as Record<string, DocumentoConsultor[]>);
+  function agruparPorConsultor(array: DocumentoConsultor[]): GrupoConsultor[] {
+    const agrupado: Record<string, DocumentoConsultor[]> = {};
+
+    for (const doc of array) {
+      if (!agrupado[doc.CPF]) agrupado[doc.CPF] = [];
+      agrupado[doc.CPF].push(doc);
+    }
+
+    return Object.entries(agrupado).map(([cpf, documentos]) => ({
+      nome: documentos[0]?.Nome ?? "", // segurança básica
+      cpf,
+      documentos,
+    }));
   }
 
   function handleSubmit(event: React.FormEvent) {
