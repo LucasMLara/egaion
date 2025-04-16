@@ -41,10 +41,12 @@ export default function MyEditalPage() {
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
     useState<GrupoConsultor[]>([]);
+
   const [
     documentosQualificacaoTecnicaEmpresa,
     setDocumentosQualificacaoTecnicaEmpresa,
-  ] = useState<Record<string, DocumentoQualificacao[]>>({});
+  ] = useState<Record<string, DocumentoEmpresaAjuste[]>>({});
+
   const [documentosDosConsultoresPorArea, setDocumentosDosConsultoresPorArea] =
     useState<DocumentosAgrupadosPorConsultorEArea>({});
 
@@ -63,13 +65,15 @@ export default function MyEditalPage() {
     }, {} as DocumentosAgrupadosPorConsultorEArea);
   }
 
-  function agruparDocsEmpresaPorParametrizacao(docs?: DocumentoQualificacao[]) {
+  function agruparDocsEmpresaPorParametrizacao(
+    docs?: DocumentoEmpresaAjuste[]
+  ) {
     return (docs || []).reduce((acc, doc) => {
       const key = doc.Parametrizacao;
       if (!acc[key]) acc[key] = [];
       acc[key].push(doc);
       return acc;
-    }, {} as Record<string, DocumentoQualificacao[]>);
+    }, {} as Record<string, DocumentoEmpresaAjuste[]>);
   }
 
   function agruparPorConsultor(array: DocumentoConsultor[]): GrupoConsultor[] {
