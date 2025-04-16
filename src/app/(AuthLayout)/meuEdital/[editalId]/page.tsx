@@ -140,12 +140,13 @@ export default function MyEditalPage() {
       </div>
     );
   }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
-      <Tabs defaultValue="docsqualificacaotecnica" className="w-full">
+      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
@@ -176,9 +177,9 @@ export default function MyEditalPage() {
         </TabsContent>
         <TabsContent value="docsqualificacaotecnica">
           <DocsQualifTecEmpresaAdj
-            DocumentosQualificacaoEmpresaAjustesProp={Object.values(
-              documentosQualificacaoTecnicaEmpresa || {}
-            ).flat()}
+            DocumentosQualificacaoEmpresaAjustesProp={
+              documentosQualificacaoTecnicaEmpresa
+            }
           />
         </TabsContent>
         <TabsContent value="docsequipetecnica">
