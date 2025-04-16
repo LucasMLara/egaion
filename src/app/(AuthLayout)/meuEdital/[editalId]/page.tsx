@@ -18,6 +18,7 @@ import {
   DocumentoQualificacao,
   DocumentosAgrupadosPorConsultorEArea,
   GrupoConsultor,
+  DocumentoEmpresaAjuste,
 } from "@/types/types";
 import {
   Dialog,
@@ -28,7 +29,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FileText, File, UserCheck, Paperclip, History } from "lucide-react";
+import { FileText, File, UserCheck } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -46,35 +47,6 @@ export default function MyEditalPage() {
   ] = useState<Record<string, DocumentoQualificacao[]>>({});
   const [documentosDosConsultoresPorArea, setDocumentosDosConsultoresPorArea] =
     useState<DocumentosAgrupadosPorConsultorEArea>({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/myEditals/${editalId}`);
-        if (!res.ok) throw new Error("Erro ao buscar dados");
-        const data = await res.json();
-        setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
-        setDocumentosPessoaisConsultores(
-          agruparPorConsultor(data.documentosPessoaisConsultores || [])
-        );
-        setDocumentosDosConsultoresPorArea(
-          agruparDocumentosDosConsultores(
-            data.documentosDosConsultoresPorArea || []
-          )
-        );
-        setDocumentosQualificacaoTecnicaEmpresa(
-          agruparDocsEmpresaPorParametrizacao(
-            data.DocumentosQualificacaoTecnicaEmpresa || []
-          )
-        );
-        setLoading(false);
-      } catch (err) {
-        console.error("Erro ao carregar edital:", err);
-      }
-    };
-
-    fetchData();
-  }, [editalId]);
 
   function agruparDocumentosDosConsultores(
     docs: DocumentoConsultorPorArea[]
@@ -115,40 +87,38 @@ export default function MyEditalPage() {
     }));
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/myEditals/${editalId}`);
+        if (!res.ok) throw new Error("Erro ao buscar dados");
+        const data = await res.json();
+        setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
+        setDocumentosPessoaisConsultores(
+          agruparPorConsultor(data.documentosPessoaisConsultores || [])
+        );
+        setDocumentosDosConsultoresPorArea(
+          agruparDocumentosDosConsultores(
+            data.documentosDosConsultoresPorArea || []
+          )
+        );
+        setDocumentosQualificacaoTecnicaEmpresa(
+          agruparDocsEmpresaPorParametrizacao(
+            data.DocumentosQualificacaoTecnicaEmpresa || []
+          )
+        );
+        setLoading(false);
+      } catch (err) {
+        console.error("Erro ao carregar edital:", err);
+      }
+    };
+
+    fetchData();
+  }, [editalId]);
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     console.log("Form submitted");
-    // event.preventDefault();
-
-    // const form = event.target as HTMLFormElement;
-    // const fileInputs =
-    //   form.querySelectorAll<HTMLInputElement>('input[type="file"]');
-    // const allFilled = Array.from(fileInputs).every(
-    //   (input) => input.files && input.files.length > 0
-    // );
-
-    // if (!allFilled) {
-    //   toast.error(
-    //     "Você deve preencher todos os campos de arquivo antes de enviar."
-    //   );
-    //   return;
-    // }
-
-    // const formData = new FormData();
-
-    // fileInputs.forEach((input) => {
-    //   const name = input.name; // já está nomeado no render por tipo
-    //   const files = input.files!;
-
-    //   if (input.multiple) {
-    //     Array.from(files).forEach((file, idx) => {
-    //       formData.append(`${name}[${idx}]`, file);
-    //     });
-    //   } else {
-    //     formData.append(name, files[0]);
-    //   }
-    // });
-    // console.log("FormData:", formData);
   }
 
   const nomeEdital = (() => {
@@ -159,19 +129,19 @@ export default function MyEditalPage() {
     return firstAreaDocs[0]?.[0]?.NomeEdital ?? null;
   })();
 
-  // if (loading) {
-  //   return (
-  //     <div className="h-full flex justify-center items-center">
-  //       <LoaderIcon className="animate-spin size-8" />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <LoaderIcon className="animate-spin size-8" />
+      </div>
+    );
+  }
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
-      <Tabs defaultValue="docspessoaisconsultores" className="w-full">
+      <Tabs defaultValue="docsqualificacaotecnica" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
@@ -201,102 +171,16 @@ export default function MyEditalPage() {
           />
         </TabsContent>
         <TabsContent value="docsqualificacaotecnica">
-          <DocsQualifTecEmpresaAdj />
+          <DocsQualifTecEmpresaAdj
+            DocumentosQualificacaoEmpresaAjustesProp={Object.values(
+              documentosQualificacaoTecnicaEmpresa || {}
+            ).flat()}
+          />
         </TabsContent>
         <TabsContent value="docsequipetecnica">
           <DocsAreaConsultsAdj />
         </TabsContent>
       </Tabs>
-      {/* {documentosDaEmpresa.length > 0 && (
-        <section>
-          <h2 className="text-xl font-bold mb-2">Documentos da Empresa</h2>
-          {documentosDaEmpresa.map((doc, index) => (
-            <div key={`empresa-${doc.Nome}-${index}`} className="space-y-1">
-              <Label>{doc.Nome}</Label>
-              <Input type="file" name={`empresa-${doc.Nome}`} />
-            </div>
-          ))}
-        </section>
-      )} */}
-
-      {/* {Object.entries(documentosPessoaisConsultores).map(([cpf, docs]) => (
-        <section key={cpf}>
-          <h2 className="text-xl font-bold mb-2">
-            Documentos Pessoais dos Consultores
-          </h2>
-          <div>
-            <h3 className="font-semibold mt-4">
-              Consultor: {docs[0]?.Nome || cpf}
-            </h3>
-            {docs.map((doc, index) => (
-              <div
-                key={`${cpf}-${doc.NomeInput}-${index}`}
-                className="space-y-1"
-              >
-                <Label>{doc.NomeInput}</Label>
-                <Input type="file" name={`pessoal-${cpf}-${doc.NomeInput}`} />
-              </div>
-            ))}
-          </div>
-        </section>
-      ))} */}
-
-      {/* {Object.entries(documentosQualificacaoTecnicaEmpresa).map(
-        ([param, docs]) => (
-          <section key={param}>
-            <h2 className="text-xl font-bold mb-2">
-              Documentos de Qualificação Técnica da Empresa
-            </h2>
-            <div className="space-y-2 mt-4">
-              <h3 className="font-semibold">{param}</h3>
-              {docs.map((doc, index) => (
-                <div
-                  key={`${param}-${doc.NomeInput}-${index}`}
-                  className="space-y-1"
-                >
-                  <Label>{doc.NomeInput}</Label>
-                  <Input
-                    type="file"
-                    multiple
-                    name={`qualificacao-${param}-${doc.NomeInput}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        )
-      )} */}
-
-      {/* {Object.entries(documentosDosConsultoresPorArea).map(
-        ([consultorKey, areas]) => (
-          <section key={consultorKey} className="space-y-4 mt-6">
-            <h2 className="text-xl font-bold mb-2">
-              Documentos dos Consultores por Área
-            </h2>
-            <h3 className="font-semibold">{consultorKey}</h3>
-            {Object.entries(areas).map(([area, docs]) => (
-              <div key={area} className="space-y-2 ml-4">
-                <h4 className="text-sm font-medium text-gray-700">
-                  Área: {area}
-                </h4>
-                {docs.map((doc, index) => (
-                  <div
-                    key={`${consultorKey}-${area}-${doc.NomeInput}-${index}`}
-                    className="space-y-1"
-                  >
-                    <Label>{doc.NomeInput}</Label>
-                    <Input
-                      type="file"
-                      multiple
-                      name={`consultor-area-${consultorKey}-${area}-${doc.NomeInput}`}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </section>
-        )
-      )} */}
       <section className="mt-6 flex justify-end space-x-4">
         <Button onClick={() => router.back()} variant="outline" type="button">
           Voltar
