@@ -28,10 +28,6 @@ export default function DocsPessoaisConsultAdj({
       documentos: {},
     },
   });
-  console.log(
-    "documentosDosConsultoresParaAjustes",
-    documentosDosConsultoresParaAjustes
-  );
   const {
     inserirDocumentosPessoaisConsultorAjustes,
     removerDocumentosPessoaisConsultorAjustes,
@@ -78,7 +74,6 @@ export default function DocsPessoaisConsultAdj({
         return existing !== undefined;
       })
   );
-  console.log("allfilesUploaded", allfilesUploaded);
   return (
     <div className="space-y-6">
       {documentosDosConsultoresParaAjustes.map((consultor) => (
