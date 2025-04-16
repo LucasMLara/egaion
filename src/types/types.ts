@@ -30,6 +30,26 @@ export const generateEmpresaDocsSchema = (docs: { Nome: string; Aprovado: boolea
   return z.object(shape);
 };
 
+export interface DocumentoEmpresaAjuste {
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  Parametrizacao: string;
+  NomeInput: string;
+}
+
+export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) => {
+  const campos: Record<string, any> = {};
+  console.log(docs, "docs aqui")
+  docs.forEach((doc) => {
+    const key = `${doc.Parametrizacao}|||${doc.NomeInput}`;
+    campos[key] = z
+      .array(z.instanceof(File))
+      .min(1, { message: "Insira pelo menos um arquivo" });
+  });
+
+  return z.record(z.any()).and(z.object(campos));
+}
+
 export const DocSchema = z.object({
   areaId: z.string().optional(),
   editalDocs: z.array(
@@ -307,6 +327,7 @@ export type IFile = z.infer<typeof fileSchema>;
 export type IEditalDoc = z.infer<typeof DocSchema>;
 export type IMultipleForm = z.infer<typeof MultipleFormSchema>;
 export type IGenerateEmpresaDocs = z.infer<ReturnType<typeof generateEmpresaDocsSchema>>;
+export type IGenerateEmpresaAreaDocs = z.infer<ReturnType<typeof generateEmpresaAreaDocsSchema>>;
 
 export type MultipleCheckBoxOptions = {
   label: string;
@@ -359,6 +380,7 @@ export interface DocumentoConsultorPorArea {
   Aprovado: boolean;
   NomeInput: string;
 }
+
 
 export type DocumentosAgrupadosPorConsultorEArea = Record<
   string,
