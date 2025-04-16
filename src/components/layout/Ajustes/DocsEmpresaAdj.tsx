@@ -88,7 +88,6 @@ export default function DocsEmpresaAdj({
     documentosEmpresaAjustes.some((d) => d.id === doc.idSCDocumentacao)
   );
 
-  console.log("allFilesUploaded", allFilesUploaded);
   if (documentosParaAjustes.length === 0) return <p>n tem nada</p>;
 
   return (
