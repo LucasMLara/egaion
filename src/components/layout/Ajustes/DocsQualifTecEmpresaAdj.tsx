@@ -40,11 +40,9 @@ export default function DocsQualifTecEmpresaAdj({
     DocumentosQualificacaoEmpresaAjustes,
   } = useEditalStore();
 
-  console.log(DocumentosQualificacaoEmpresaAjustesProp);
-
-  const x = Object.values(DocumentosQualificacaoEmpresaAjustesProp).flat();
-
-  const schema = generateEmpresaAreaDocsSchema(x);
+  const schema = generateEmpresaAreaDocsSchema(
+    Object.values(DocumentosQualificacaoEmpresaAjustesProp).flat()
+  );
 
   type FormSchema = z.infer<typeof schema>;
 
@@ -63,41 +61,94 @@ export default function DocsQualifTecEmpresaAdj({
       {Object.entries(DocumentosQualificacaoEmpresaAjustesProp).map(
         ([area, docs]) => {
           return (
-            <div key={area}>
-              {area}
+            <div key={area} className="border p-4 my-2 rounded-xl shadow-lg">
+              <span className="font-bold flex my-2">{area}</span>
               <div>
-                {docs.map((doc) => (
-                  <>
-                    <Label>{doc.NomeInput}</Label>
-                    <Input
-                      type="file"
-                      multiple
-                      accept=".pdf,image/jpeg,image/jpg"
-                      key={doc.NomeInput}
-                      {...register(doc.NomeInput as keyof FormSchema)}
-                      onChange={async (e) => {
-                        const filesArray = Array.from(e.target.files || []);
-                        setValue(doc.NomeInput as any, filesArray);
-                        const isValid = await trigger(doc.NomeInput as any);
+                {docs.map((doc) => {
+                  const key = `${doc.Parametrizacao} - ${doc.NomeInput}`;
+                  const arquivosSalvos =
+                    DocumentosQualificacaoEmpresaAjustes.filter(
+                      (d) =>
+                        d.id === doc.idSCCredenciada &&
+                        d.title === doc.NomeInput
+                    );
 
-                        if (isValid) {
-                          const documentosConvertidos = filesArray.map(
-                            (file) => ({
-                              title: doc.NomeInput,
-                              blob: URL.createObjectURL(file),
-                              id: doc.idSCCredenciada,
-                              turnToBase64: file,
-                            })
-                          );
+                  return (
+                    <div key={key} className="mb-4">
+                      <Label className="my-4 flex">{doc.NomeInput}</Label>
 
-                          documentosConvertidos.forEach((doc) =>
-                            cadastrarDocumentosQualificacaoEmpresaAjustes(doc)
-                          );
-                        }
-                      }}
-                    />
-                  </>
-                ))}
+                      {/* Se ainda não houver arquivos cadastrados, mostra o input */}
+                      {arquivosSalvos.length === 0 ? (
+                        <>
+                          <Input
+                            type="file"
+                            multiple
+                            accept=".pdf,image/jpeg,image/jpg"
+                            {...register(key)}
+                            onChange={async (e) => {
+                              const filesArray = Array.from(
+                                e.target.files || []
+                              );
+                              setValue(key, filesArray);
+                              const isValid = await trigger(key);
+
+                              if (isValid) {
+                                const documentosConvertidos = filesArray.map(
+                                  (file) => ({
+                                    title: doc.NomeInput,
+                                    blob: URL.createObjectURL(file),
+                                    id: doc.idSCCredenciada,
+                                    turnToBase64: file,
+                                  })
+                                );
+
+                                documentosConvertidos.forEach((doc) =>
+                                  cadastrarDocumentosQualificacaoEmpresaAjustes(
+                                    doc
+                                  )
+                                );
+                              }
+                            }}
+                          />
+
+                          {errors[key]?.message && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[key]?.message?.toString()}
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <div className="space-y-2">
+                          {arquivosSalvos.map((arquivo, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between bg-gray-100 p-2 rounded"
+                            >
+                              <a
+                                href={arquivo.blob}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                              >
+                                {arquivo.title}
+                              </a>
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  removerDocumentosQualificacaoEmpresaAjustes(
+                                    arquivo.id
+                                  )
+                                }
+                              >
+                                <TrashIcon className="w-4 h-4 text-red-500" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
