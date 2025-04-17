@@ -39,15 +39,23 @@ export interface DocumentoEmpresaAjuste {
 
 export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) => {
   const campos: Record<string, any> = {};
-  console.log(docs, "docs aqui")
   docs.forEach((doc) => {
-    const key = `${doc.Parametrizacao}|||${doc.NomeInput}`;
+    const key = `${doc.Parametrizacao} - ${doc.NomeInput}`;
     campos[key] = z
-      .array(z.instanceof(File))
+      .array(
+        z
+          .instanceof(File)
+          .refine((file) => ACCEPTED_FILE_TYPES.includes(file.type), {
+            message: "Arquivo deve ser PDF ou imagem (JPEG/PNG)",
+          })
+          .refine((file) => file.size <= MAX_UPLOAD_SIZE, {
+            message: "Arquivo deve ter no máximo 10MB",
+          })
+      )
       .min(1, { message: "Insira pelo menos um arquivo" });
   });
 
-  return z.record(z.any()).and(z.object(campos));
+  return z.object(campos);
 }
 
 export const DocSchema = z.object({
