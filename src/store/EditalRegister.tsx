@@ -52,6 +52,7 @@ export type IEditalStore = {
   documentosEmpresaAjustes: Document[];
   documentosPessoaisConsultoresAjustes: Document[];
   DocumentosQualificacaoEmpresaAjustes: Document[];
+  DocumentosQualificacaoConsultoresAjustes: Document[];
   consultantNaturezasPorAreas: MultipleCheckBoxOptions[];
   localidadesDoConsultor: Localidade[];
   Consultores: IConsultant[];
@@ -120,9 +121,17 @@ type editalActions = {
     id: string,
     title: string
   ) => void;
+  cadastrarDocumentosQualificacaoConsultoresAjustes: (
+    documentos: Document
+  ) => void;
+  removerDocumentosQualificacaoConsultoresAjustes: (
+    id: string,
+    title: string
+  ) => void;
 };
 
 const initialState: IEditalStore = {
+  DocumentosQualificacaoConsultoresAjustes: [],
   DocumentosQualificacaoEmpresaAjustes: [],
   documentosPessoaisConsultoresAjustes: [],
   documentosEmpresaAjustes: [],
@@ -151,6 +160,22 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
   persist(
     (set, get) => ({
       ...initialState,
+      cadastrarDocumentosQualificacaoConsultoresAjustes: (documento) => {
+        set((state) => ({
+          DocumentosQualificacaoConsultoresAjustes: [
+            ...state.DocumentosQualificacaoConsultoresAjustes,
+            documento,
+          ],
+        }));
+      },
+      removerDocumentosQualificacaoConsultoresAjustes: (id, title) => {
+        set((state) => ({
+          DocumentosQualificacaoConsultoresAjustes:
+            state.DocumentosQualificacaoConsultoresAjustes.filter(
+              (doc) => !(doc.id === id && doc.title === title)
+            ),
+        }));
+      },
       cadastrarDocumentosQualificacaoEmpresaAjustes: (documento) => {
         set((state) => ({
           DocumentosQualificacaoEmpresaAjustes: [
