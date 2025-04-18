@@ -42,7 +42,7 @@ export default function DocsQualifTecEmpresaAdj({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-  console.log(errors);
+
   return (
     <div className="space-y-6">
       {Object.entries(DocumentosQualificacaoEmpresaAjustesProp).map(
@@ -105,6 +105,7 @@ export default function DocsQualifTecEmpresaAdj({
                                     blob: URL.createObjectURL(file),
                                     id: doc.idSCCredenciada,
                                     turnToBase64: file,
+                                    fileName: file.name,
                                   })
                                 );
 
@@ -136,7 +137,7 @@ export default function DocsQualifTecEmpresaAdj({
                                 rel="noopener noreferrer"
                                 className="text-blue-600 underline"
                               >
-                                {arquivo.title}
+                                {arquivo.fileName}
                               </a>
                             </div>
                           ))}
