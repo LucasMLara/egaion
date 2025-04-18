@@ -69,6 +69,58 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
   return z.object(campos);
 };
 
+export interface DocumentoConsultorPorArea {
+  idSCCredenciadasEdital: string;
+  idSCEdital: string;
+  NomeEdital: string;
+  idSCCredenciada: string;
+  RazaoSocial: string;
+  idSCConsultorEdital: string;
+  idSCTecnico: string;
+  Nome: string;
+  CPF: string;
+  Parametrizacao: string;
+  Aprovado: boolean;
+}
+
+export const generateConsultorAreaDocsSchema = (
+  dados: Record<string, Record<string, DocumentoConsultorPorArea[]>>
+) => {
+  const campos: Record<string, any> = {};
+
+  Object.entries(dados).forEach(([consultor, setores]) => {
+    Object.entries(setores).forEach(([area, docs]) => {
+      const key = `${consultor} - ${area}`;
+      campos[key] = z
+        .array(z.instanceof(File))
+        .min(1, { message: "Insira pelo menos um arquivo" })
+        .superRefine((files, ctx) => {
+          files.forEach((file, idx) => {
+            if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Arquivos devem ser PDF ou imagem (JPEG/PNG)",
+                path: [idx],
+              });
+            }
+
+            if (file.size > MAX_UPLOAD_SIZE) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Arquivos devem ter no máximo 10MB",
+                path: [idx],
+              });
+            }
+          });
+        });
+    });
+  });
+
+  return z.object(campos);
+};
+
+
+
 
 export const DocSchema = z.object({
   areaId: z.string().optional(),
