@@ -27,7 +27,6 @@ export default function DocsQualifTecEmpresaAdj({
     removerDocumentosQualificacaoEmpresaAjustes,
     DocumentosQualificacaoEmpresaAjustes,
   } = useEditalStore();
-
   const schema = generateEmpresaAreaDocsSchema(
     Object.values(DocumentosQualificacaoEmpresaAjustesProp).flat()
   );
