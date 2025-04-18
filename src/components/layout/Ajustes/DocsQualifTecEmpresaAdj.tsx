@@ -62,9 +62,26 @@ export default function DocsQualifTecEmpresaAdj({
 
                   return (
                     <div key={uniqueKey} className="mb-4">
-                      <Label className="my-4 flex">{doc.NomeInput}</Label>
-
-                      {/* Se ainda não houver arquivos cadastrados, mostra o input */}
+                      <div className="flex items-center justify-between my-4">
+                        <Label>{doc.NomeInput}</Label>
+                        {arquivosSalvos.length > 0 && (
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              arquivosSalvos.forEach((arq) => {
+                                return removerDocumentosQualificacaoEmpresaAjustes(
+                                  arq.id,
+                                  arq.title
+                                );
+                              });
+                            }}
+                            className="text-red-500 text-sm"
+                          >
+                            <TrashIcon className="w-4 h-4 mr-1" />
+                            Remover todos
+                          </Button>
+                        )}
+                      </div>
                       {arquivosSalvos.length === 0 ? (
                         <>
                           <Input
@@ -75,8 +92,6 @@ export default function DocsQualifTecEmpresaAdj({
                               const filesArray = Array.from(
                                 e.target.files || []
                               );
-
-                              // Seta o valor manualmente
                               setValue(uniqueKey, filesArray, {
                                 shouldValidate: true,
                               });
@@ -123,16 +138,6 @@ export default function DocsQualifTecEmpresaAdj({
                               >
                                 {arquivo.title}
                               </a>
-                              <Button
-                                variant="ghost"
-                                onClick={() =>
-                                  removerDocumentosQualificacaoEmpresaAjustes(
-                                    arquivo.id
-                                  )
-                                }
-                              >
-                                <TrashIcon className="w-4 h-4 text-red-500" />
-                              </Button>
                             </div>
                           ))}
                         </div>
