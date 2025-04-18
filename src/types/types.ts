@@ -39,24 +39,36 @@ export interface DocumentoEmpresaAjuste {
 
 export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) => {
   const campos: Record<string, any> = {};
+
   docs.forEach((doc) => {
     const key = `${doc.Parametrizacao} - ${doc.NomeInput}`;
     campos[key] = z
-      .array(
-        z
-          .instanceof(File)
-          .refine((file) => ACCEPTED_FILE_TYPES.includes(file.type), {
-            message: "Arquivo deve ser PDF ou imagem (JPEG/PNG)",
-          })
-          .refine((file) => file.size <= MAX_UPLOAD_SIZE, {
-            message: "Arquivo deve ter no máximo 10MB",
-          })
-      )
-      .min(1, { message: "Insira pelo menos um arquivo" });
+      .array(z.instanceof(File))
+      .min(1, { message: "Insira pelo menos um arquivo" })
+      .superRefine((files, ctx) => {
+        files.forEach((file, index) => {
+          if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Arquivo deve ser PDF ou imagem (JPEG/PNG)",
+              path: [index],
+            });
+          }
+
+          if (file.size > MAX_UPLOAD_SIZE) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Arquivo deve ter no máximo 10MB",
+              path: [index],
+            });
+          }
+        });
+      });
   });
 
   return z.object(campos);
-}
+};
+
 
 export const DocSchema = z.object({
   areaId: z.string().optional(),
