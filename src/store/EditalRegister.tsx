@@ -116,7 +116,10 @@ type editalActions = {
   inserirDocumentosPessoaisConsultorAjustes: (documento: Document) => void;
   removerDocumentosPessoaisConsultorAjustes: (id: string) => void;
   cadastrarDocumentosQualificacaoEmpresaAjustes: (documentos: Document) => void;
-  removerDocumentosQualificacaoEmpresaAjustes: (id: string) => void;
+  removerDocumentosQualificacaoEmpresaAjustes: (
+    id: string,
+    title: string
+  ) => void;
 };
 
 const initialState: IEditalStore = {
@@ -156,11 +159,11 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
           ],
         }));
       },
-      removerDocumentosQualificacaoEmpresaAjustes: (id) => {
+      removerDocumentosQualificacaoEmpresaAjustes: (id, title) => {
         set((state) => ({
           DocumentosQualificacaoEmpresaAjustes:
             state.DocumentosQualificacaoEmpresaAjustes.filter(
-              (documento) => documento.id !== id
+              (doc) => !(doc.id === id && doc.title === title)
             ),
         }));
       },
