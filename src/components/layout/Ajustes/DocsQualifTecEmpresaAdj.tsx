@@ -3,7 +3,7 @@ import {
   generateEmpresaAreaDocsSchema,
 } from "@/types/types";
 import { useForm } from "react-hook-form";
-import { object, z } from "zod";
+import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/label";
@@ -11,18 +11,6 @@ import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
-import { useMemo } from "react";
-
-function agruparPorParametrizacaoEDocumento(
-  docs: DocumentoEmpresaAjuste[]
-): Record<string, DocumentoEmpresaAjuste[]> {
-  return docs.reduce((acc, doc) => {
-    const key = `${doc.Parametrizacao}|||${doc.NomeInput}`;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(doc);
-    return acc;
-  }, {} as Record<string, DocumentoEmpresaAjuste[]>);
-}
 
 interface Props {
   DocumentosQualificacaoEmpresaAjustesProp: Record<
@@ -47,7 +35,6 @@ export default function DocsQualifTecEmpresaAdj({
   type FormSchema = z.infer<typeof schema>;
 
   const {
-    register,
     setValue,
     trigger,
     formState: { errors },
@@ -55,7 +42,7 @@ export default function DocsQualifTecEmpresaAdj({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-
+  console.log(errors);
   return (
     <div className="space-y-6">
       {Object.entries(DocumentosQualificacaoEmpresaAjustesProp).map(
@@ -65,16 +52,16 @@ export default function DocsQualifTecEmpresaAdj({
               <span className="font-bold flex my-2">{area}</span>
               <div>
                 {docs.map((doc) => {
-                  const key = `${doc.Parametrizacao} - ${doc.NomeInput}`;
+                  const uniqueKey = `${doc.Parametrizacao} - ${doc.NomeInput}`;
+
                   const arquivosSalvos =
                     DocumentosQualificacaoEmpresaAjustes.filter(
                       (d) =>
-                        d.id === doc.idSCCredenciada &&
-                        d.title === doc.NomeInput
+                        d.id === doc.idSCCredenciada && d.title === uniqueKey
                     );
 
                   return (
-                    <div key={key} className="mb-4">
+                    <div key={uniqueKey} className="mb-4">
                       <Label className="my-4 flex">{doc.NomeInput}</Label>
 
                       {/* Se ainda não houver arquivos cadastrados, mostra o input */}
@@ -84,18 +71,22 @@ export default function DocsQualifTecEmpresaAdj({
                             type="file"
                             multiple
                             accept=".pdf,image/jpeg,image/jpg"
-                            {...register(key)}
                             onChange={async (e) => {
                               const filesArray = Array.from(
                                 e.target.files || []
                               );
-                              setValue(key, filesArray);
-                              const isValid = await trigger(key);
+
+                              // Seta o valor manualmente
+                              setValue(uniqueKey, filesArray, {
+                                shouldValidate: true,
+                              });
+
+                              const isValid = await trigger(uniqueKey);
 
                               if (isValid) {
                                 const documentosConvertidos = filesArray.map(
                                   (file) => ({
-                                    title: doc.NomeInput,
+                                    title: uniqueKey,
                                     blob: URL.createObjectURL(file),
                                     id: doc.idSCCredenciada,
                                     turnToBase64: file,
@@ -110,12 +101,12 @@ export default function DocsQualifTecEmpresaAdj({
                               }
                             }}
                           />
-
-                          {errors[key]?.message && (
-                            <p className="text-red-500 text-sm mt-1">
-                              {errors[key]?.message?.toString()}
-                            </p>
-                          )}
+                          {Array.isArray(errors[uniqueKey]) &&
+                            errors[uniqueKey]?.map((erro, i) => (
+                              <p key={i} className="text-red-500 text-sm mt-1">
+                                {erro?.message?.toString()}
+                              </p>
+                            ))}
                         </>
                       ) : (
                         <div className="space-y-2">
