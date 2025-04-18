@@ -50,7 +50,7 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
           if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Arquivo deve ser PDF ou imagem (JPEG/PNG)",
+              message: "Arquivos devem ser PDF ou imagem (JPEG/PNG)",
               path: [index],
             });
           }
@@ -58,7 +58,7 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
           if (file.size > MAX_UPLOAD_SIZE) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Arquivo deve ter no máximo 10MB",
+              message: "Arquivos devem ter no máximo 10MB",
               path: [index],
             });
           }
