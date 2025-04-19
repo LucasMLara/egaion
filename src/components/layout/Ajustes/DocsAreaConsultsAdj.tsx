@@ -26,45 +26,23 @@ export default function DocsAreaConsultsAdj({
       ),
     [DocumentosDosConsultoresPorAreaAjustesProp]
   );
-
+  // console.log(DocumentosDosConsultoresPorAreaAjustesProp);
   const {
     setValue,
+    getFieldState,
+    register,
     trigger,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    mode: "onChange",
   });
-  //TODO verificar o setvalue, eu estou inserindo arquivos e n estao indo pro store e o gpt ja ta pagando de doido
+
   const {
     cadastrarDocumentosQualificacaoConsultoresAjustes,
     removerDocumentosQualificacaoConsultoresAjustes,
     DocumentosQualificacaoConsultoresAjustes,
   } = useEditalStore();
-
-  const handleDocumentUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    uniqueKey: string
-  ) => {
-    const filesArray = Array.from(e.target.files || []);
-    setValue(uniqueKey, filesArray, {
-      shouldValidate: true,
-    });
-
-    const isValid = await trigger(uniqueKey);
-    if (!isValid) return;
-
-    const documentosConvertidos = filesArray.map((file) => ({
-      title: uniqueKey,
-      blob: URL.createObjectURL(file),
-      id: `${uniqueKey}-${file.name}`,
-      turnToBase64: file,
-      fileName: file.name,
-    }));
-
-    documentosConvertidos.forEach((doc) =>
-      cadastrarDocumentosQualificacaoConsultoresAjustes(doc)
-    );
-  };
 
   return (
     <div className="space-y-6">
@@ -103,8 +81,45 @@ export default function DocsAreaConsultsAdj({
                         <Input
                           type="file"
                           multiple
+                          {...register(uniqueKey)}
                           accept=".pdf,image/jpeg,image/jpg"
-                          onChange={(e) => handleDocumentUpload(e, uniqueKey)}
+                          onChange={async (e) => {
+                            const filesArray = Array.from(e.target.files || []);
+                            setValue(uniqueKey, filesArray, {
+                              shouldValidate: true,
+                            });
+                            const isValid = await trigger(uniqueKey);
+                            const fieldState = getFieldState(uniqueKey);
+                            // console.log("isValid:", isValid);
+                            // console.log("fieldState:", fieldState);
+                            console.log("Files inseridos:", e.target.files);
+                            console.log("Array convertido:", filesArray);
+                            console.log(
+                              "typeof filesArray[0]:",
+                              typeof filesArray[0]
+                            );
+                            console.log(
+                              "instanceof File:",
+                              filesArray.map((f) => f instanceof File)
+                            );
+                            // console.log("errors:", errors);
+                            //TODO - estou tendo erro no ISVALID , entao a função retorna false e não salva os arquivos, mesmo quando o arquivo é válido. verificar isso na segunda
+                            if (!isValid) return;
+                            const documentosConvertidos = filesArray.map(
+                              (file) => ({
+                                title: uniqueKey,
+                                blob: URL.createObjectURL(file),
+                                id: `${uniqueKey}-${file.name}`,
+                                turnToBase64: file,
+                                fileName: file.name,
+                              })
+                            );
+                            documentosConvertidos.forEach((doc) =>
+                              cadastrarDocumentosQualificacaoConsultoresAjustes(
+                                doc
+                              )
+                            );
+                          }}
                         />
                         {errors[uniqueKey]?.message && (
                           <p className="text-red-500 text-sm mt-1">
