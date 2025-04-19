@@ -88,8 +88,9 @@ export const generateConsultorAreaDocsSchema = (
 ) => {
   const campos: Record<string, any> = {};
 
+
   Object.entries(dados).forEach(([consultor, setores]) => {
-    Object.entries(setores).forEach(([area, docs]) => {
+    Object.keys(setores).forEach((area) => {
       const key = `${consultor} - ${area}`;
       campos[key] = z
         .array(z.instanceof(File))
@@ -115,7 +116,6 @@ export const generateConsultorAreaDocsSchema = (
         });
     });
   });
-
   return z.object(campos);
 };
 
