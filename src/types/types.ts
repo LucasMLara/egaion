@@ -88,20 +88,20 @@ export const generateConsultorAreaDocsSchema = (
 ) => {
   const campos: Record<string, any> = {};
 
-
   Object.entries(dados).forEach(([consultor, setores]) => {
-    Object.keys(setores).forEach((area) => {
-      const key = `${consultor} - ${area}`;
+    Object.entries(setores).forEach(([parametrizacao, documentos]) => {
+      const key = `${consultor} - ${parametrizacao}`;
+      // console.log("key", key);
       campos[key] = z
         .array(z.instanceof(File))
         .min(1, { message: "Insira pelo menos um arquivo" })
         .superRefine((files, ctx) => {
-          files.forEach((file, idx) => {
+          files.forEach((file, index) => {
             if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Arquivos devem ser PDF ou imagem (JPEG/PNG)",
-                path: [idx],
+                path: [index],
               });
             }
 
@@ -109,15 +109,18 @@ export const generateConsultorAreaDocsSchema = (
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Arquivos devem ter no máximo 10MB",
-                path: [idx],
+                path: [index],
               });
             }
           });
         });
     });
   });
+
   return z.object(campos);
 };
+
+
 
 
 
