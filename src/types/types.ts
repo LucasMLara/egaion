@@ -69,29 +69,20 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
   return z.object(campos);
 };
 
-export interface DocumentoConsultorPorArea {
-  idSCCredenciadasEdital: string;
-  idSCEdital: string;
-  NomeEdital: string;
-  idSCCredenciada: string;
-  RazaoSocial: string;
-  idSCConsultorEdital: string;
-  idSCTecnico: string;
-  Nome: string;
-  CPF: string;
-  Parametrizacao: string;
-  Aprovado: boolean;
-}
+type Parametrizacao = string;
+type ConsultorEmailOuNome = string;
+
+type DocumentosPorArea = Record<Parametrizacao, unknown[]>;
+type TodosDocumentosPorConsultor = Record<ConsultorEmailOuNome, DocumentosPorArea>;
 
 export const generateConsultorAreaDocsSchema = (
-  dados: Record<string, Record<string, DocumentoConsultorPorArea[]>>
+  dados: TodosDocumentosPorConsultor
 ) => {
   const campos: Record<string, any> = {};
 
   Object.entries(dados).forEach(([consultor, setores]) => {
-    Object.entries(setores).forEach(([parametrizacao, documentos]) => {
+    Object.keys(setores).forEach((parametrizacao) => {
       const key = `${consultor} - ${parametrizacao}`;
-      // console.log("key", key);
       campos[key] = z
         .array(z.instanceof(File))
         .min(1, { message: "Insira pelo menos um arquivo" })
