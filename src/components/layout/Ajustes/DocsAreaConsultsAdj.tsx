@@ -11,6 +11,7 @@ import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
+import { z } from "zod";
 
 interface Props {
   DocumentosDosConsultoresPorAreaAjustesProp: DocumentosAgrupadosPorConsultorEArea;
@@ -19,21 +20,19 @@ interface Props {
 export default function DocsAreaConsultsAdj({
   DocumentosDosConsultoresPorAreaAjustesProp,
 }: Props) {
-  const schema = useMemo(
-    () =>
-      generateConsultorAreaDocsSchema(
-        DocumentosDosConsultoresPorAreaAjustesProp
-      ),
-    [DocumentosDosConsultoresPorAreaAjustesProp]
+  const schema = generateConsultorAreaDocsSchema(
+    DocumentosDosConsultoresPorAreaAjustesProp
   );
-  // console.log(DocumentosDosConsultoresPorAreaAjustesProp);
+
+  type FormSchema = z.infer<typeof schema>;
+
   const {
     setValue,
     getFieldState,
     register,
     trigger,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
@@ -60,22 +59,28 @@ export default function DocsAreaConsultsAdj({
                   DocumentosQualificacaoConsultoresAjustes.filter(
                     (d) => d.title === uniqueKey
                   );
-
                 return (
                   <div key={uniqueKey} className="mb-4">
-                    <Label className="text-sm font-bold">{area}</Label>
-                    {arquivosSalvos.length > 0 && (
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() =>
-                          removerDocumentosQualificacaoConsultoresAjustes(
-                            arquivosSalvos[0].id,
-                            arquivosSalvos[0].title
-                          )
-                        }
-                      />
-                    )}
+                    <div className="flex items-center justify-between my-4">
+                      <Label className="text-sm font-bold">{area}</Label>
+                      {arquivosSalvos.length > 0 && (
+                        <Button
+                          className="text-red-500 text-sm"
+                          variant="ghost"
+                          onClick={() => {
+                            arquivosSalvos.forEach((arq) => {
+                              return removerDocumentosQualificacaoConsultoresAjustes(
+                                arq.id,
+                                arq.title
+                              );
+                            });
+                          }}
+                        >
+                          <TrashIcon className="w-4 h-4 mr-1" />
+                          Remover todos
+                        </Button>
+                      )}
+                    </div>
                     {arquivosSalvos.length === 0 ? (
                       <>
                         <Input
@@ -90,8 +95,8 @@ export default function DocsAreaConsultsAdj({
                             });
                             const isValid = await trigger(uniqueKey);
                             const fieldState = getFieldState(uniqueKey);
-                            // console.log("isValid:", isValid);
-                            // console.log("fieldState:", fieldState);
+                            console.log("isValid:", isValid);
+                            console.log("fieldState:", fieldState);
                             console.log("Files inseridos:", e.target.files);
                             console.log("Array convertido:", filesArray);
                             console.log(
@@ -102,9 +107,8 @@ export default function DocsAreaConsultsAdj({
                               "instanceof File:",
                               filesArray.map((f) => f instanceof File)
                             );
-                            // console.log("errors:", errors);
                             //TODO - estou tendo erro no ISVALID , entao a função retorna false e não salva os arquivos, mesmo quando o arquivo é válido. verificar isso na segunda
-                            if (!isValid) return;
+                            // if (!isValid) return;
                             const documentosConvertidos = filesArray.map(
                               (file) => ({
                                 title: uniqueKey,
