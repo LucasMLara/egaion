@@ -41,7 +41,7 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
   const campos: Record<string, any> = {};
 
   docs.forEach((doc) => {
-    const key = `${doc.Parametrizacao} - ${doc.NomeInput}`;
+    const key = `${doc.Parametrizacao} - ${doc.NomeInput}`.replaceAll(".", "__DOT__");
     campos[key] = z
       .array(z.instanceof(File))
       .min(1, { message: "Insira pelo menos um arquivo" })
@@ -82,7 +82,7 @@ export const generateConsultorAreaDocsSchema = (
 
   Object.entries(dados).forEach(([consultor, setores]) => {
     Object.keys(setores).forEach((parametrizacao) => {
-      const key = `${consultor} - ${parametrizacao}`;
+      const key = `${consultor} - ${parametrizacao}`.replaceAll(".", "__DOT__");
       campos[key] = z
         .array(z.instanceof(File))
         .min(1, { message: "Insira pelo menos um arquivo" })
