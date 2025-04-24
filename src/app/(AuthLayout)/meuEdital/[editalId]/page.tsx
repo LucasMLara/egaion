@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { LoaderIcon } from "lucide-react";
 import DocsEmpresaAdj from "@/components/layout/Ajustes/DocsEmpresaAdj";
@@ -30,11 +30,15 @@ import {
 import { FileText, File, UserCheck } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [cancelando, setCancelando] = useState(false);
+  const [enviandoAjuste, setEnviandoAjuste] = useState(false);
+  const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
   const {
     DocumentosQualificacaoConsultoresAjustes,
     DocumentosQualificacaoEmpresaAjustes,
@@ -94,6 +98,162 @@ export default function MyEditalPage() {
       documentos,
     }));
   }
+  const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
+
+  const enviarAjustes = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      const body = `
+              <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
+                <soap:Header/>
+                  <soap:Body>
+                      <tem:performActivity>
+                        <tem:activityInfo>
+                          <BizAgiWSParam>
+                            <domain>domain</domain>
+                            <userName>admon</userName>
+                            <ActivityData>
+                              <radNumber>${numeroCaso}</radNumber>
+                              <taskName>Activity_100</taskName>
+                            </ActivityData>
+                            <Entities>
+                              <SCCredenciadasEdital>
+                                <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='2'"/>
+                              </SCCredenciadasEdital>
+                            </Entities>
+                          </BizAgiWSParam>
+                            </tem:activityInfo>
+                          </tem:performActivity>
+                  </soap:Body>
+        </soap:Envelope>
+          `;
+      const fetchOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
+          "Accept-Encoding": "gzip,deflate",
+        },
+        body,
+      };
+
+      console.log(body);
+      // try {
+      //   setEnviandoAjuste(true);
+      //   const response = await fetch(url, fetchOptions);
+      //   const text = await response.text();
+      //   console.log(text);
+
+      //   const parser = new DOMParser();
+      //   const xmlDoc = parser.parseFromString(text, "application/xml");
+
+      //   const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
+      //   const errorMessage =
+      //     errorMessageElements.length > 0
+      //       ? errorMessageElements[0].textContent
+      //       : null;
+
+      //   if (errorMessage || !response.ok) {
+      //     console.error(
+      //       "Erro retornado pelo sistema:",
+      //       errorMessage || "Resposta não OK"
+      //     );
+      //     setEnviandoAjuste(false);
+      //     throw new Error(
+      //       errorMessage || "Erro ao Enviar os ajustes da inscrição."
+      //     );
+      //   } else {
+      //     toast.success("Ajustes Enviados!");
+      //     setEnviandoAjuste(false);
+      //   }
+      // } catch (e) {
+      //   if (e instanceof Error) {
+      //     toast.error("Erro ao Enviar os ajustes da inscrição.");
+      //     console.error(e.message);
+      //   } else {
+      //     toast.error("An unknown error occurred.");
+      //   }
+      //   console.error(e);
+      //   setEnviandoAjuste(false);
+      // }
+    },
+    [numeroCaso]
+  );
+
+  const cancelarInscricao = useCallback(async () => {
+    const body = `
+              <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
+                <soap:Header/>
+                  <soap:Body>
+                      <tem:performActivity>
+                        <tem:activityInfo>
+                          <BizAgiWSParam>
+                            <domain>domain</domain>
+                            <userName>admon</userName>
+                            <ActivityData>
+                              <radNumber>${numeroCaso}</radNumber>
+                              <taskName>Activity_100</taskName>
+                            </ActivityData>
+                            <Entities>
+                              <SCCredenciadasEdital>
+                                <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='2'"/>
+                              </SCCredenciadasEdital>
+                            </Entities>
+                          </BizAgiWSParam>
+                            </tem:activityInfo>
+                          </tem:performActivity>
+                  </soap:Body>
+        </soap:Envelope>
+          `;
+
+    const fetchOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
+        "Accept-Encoding": "gzip,deflate",
+      },
+      body,
+    };
+    try {
+      setCancelando(true);
+      const response = await fetch(url, fetchOptions);
+      const text = await response.text();
+      console.log(text);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "application/xml");
+
+      const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
+      const errorMessage =
+        errorMessageElements.length > 0
+          ? errorMessageElements[0].textContent
+          : null;
+
+      if (!response.ok) {
+        console.error(
+          "Erro retornado pelo sistema:",
+          errorMessage || "Resposta não OK"
+        );
+        setCancelando(false);
+        throw new Error(errorMessage || "Erro ao cancelar inscrição.");
+      } else {
+        toast.success("Inscrição Cancelada!");
+        setCancelando(false);
+        setLoading(true);
+        router.push("/");
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error("Erro ao cancelar inscrição.");
+        console.error(e.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+      console.error(e);
+      setCancelando(false);
+    }
+  }, [numeroCaso, router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +261,23 @@ export default function MyEditalPage() {
         const res = await fetch(`/api/myEditals/${editalId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
+        const {
+          documentosDaEmpresa,
+          DocumentosQualificacaoTecnicaEmpresa,
+          documentosPessoaisConsultores,
+          documentosDosConsultoresPorArea,
+        } = data;
+        const rawCaseNumber =
+          documentosDaEmpresa?.[0]?.NumeroCaso ??
+          DocumentosQualificacaoTecnicaEmpresa?.[0]?.NumeroCaso ??
+          documentosPessoaisConsultores?.[0]?.NumeroCaso ??
+          documentosDosConsultoresPorArea?.[0]?.NumeroCaso;
+
+        if (!rawCaseNumber) {
+          throw new Error("Nenhum Número de Caso encontrado.");
+        }
+
+        setNumeroCaso(rawCaseNumber);
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
         setDocumentosPessoaisConsultores(
           agruparPorConsultor(data.documentosPessoaisConsultores || [])
@@ -122,12 +299,7 @@ export default function MyEditalPage() {
     };
 
     fetchData();
-  }, [editalId]);
-
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    console.log("Form submitted");
-  }
+  }, [editalId, numeroCaso]);
 
   const nomeEdital = (() => {
     const values = Object.values(documentosDosConsultoresPorArea);
@@ -146,7 +318,7 @@ export default function MyEditalPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-6">
+    <form onSubmit={enviarAjustes} className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
@@ -235,13 +407,24 @@ export default function MyEditalPage() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button type="button" variant="destructive">
-                Confirmar Cancelamento da Inscrição
+              <Button
+                disabled={cancelando}
+                type="button"
+                variant="destructive"
+                onClick={cancelarInscricao}
+              >
+                {cancelando ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Confirmar Cancelamento da Inscrição"
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        <Button type="submit">Enviar</Button>
+        <Button type="submit" disabled={enviandoAjuste}>
+          {cancelando ? <LoaderIcon className="animate-spin" /> : "Enviar"}
+        </Button>
       </section>
     </form>
   );
