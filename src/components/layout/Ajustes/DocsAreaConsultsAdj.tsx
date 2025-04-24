@@ -35,6 +35,7 @@ export default function DocsAreaConsultsAdj({
   } = useForm<FormSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
+    defaultValues: {},
   });
 
   const {
@@ -54,7 +55,10 @@ export default function DocsAreaConsultsAdj({
             >
               <span className="font-bold flex my-2">{consultor}</span>
               {Object.keys(areas).map((area) => {
-                const uniqueKey = `${consultor} - ${area}`;
+                const uniqueKey = `${consultor} - ${area}`.replaceAll(
+                  ".",
+                  "__DOT__"
+                );
                 const arquivosSalvos =
                   DocumentosQualificacaoConsultoresAjustes.filter(
                     (d) => d.title === uniqueKey
@@ -86,7 +90,6 @@ export default function DocsAreaConsultsAdj({
                         <Input
                           type="file"
                           multiple
-                          {...register(uniqueKey)}
                           accept=".pdf,image/jpeg,image/jpg"
                           onChange={async (e) => {
                             const filesArray = Array.from(e.target.files || []);
@@ -94,21 +97,8 @@ export default function DocsAreaConsultsAdj({
                               shouldValidate: true,
                             });
                             const isValid = await trigger(uniqueKey);
-                            const fieldState = getFieldState(uniqueKey);
-                            console.log("isValid:", isValid);
-                            console.log("fieldState:", fieldState);
-                            console.log("Files inseridos:", e.target.files);
-                            console.log("Array convertido:", filesArray);
-                            console.log(
-                              "typeof filesArray[0]:",
-                              typeof filesArray[0]
-                            );
-                            console.log(
-                              "instanceof File:",
-                              filesArray.map((f) => f instanceof File)
-                            );
-                            //TODO - estou tendo erro no ISVALID , entao a função retorna false e não salva os arquivos, mesmo quando o arquivo é válido. verificar isso na segunda
-                            // if (!isValid) return;
+
+                            if (!isValid) return;
                             const documentosConvertidos = filesArray.map(
                               (file) => ({
                                 title: uniqueKey,
@@ -125,11 +115,12 @@ export default function DocsAreaConsultsAdj({
                             );
                           }}
                         />
-                        {errors[uniqueKey]?.message && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors[uniqueKey].message.toString()}
-                          </p>
-                        )}
+                        {Array.isArray(errors[uniqueKey]) &&
+                          errors[uniqueKey][0]?.message && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[uniqueKey][0]?.message}
+                            </p>
+                          )}
                       </>
                     ) : (
                       <div className="space-y-2">
