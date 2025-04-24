@@ -2,8 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LoaderIcon } from "lucide-react";
 import DocsEmpresaAdj from "@/components/layout/Ajustes/DocsEmpresaAdj";
@@ -11,11 +9,11 @@ import DocsPessoaisConsultAdj from "@/components/layout/Ajustes/DocsPessoaisCons
 import DocsQualifTecEmpresaAdj from "@/components/layout/Ajustes/DocsQualifTecEmpresaAdj";
 import DocsAreaConsultsAdj from "@/components/layout/Ajustes/DocsAreaConsultsAdj";
 
-import { toast } from "sonner";
+import { useEditalStore } from "@/store/EditalRegister";
+
 import {
   DocumentoConsultor,
   DocumentoConsultorPorArea,
-  DocumentoQualificacao,
   DocumentosAgrupadosPorConsultorEArea,
   GrupoConsultor,
   DocumentoEmpresaAjuste,
@@ -37,7 +35,13 @@ export default function MyEditalPage() {
   const { editalId } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
+  const {
+    DocumentosQualificacaoConsultoresAjustes,
+    DocumentosQualificacaoEmpresaAjustes,
+    documentosEmpresaAjustes,
+    documentosPessoaisConsultoresAjustes,
+    reset,
+  } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
     useState<GrupoConsultor[]>([]);
@@ -193,6 +197,30 @@ export default function MyEditalPage() {
       <section className="mt-6 flex justify-end space-x-4">
         <Button onClick={() => router.back()} variant="outline" type="button">
           Voltar
+        </Button>
+        <Button onClick={() => reset()} variant="destructive" type="button">
+          RESETA
+        </Button>
+        <Button
+          onClick={() => {
+            console.log(
+              "DocumentosQualificacaoConsultoresAjustes",
+              DocumentosQualificacaoConsultoresAjustes
+            );
+            console.log(
+              "DocumentosQualificacaoEmpresaAjustes",
+              DocumentosQualificacaoEmpresaAjustes
+            );
+            console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
+            console.log(
+              "documentosPessoaisConsultoresAjustes",
+              documentosPessoaisConsultoresAjustes
+            );
+          }}
+          variant="outline"
+          type="button"
+        >
+          LOGAR STATE
         </Button>
         <Dialog>
           <DialogTrigger asChild>
