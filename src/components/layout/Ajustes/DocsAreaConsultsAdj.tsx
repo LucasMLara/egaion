@@ -29,8 +29,6 @@ export default function DocsAreaConsultsAdj({
 
   const {
     setValue,
-    getFieldState,
-    register,
     trigger,
     formState: { errors },
   } = useForm<FormSchema>({
