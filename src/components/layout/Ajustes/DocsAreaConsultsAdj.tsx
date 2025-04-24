@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 import { z } from "zod";
+import { toast } from "sonner";
 
 interface Props {
   DocumentosDosConsultoresPorAreaAjustesProp: DocumentosAgrupadosPorConsultorEArea;
@@ -98,7 +99,10 @@ export default function DocsAreaConsultsAdj({
                             });
                             const isValid = await trigger(uniqueKey);
 
-                            if (!isValid) return;
+                            if (!isValid)
+                              return toast.error(
+                                "Erro ao validar arquivos. Insira-os novamente."
+                              );
                             const documentosConvertidos = filesArray.map(
                               (file) => ({
                                 title: uniqueKey,
@@ -113,6 +117,7 @@ export default function DocsAreaConsultsAdj({
                                 doc
                               )
                             );
+                            toast.success("Arquivos preparados com sucesso!");
                           }}
                         />
                         {Array.isArray(errors[uniqueKey]) &&

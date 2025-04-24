@@ -11,6 +11,7 @@ import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
+import { toast } from "sonner";
 
 interface Props {
   DocumentosQualificacaoEmpresaAjustesProp: Record<
@@ -98,7 +99,10 @@ export default function DocsQualifTecEmpresaAdj({
                                 shouldValidate: true,
                               });
                               const isValid = await trigger(uniqueKey);
-                              if (!isValid) return;
+                              if (!isValid)
+                                return toast.error(
+                                  "Erro ao validar arquivos. Insira-os novamente."
+                                );
                               const documentosConvertidos = filesArray.map(
                                 (file) => ({
                                   title: uniqueKey,
@@ -113,6 +117,7 @@ export default function DocsQualifTecEmpresaAdj({
                                   doc
                                 )
                               );
+                              toast.success("Arquivos preparados com sucesso!");
                             }}
                           />
                           {Array.isArray(errors[uniqueKey]) &&
