@@ -217,7 +217,7 @@ export default function MyEditalPage() {
               documentosPessoaisConsultoresAjustes
             );
           }}
-          variant="outline"
+          variant="ghost"
           type="button"
         >
           LOGAR STATE
