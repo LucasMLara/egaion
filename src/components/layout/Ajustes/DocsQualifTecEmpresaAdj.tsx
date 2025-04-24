@@ -51,8 +51,11 @@ export default function DocsQualifTecEmpresaAdj({
               <span className="font-bold flex my-2">{area}</span>
               <div>
                 {docs.map((doc) => {
-                  const uniqueKey = `${doc.Parametrizacao} - ${doc.NomeInput}`;
-
+                  const uniqueKey =
+                    `${doc.Parametrizacao} - ${doc.NomeInput}`.replaceAll(
+                      ".",
+                      "__DOT__"
+                    );
                   const arquivosSalvos =
                     DocumentosQualificacaoEmpresaAjustes.filter(
                       (d) =>
@@ -94,26 +97,22 @@ export default function DocsQualifTecEmpresaAdj({
                               setValue(uniqueKey, filesArray, {
                                 shouldValidate: true,
                               });
-
                               const isValid = await trigger(uniqueKey);
-
-                              if (isValid) {
-                                const documentosConvertidos = filesArray.map(
-                                  (file) => ({
-                                    title: uniqueKey,
-                                    blob: URL.createObjectURL(file),
-                                    id: doc.idSCCredenciada,
-                                    turnToBase64: file,
-                                    fileName: file.name,
-                                  })
-                                );
-
-                                documentosConvertidos.forEach((doc) =>
-                                  cadastrarDocumentosQualificacaoEmpresaAjustes(
-                                    doc
-                                  )
-                                );
-                              }
+                              if (!isValid) return;
+                              const documentosConvertidos = filesArray.map(
+                                (file) => ({
+                                  title: uniqueKey,
+                                  blob: URL.createObjectURL(file),
+                                  id: doc.idSCCredenciada,
+                                  turnToBase64: file,
+                                  fileName: file.name,
+                                })
+                              );
+                              documentosConvertidos.forEach((doc) =>
+                                cadastrarDocumentosQualificacaoEmpresaAjustes(
+                                  doc
+                                )
+                              );
                             }}
                           />
                           {Array.isArray(errors[uniqueKey]) &&
