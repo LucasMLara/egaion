@@ -31,6 +31,7 @@ import { FileText, File, UserCheck } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { prepararDocumentosCredenciadaAjustes } from "@/lib/concatEditalAdjustmentsDocs";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
@@ -39,13 +40,7 @@ export default function MyEditalPage() {
   const [cancelando, setCancelando] = useState(false);
   const [enviandoAjuste, setEnviandoAjuste] = useState(false);
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
-  const {
-    DocumentosQualificacaoConsultoresAjustes,
-    DocumentosQualificacaoEmpresaAjustes,
-    documentosEmpresaAjustes,
-    documentosPessoaisConsultoresAjustes,
-    reset,
-  } = useEditalStore();
+  const { documentosEmpresaAjustes, reset } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
     useState<GrupoConsultor[]>([]);
@@ -100,10 +95,8 @@ export default function MyEditalPage() {
   }
   const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
 
-  const enviarAjustes = useCallback(
-    async (event: React.FormEvent) => {
-      event.preventDefault();
-      const body = `
+  const enviarAjustes = useCallback(async () => {
+    const body = `
               <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
                 <soap:Header/>
                   <soap:Body>
@@ -118,7 +111,9 @@ export default function MyEditalPage() {
                             </ActivityData>
                             <Entities>
                               <SCCredenciadasEdital>
-                                <StatusCadastro entityName="SCStatusCredEdital" businessKey="Codigo='2'"/>
+                                ${await prepararDocumentosCredenciadaAjustes(
+                                  documentosEmpresaAjustes
+                                )}
                               </SCCredenciadasEdital>
                             </Entities>
                           </BizAgiWSParam>
@@ -127,58 +122,57 @@ export default function MyEditalPage() {
                   </soap:Body>
         </soap:Envelope>
           `;
-      const fetchOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
-          "Accept-Encoding": "gzip,deflate",
-        },
-        body,
-      };
 
-      console.log(body);
-      // try {
-      //   setEnviandoAjuste(true);
-      //   const response = await fetch(url, fetchOptions);
-      //   const text = await response.text();
-      //   console.log(text);
+    const fetchOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          'application/soap+xml;charset=UTF-8;action="http://tempuri.org/performActivity"',
+        "Accept-Encoding": "gzip,deflate",
+      },
+      body,
+    };
 
-      //   const parser = new DOMParser();
-      //   const xmlDoc = parser.parseFromString(text, "application/xml");
+    console.log(body);
+    // try {
+    //   setEnviandoAjuste(true);
+    //   const response = await fetch(url, fetchOptions);
+    //   const text = await response.text();
+    //   console.log(text);
 
-      //   const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
-      //   const errorMessage =
-      //     errorMessageElements.length > 0
-      //       ? errorMessageElements[0].textContent
-      //       : null;
+    //   const parser = new DOMParser();
+    //   const xmlDoc = parser.parseFromString(text, "application/xml");
 
-      //   if (errorMessage || !response.ok) {
-      //     console.error(
-      //       "Erro retornado pelo sistema:",
-      //       errorMessage || "Resposta não OK"
-      //     );
-      //     setEnviandoAjuste(false);
-      //     throw new Error(
-      //       errorMessage || "Erro ao Enviar os ajustes da inscrição."
-      //     );
-      //   } else {
-      //     toast.success("Ajustes Enviados!");
-      //     setEnviandoAjuste(false);
-      //   }
-      // } catch (e) {
-      //   if (e instanceof Error) {
-      //     toast.error("Erro ao Enviar os ajustes da inscrição.");
-      //     console.error(e.message);
-      //   } else {
-      //     toast.error("An unknown error occurred.");
-      //   }
-      //   console.error(e);
-      //   setEnviandoAjuste(false);
-      // }
-    },
-    [numeroCaso]
-  );
+    //   const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
+    //   const errorMessage =
+    //     errorMessageElements.length > 0
+    //       ? errorMessageElements[0].textContent
+    //       : null;
+
+    //   if (errorMessage || !response.ok) {
+    //     console.error(
+    //       "Erro retornado pelo sistema:",
+    //       errorMessage || "Resposta não OK"
+    //     );
+    //     setEnviandoAjuste(false);
+    //     throw new Error(
+    //       errorMessage || "Erro ao Enviar os ajustes da inscrição."
+    //     );
+    //   } else {
+    //     toast.success("Ajustes Enviados!");
+    //     setEnviandoAjuste(false);
+    //   }
+    // } catch (e) {
+    //   if (e instanceof Error) {
+    //     toast.error("Erro ao Enviar os ajustes da inscrição.");
+    //     console.error(e.message);
+    //   } else {
+    //     toast.error("An unknown error occurred.");
+    //   }
+    //   console.error(e);
+    //   setEnviandoAjuste(false);
+    // }
+  }, [numeroCaso, documentosEmpresaAjustes]);
 
   const cancelarInscricao = useCallback(async () => {
     const body = `
@@ -318,11 +312,71 @@ export default function MyEditalPage() {
   }
 
   return (
-    <form onSubmit={enviarAjustes} className="space-y-6 p-6">
+    <section className="space-y-6 p-6">
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
-      <Tabs defaultValue="docsequipetecnica" className="w-full">
+      <section className="mt-6 flex justify-end space-x-4">
+        <Button onClick={() => router.back()} variant="outline" type="button">
+          Voltar
+        </Button>
+        <Button onClick={() => reset()} variant="destructive" type="button">
+          RESETA
+        </Button>
+        <Button
+          onClick={() => {
+            // console.log(
+            //   "DocumentosQualificacaoConsultoresAjustes",
+            //   DocumentosQualificacaoConsultoresAjustes
+            // );
+            // console.log(
+            //   "DocumentosQualificacaoEmpresaAjustes",
+            //   DocumentosQualificacaoEmpresaAjustes
+            // );
+            console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
+            // console.log(
+            //   "documentosPessoaisConsultoresAjustes",
+            //   documentosPessoaisConsultoresAjustes
+            // );
+          }}
+          variant="ghost"
+          type="button"
+        >
+          LOGAR STATE
+        </Button>
+        <Dialog>
+          {/* <DialogTrigger asChild>
+            <Button variant="outline">Cancelar Inscrição</Button>
+          </DialogTrigger> */}
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Cancelar Inscrição</DialogTitle>
+              <DialogDescription>
+                Tem certeza de que deseja cancelar a inscrição? Esta ação não
+                pode ser desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                disabled={cancelando}
+                type="button"
+                variant="destructive"
+                onClick={cancelarInscricao}
+              >
+                {cancelando ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Confirmar Cancelamento da Inscrição"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Button disabled={enviandoAjuste} onClick={() => enviarAjustes()}>
+          {cancelando ? <LoaderIcon className="animate-spin" /> : "Enviar"}
+        </Button>
+      </section>
+      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
@@ -366,66 +420,6 @@ export default function MyEditalPage() {
           />
         </TabsContent>
       </Tabs>
-      <section className="mt-6 flex justify-end space-x-4">
-        <Button onClick={() => router.back()} variant="outline" type="button">
-          Voltar
-        </Button>
-        <Button onClick={() => reset()} variant="destructive" type="button">
-          RESETA
-        </Button>
-        <Button
-          onClick={() => {
-            console.log(
-              "DocumentosQualificacaoConsultoresAjustes",
-              DocumentosQualificacaoConsultoresAjustes
-            );
-            console.log(
-              "DocumentosQualificacaoEmpresaAjustes",
-              DocumentosQualificacaoEmpresaAjustes
-            );
-            console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
-            console.log(
-              "documentosPessoaisConsultoresAjustes",
-              documentosPessoaisConsultoresAjustes
-            );
-          }}
-          variant="ghost"
-          type="button"
-        >
-          LOGAR STATE
-        </Button>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Cancelar Inscrição</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Cancelar Inscrição</DialogTitle>
-              <DialogDescription>
-                Tem certeza de que deseja cancelar a inscrição? Esta ação não
-                pode ser desfeita.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                disabled={cancelando}
-                type="button"
-                variant="destructive"
-                onClick={cancelarInscricao}
-              >
-                {cancelando ? (
-                  <LoaderIcon className="animate-spin" />
-                ) : (
-                  "Confirmar Cancelamento da Inscrição"
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <Button type="submit" disabled={enviandoAjuste}>
-          {cancelando ? <LoaderIcon className="animate-spin" /> : "Enviar"}
-        </Button>
-      </section>
-    </form>
+    </section>
   );
 }
