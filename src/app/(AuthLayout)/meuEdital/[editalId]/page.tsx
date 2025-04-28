@@ -40,7 +40,11 @@ export default function MyEditalPage() {
   const [cancelando, setCancelando] = useState(false);
   const [enviandoAjuste, setEnviandoAjuste] = useState(false);
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
-  const { documentosEmpresaAjustes, reset } = useEditalStore();
+  const {
+    documentosEmpresaAjustes,
+    reset,
+    documentosPessoaisConsultoresAjustes,
+  } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
     useState<GrupoConsultor[]>([]);
@@ -333,7 +337,10 @@ export default function MyEditalPage() {
             //   "DocumentosQualificacaoEmpresaAjustes",
             //   DocumentosQualificacaoEmpresaAjustes
             // );
-            console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
+            console.log(
+              "documentosPessoaisConsultoresAjustes",
+              documentosPessoaisConsultoresAjustes
+            );
             // console.log(
             //   "documentosPessoaisConsultoresAjustes",
             //   documentosPessoaisConsultoresAjustes
@@ -376,7 +383,7 @@ export default function MyEditalPage() {
           {cancelando ? <LoaderIcon className="animate-spin" /> : "Enviar"}
         </Button>
       </section>
-      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
+      <Tabs defaultValue="docspessoaisconsultores" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
