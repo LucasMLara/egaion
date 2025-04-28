@@ -17,7 +17,6 @@ export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes: GrupoConsultor[];
 }) {
   const {
-    register,
     trigger,
     setValue,
     formState: { errors },
@@ -93,7 +92,6 @@ export default function DocsPessoaisConsultAdj({
                 <Label className="flex items-center justify-center font-medium my-2">
                   {doc.NomeInput}
                 </Label>
-
                 {existing ? (
                   <div className="flex items-center justify-center gap-2">
                     <a
@@ -129,7 +127,6 @@ export default function DocsPessoaisConsultAdj({
                     }}
                   />
                 )}
-
                 {errors.documentos?.[doc.NomeInput] && (
                   <p className="text-red-500 text-sm">
                     {errors.documentos[doc.NomeInput]?.message}
