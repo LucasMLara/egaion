@@ -33,6 +33,17 @@ export default function DocsPessoaisConsultAdj({
     documentosPessoaisConsultoresAjustes,
   } = useEditalStore();
 
+  // TODO - CRIAR FUNÇÃO NO ARQUIVO TYPES PARA GERAR O SCHEMA DINAMICAMENTE
+
+  // console.log(
+  //   "documentosDosConsultoresParaAjustes",
+  //   documentosDosConsultoresParaAjustes
+  // );
+  // console.log(
+  //   "Campos esperados no form:",
+  //   Object.keys(schemaDocsPessoais.shape)
+  // );
+
   async function handleFieldSubmit(
     fieldName: string,
     file: File | undefined,
