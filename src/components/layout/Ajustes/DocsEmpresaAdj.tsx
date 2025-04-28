@@ -61,15 +61,14 @@ export default function DocsEmpresaAdj({
 
     if (isValid && file) {
       const blobUrl = URL.createObjectURL(file);
-      const documento: any = {
-        Nome: fieldName,
+      const documento = {
+        title: fieldName,
         fileName: file.name,
         blob: blobUrl,
         id: idSCDocumentacao,
+        idSCDocumentacao,
         turnToBase64: file,
       };
-
-      console.log(documento);
       inserirDocumentosEmpresaAjustes(documento);
     }
   }
