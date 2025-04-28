@@ -210,7 +210,7 @@ export default function MyEditalPage() {
       method: "POST",
       headers: {
         "Content-Type":
-          'application/soap+xml;charset=UTF-8;action="http://tempuri.org/createCases"',
+          'application/soap+xml;charset=UTF-8;action="http://tempuri.org/performActivity"',
         "Accept-Encoding": "gzip,deflate",
       },
       body,
