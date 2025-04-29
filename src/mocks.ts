@@ -1,5 +1,104 @@
 import { RequiredDocuments, MultipleCheckBoxOptions } from "@/types/types";
 
+export const mockData = [
+  {
+    nome: "teste@teste.com",
+    cpf: "45126154353",
+    documentos: [
+      {
+        idSCCredenciadasEdital: "2051",
+        idSCEdital: "2701",
+        NomeEdital: "Edital Teste 27/03",
+        idSCCredenciada: "1107",
+        RazaoSocial: "Ivan Pentago",
+        idSCConsultorEdital: "1601",
+        idSCTecnico: "1551",
+        Nome: "teste@teste.com",
+        CPF: "45126154353",
+        NomeInput: "Comprovante de Formação Acadêmica",
+        NumeroCaso: 2151,
+      },
+      {
+        idSCCredenciadasEdital: "2051",
+        idSCEdital: "2701",
+        NomeEdital: "Edital Teste 27/03",
+        idSCCredenciada: "1107",
+        RazaoSocial: "Ivan Pentago",
+        idSCConsultorEdital: "1601",
+        idSCTecnico: "1551",
+        Nome: "teste@teste.com",
+        CPF: "45126154353",
+        NomeInput: "Registro Profissional",
+        NumeroCaso: 2151,
+      },
+    ],
+  },
+  {
+    nome: "maria.silva@email.com",
+    cpf: "12345678901",
+    documentos: [
+      {
+        idSCCredenciadasEdital: "2052",
+        idSCEdital: "2702",
+        NomeEdital: "Edital Abril 2025",
+        idSCCredenciada: "1108",
+        RazaoSocial: "Silva Consultoria",
+        idSCConsultorEdital: "1602",
+        idSCTecnico: "1552",
+        Nome: "maria.silva@email.com",
+        CPF: "12345678901",
+        NomeInput: "Documentos Pessoais",
+        NumeroCaso: 2152,
+      },
+      {
+        idSCCredenciadasEdital: "2052",
+        idSCEdital: "2702",
+        NomeEdital: "Edital Abril 2025",
+        idSCCredenciada: "1108",
+        RazaoSocial: "Silva Consultoria",
+        idSCConsultorEdital: "1602",
+        idSCTecnico: "1552",
+        Nome: "maria.silva@email.com",
+        CPF: "12345678901",
+        NomeInput: "Comprovante de Vínculo PJ",
+        NumeroCaso: 2152,
+      },
+    ],
+  },
+  {
+    nome: "joao.lima@empresa.com",
+    cpf: "98765432100",
+    documentos: [
+      {
+        idSCCredenciadasEdital: "2053",
+        idSCEdital: "2703",
+        NomeEdital: "Edital Maio 2025",
+        idSCCredenciada: "1109",
+        RazaoSocial: "Lima Tech",
+        idSCConsultorEdital: "1603",
+        idSCTecnico: "1553",
+        Nome: "joao.lima@empresa.com",
+        CPF: "98765432100",
+        NomeInput: "Diploma de Especialização",
+        NumeroCaso: 2153,
+      },
+      {
+        idSCCredenciadasEdital: "2053",
+        idSCEdital: "2703",
+        NomeEdital: "Edital Maio 2025",
+        idSCCredenciada: "1109",
+        RazaoSocial: "Lima Tech",
+        idSCConsultorEdital: "1603",
+        idSCTecnico: "1553",
+        Nome: "joao.lima@empresa.com",
+        CPF: "98765432100",
+        NomeInput: "Carteira Profissional",
+        NumeroCaso: 2153,
+      },
+    ],
+  },
+];
+
 export const body = `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
 xmlns:tem="http://tempuri.org/">
 <soap:Header/>
