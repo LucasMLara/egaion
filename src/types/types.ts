@@ -31,25 +31,19 @@ export const generateEmpresaDocsSchema = (docs: { Nome: string; Aprovado: boolea
 };
 
 export const generateConsultorDocsSchema = (data: GrupoConsultor[]) => {
-  const shape: Record<string, z.ZodObject<Record<string, typeof fileSchema>>> = {};
+  const shape: Record<string, z.ZodTypeAny> = {};
 
   data.forEach((consultor) => {
-
-    const campos: Record<string, typeof fileSchema> = {};
-
     consultor.documentos.forEach((doc) => {
-      console.log(doc)
       if (doc.NomeInput) {
-        campos[doc.NomeInput] = fileSchema;
+        const key = `${doc.NomeInput}-${consultor.cpf}`;
+
+        shape[key] = fileSchema;
       }
     });
-
-    if (Object.keys(campos).length > 0) {
-      shape[consultor.cpf] = z.object(campos);
-    }
   });
 
-  return z.object(shape);
+  return z.object({ documentos: z.object(shape) });
 };
 
 
