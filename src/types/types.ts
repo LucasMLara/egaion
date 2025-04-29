@@ -69,6 +69,30 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
   return z.object(campos);
 };
 
+export const generateConsultorDocsSchema = (data: GrupoConsultor[]) => {
+  const shape: Record<string, z.ZodObject<Record<string, typeof fileSchema>>> = {};
+
+  data.forEach((consultor) => {
+
+    const campos: Record<string, typeof fileSchema> = {};
+
+    consultor.documentos.forEach((doc) => {
+      console.log(doc)
+      if (doc.NomeInput) {
+        campos[doc.NomeInput] = fileSchema;
+      }
+    });
+
+    if (Object.keys(campos).length > 0) {
+      shape[consultor.cpf] = z.object(campos);
+    }
+  });
+
+  return z.object(shape);
+};
+
+
+
 type Parametrizacao = string;
 type ConsultorEmailOuNome = string;
 
@@ -394,6 +418,7 @@ export type IEditalDoc = z.infer<typeof DocSchema>;
 export type IMultipleForm = z.infer<typeof MultipleFormSchema>;
 export type IGenerateEmpresaDocs = z.infer<ReturnType<typeof generateEmpresaDocsSchema>>;
 export type IGenerateEmpresaAreaDocs = z.infer<ReturnType<typeof generateEmpresaAreaDocsSchema>>;
+export type IGenerateConsultorDocs = z.infer<ReturnType<typeof generateConsultorDocsSchema>>
 
 export type MultipleCheckBoxOptions = {
   label: string;
