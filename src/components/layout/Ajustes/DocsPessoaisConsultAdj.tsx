@@ -6,22 +6,26 @@ import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 
 import {
-  schemaDocsPessoais,
   GrupoConsultor,
   IDocumentoConsultor,
+  generateConsultorDocsSchema,
+  IGenerateConsultorDocs,
 } from "@/types/types";
+import { mockData } from "@/mocks";
 
 export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes,
 }: {
   documentosDosConsultoresParaAjustes: GrupoConsultor[];
 }) {
+  const schema = generateConsultorDocsSchema(mockData);
+
   const {
     trigger,
     setValue,
     formState: { errors },
-  } = useForm<IDocumentoConsultor>({
-    resolver: zodResolver(schemaDocsPessoais),
+  } = useForm<IGenerateConsultorDocs>({
+    resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
       documentos: {},
@@ -33,23 +37,13 @@ export default function DocsPessoaisConsultAdj({
     documentosPessoaisConsultoresAjustes,
   } = useEditalStore();
 
-  // TODO - CRIAR FUNÇÃO NO ARQUIVO TYPES PARA GERAR O SCHEMA DINAMICAMENTE
-
-  // console.log(
-  //   "documentosDosConsultoresParaAjustes",
-  //   documentosDosConsultoresParaAjustes
-  // );
-  // console.log(
-  //   "Campos esperados no form:",
-  //   Object.keys(schemaDocsPessoais.shape)
-  // );
-
   async function handleFieldSubmit(
     fieldName: string,
     file: File | undefined,
     idSCDocumentacao: string
   ) {
-    const isValid = await trigger(fieldName as keyof IDocumentoConsultor);
+    const fullFieldName = `documentos.${fieldName}` as const;
+    const isValid = await trigger(fullFieldName);
 
     if (isValid && file) {
       const blobUrl = URL.createObjectURL(file);
@@ -94,6 +88,8 @@ export default function DocsPessoaisConsultAdj({
           <h2 className="font-semibold text-lg">{consultor.nome}</h2>
 
           {consultor.documentos.map((doc) => {
+            const key = `${doc.NomeInput}-${consultor.cpf}`;
+
             const existing = documentosPessoaisConsultoresAjustes.find(
               (d) => d.id === `${doc.NomeInput}-${consultor.cpf}`
             );
@@ -128,19 +124,15 @@ export default function DocsPessoaisConsultAdj({
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        setValue(`documentos.${doc.NomeInput}`, file);
-                        await handleFieldSubmit(
-                          doc.NomeInput,
-                          file,
-                          `${doc.NomeInput}-${consultor.cpf}`
-                        );
+                        setValue(`documentos.${key}`, file);
+                        await handleFieldSubmit(key, file, key);
                       }
                     }}
                   />
                 )}
-                {errors.documentos?.[doc.NomeInput] && (
+                {typeof errors.documentos?.[key]?.message === "string" && (
                   <p className="text-red-500 text-sm">
-                    {errors.documentos[doc.NomeInput]?.message}
+                    {errors.documentos[key]?.message as string}
                   </p>
                 )}
               </div>
