@@ -30,6 +30,29 @@ export const generateEmpresaDocsSchema = (docs: { Nome: string; Aprovado: boolea
   return z.object(shape);
 };
 
+export const generateConsultorDocsSchema = (data: GrupoConsultor[]) => {
+  const shape: Record<string, z.ZodObject<Record<string, typeof fileSchema>>> = {};
+
+  data.forEach((consultor) => {
+
+    const campos: Record<string, typeof fileSchema> = {};
+
+    consultor.documentos.forEach((doc) => {
+      console.log(doc)
+      if (doc.NomeInput) {
+        campos[doc.NomeInput] = fileSchema;
+      }
+    });
+
+    if (Object.keys(campos).length > 0) {
+      shape[consultor.cpf] = z.object(campos);
+    }
+  });
+
+  return z.object(shape);
+};
+
+
 export interface DocumentoEmpresaAjuste {
   idSCCredenciada: string;
   RazaoSocial: string;
@@ -69,27 +92,6 @@ export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) =>
   return z.object(campos);
 };
 
-export const generateConsultorDocsSchema = (data: GrupoConsultor[]) => {
-  const shape: Record<string, z.ZodObject<Record<string, typeof fileSchema>>> = {};
-
-  data.forEach((consultor) => {
-
-    const campos: Record<string, typeof fileSchema> = {};
-
-    consultor.documentos.forEach((doc) => {
-      console.log(doc)
-      if (doc.NomeInput) {
-        campos[doc.NomeInput] = fileSchema;
-      }
-    });
-
-    if (Object.keys(campos).length > 0) {
-      shape[consultor.cpf] = z.object(campos);
-    }
-  });
-
-  return z.object(shape);
-};
 
 
 
