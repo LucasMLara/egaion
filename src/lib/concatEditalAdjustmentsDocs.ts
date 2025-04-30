@@ -68,7 +68,6 @@ export async function prepararDocumentosCredenciadaAjustes(
 export async function prepararAreasCredenciadaAjustes(
   Areas: Document[]
 ): Promise<string> {
-  console.log(Areas)
   const agrupadoPorArea = Areas.reduce<Record<string, Document[]>>((acc, doc) => {
     const area = doc.areaName || "Desconhecida";
     if (!acc[area]) acc[area] = [];
