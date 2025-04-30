@@ -31,7 +31,11 @@ import { FileText, File, UserCheck } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { prepararDocumentosCredenciadaAjustes } from "@/lib/concatEditalAdjustmentsDocs";
+import {
+  prepararDocumentosCredenciadaAjustes,
+  prepararAreasCredenciadaAjustes,
+  prepararConsultoresCredenciada,
+} from "@/lib/concatEditalAdjustmentsDocs";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
@@ -42,8 +46,10 @@ export default function MyEditalPage() {
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
   const {
     documentosEmpresaAjustes,
-    reset,
     documentosPessoaisConsultoresAjustes,
+    DocumentosQualificacaoEmpresaAjustes,
+    DocumentosQualificacaoConsultoresAjustes,
+    reset,
   } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
@@ -118,6 +124,9 @@ export default function MyEditalPage() {
                                 ${await prepararDocumentosCredenciadaAjustes(
                                   documentosEmpresaAjustes
                                 )}
+                                ${await prepararAreasCredenciadaAjustes(
+                                  DocumentosQualificacaoEmpresaAjustes
+                                )}
                               </SCCredenciadasEdital>
                             </Entities>
                           </BizAgiWSParam>
@@ -137,7 +146,7 @@ export default function MyEditalPage() {
       body,
     };
 
-    console.log(body);
+    // console.log(body);
     // try {
     //   setEnviandoAjuste(true);
     //   const response = await fetch(url, fetchOptions);
@@ -176,7 +185,11 @@ export default function MyEditalPage() {
     //   console.error(e);
     //   setEnviandoAjuste(false);
     // }
-  }, [numeroCaso, documentosEmpresaAjustes]);
+  }, [
+    numeroCaso,
+    documentosEmpresaAjustes,
+    DocumentosQualificacaoEmpresaAjustes,
+  ]);
 
   const cancelarInscricao = useCallback(async () => {
     const body = `
@@ -330,21 +343,18 @@ export default function MyEditalPage() {
         <Button
           onClick={() => {
             // console.log(
-            //   "DocumentosQualificacaoConsultoresAjustes",
-            //   DocumentosQualificacaoConsultoresAjustes
-            // );
-            // console.log(
             //   "DocumentosQualificacaoEmpresaAjustes",
             //   DocumentosQualificacaoEmpresaAjustes
             // );
+            // console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
+            console.log(
+              "DocumentosQualificacaoConsultoresAjustes",
+              DocumentosQualificacaoConsultoresAjustes
+            );
             console.log(
               "documentosPessoaisConsultoresAjustes",
               documentosPessoaisConsultoresAjustes
             );
-            // console.log(
-            //   "documentosPessoaisConsultoresAjustes",
-            //   documentosPessoaisConsultoresAjustes
-            // );
           }}
           variant="ghost"
           type="button"
