@@ -65,16 +65,49 @@ export async function prepararDocumentosCredenciadaAjustes(
   return xml;
 }
 
-
 export async function prepararAreasCredenciadaAjustes(
   Areas: Document[]
 ): Promise<string> {
   console.log(Areas)
+  const agrupadoPorArea = Areas.reduce<Record<string, Document[]>>((acc, doc) => {
+    const area = doc.areaName || "Desconhecida";
+    if (!acc[area]) acc[area] = [];
+    acc[area].push(doc);
+    return acc;
+  }, {});
+
   let xml = "<NiveisFinais>";
 
+  for (const areaName in agrupadoPorArea) {
+    const docsDaArea = agrupadoPorArea[areaName];
 
+    xml += `\n  <SCParametrizacaoEdital>`;
+    xml += `\n    <Parametrizacao>${areaName}</Parametrizacao>`;
+    const agrupadoPorModalidade = docsDaArea.reduce<Record<string, Document[]>>((acc, doc) => {
+      const modalidade = doc.modalidade || "Desconhecida";
+      if (!acc[modalidade]) acc[modalidade] = [];
+      acc[modalidade].push(doc);
+      return acc;
+    }, {});
 
-  xml += `\n</NiveisFinais>`;
+    for (const modalidade in agrupadoPorModalidade) {
+      const docsDaModalidade = agrupadoPorModalidade[modalidade];
+      xml += `\n    <${modalidade}>`;
+
+      for (const doc of docsDaModalidade) {
+        xml += `\n      <File fileName="${doc.fileName}">${await getBase64(
+          new File([doc.turnToBase64], doc.title)
+        )}</File>`;
+      }
+
+      xml += `\n    </${modalidade}>`;
+    }
+
+    xml += `\n  </SCParametrizacaoEdital>`;
+  }
+
+  xml += `\n </NiveisFinais>`;
+
   return xml;
 }
 
