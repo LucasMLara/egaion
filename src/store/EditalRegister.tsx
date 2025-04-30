@@ -9,6 +9,7 @@ export type Document = {
   id: string;
   areaId?: string;
   areaName?: string;
+  modalidade?: string;
   consultorId?: string;
   category?: string;
   file?: File[];
