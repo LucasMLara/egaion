@@ -110,6 +110,11 @@ export default function DocsQualifTecEmpresaAdj({
                                   id: doc.idSCCredenciada,
                                   turnToBase64: file,
                                   fileName: file.name,
+                                  areaName: doc.Parametrizacao,
+                                  modalidade:
+                                    doc.NomeInput === "Relato de Experiência"
+                                      ? "RelatoExperiencia"
+                                      : "AtestadoCapacidadeTecnica",
                                 })
                               );
                               documentosConvertidos.forEach((doc) =>
