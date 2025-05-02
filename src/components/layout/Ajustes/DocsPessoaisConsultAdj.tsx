@@ -7,18 +7,18 @@ import { useEditalStore } from "@/store/EditalRegister";
 
 import {
   GrupoConsultor,
-  IDocumentoConsultor,
   generateConsultorDocsSchema,
   IGenerateConsultorDocs,
 } from "@/types/types";
-import { mockData } from "@/mocks";
 
 export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes,
 }: {
   documentosDosConsultoresParaAjustes: GrupoConsultor[];
 }) {
-  const schema = generateConsultorDocsSchema(mockData);
+  const schema = generateConsultorDocsSchema(
+    documentosDosConsultoresParaAjustes
+  );
 
   const {
     trigger,
@@ -55,7 +55,8 @@ export default function DocsPessoaisConsultAdj({
   async function handleFieldSubmit(
     fieldName: string,
     file: File | undefined,
-    idSCDocumentacao: string
+    idSCDocumentacao: string,
+    idSCTecnico: string
   ) {
     const fullFieldName = `documentos.${fieldName}` as const;
     const isValid = await trigger(fullFieldName);
@@ -68,6 +69,7 @@ export default function DocsPessoaisConsultAdj({
         id: idSCDocumentacao,
         turnToBase64: file,
         title: fieldName,
+        idSCTecnico,
       };
       inserirDocumentosPessoaisConsultorAjustes(documento);
     }
@@ -101,14 +103,11 @@ export default function DocsPessoaisConsultAdj({
           className="border rounded-xl p-4 my-2  space-y-4 shadow-lg"
         >
           <h2 className="font-semibold text-lg">{consultor.nome}</h2>
-
           {consultor.documentos.map((doc) => {
             const key = `${doc.NomeInput}-${consultor.cpf}`;
-
             const existing = documentosPessoaisConsultoresAjustes.find(
               (d) => d.id === `${doc.NomeInput}-${consultor.cpf}`
             );
-
             return (
               <div key={doc.NomeInput} className="flex flex-col gap-1">
                 <Label className="flex items-center justify-center font-medium my-2">
@@ -140,7 +139,12 @@ export default function DocsPessoaisConsultAdj({
                       const file = e.target.files?.[0];
                       if (file) {
                         setValue(`documentos.${key}`, file);
-                        await handleFieldSubmit(key, file, key);
+                        await handleFieldSubmit(
+                          key,
+                          file,
+                          key,
+                          consultor.idSCTecnico
+                        );
                       }
                     }}
                   />
