@@ -396,7 +396,7 @@ export default function MyEditalPage() {
           </DialogContent>
         </Dialog>
         <Button disabled={enviandoAjuste} onClick={() => enviarAjustes()}>
-          {cancelando ? <LoaderIcon className="animate-spin" /> : "Enviar"}
+          {enviandoAjuste ? <LoaderIcon className="animate-spin" /> : "Enviar"}
         </Button>
       </section>
       <Tabs defaultValue="docspessoaisconsultores" className="w-full">
