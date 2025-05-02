@@ -103,6 +103,7 @@ export default function DocsAreaConsultsAdj({
                               );
                             const documentosConvertidos = filesArray.map(
                               (file) => ({
+                                areaName: area,
                                 title: uniqueKey,
                                 blob: URL.createObjectURL(file),
                                 id: `${uniqueKey}-${file.name}`,
