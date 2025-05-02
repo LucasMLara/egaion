@@ -433,10 +433,12 @@ export interface DocumentoConsultor {
   NomeInput: string;
   Nome: string;
   CPF: string;
+  idSCTecnico: string;
 }
 export type GrupoConsultor = {
   nome: string;
   cpf: string;
+  idSCTecnico: string;
   documentos: DocumentoConsultor[];
 };
 
