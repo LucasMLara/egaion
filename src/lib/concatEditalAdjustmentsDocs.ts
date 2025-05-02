@@ -48,7 +48,6 @@ export async function prepararDocumentosCredenciadaAjustes(
 ): Promise<string> {
   let xml = "<Documentos>";
   for (const document of documents) {
-    console.log(document)
     xml += `
             <SCDocCredenciadaEdital entityName="SCDocCredenciadaEdital">
             <DadosDocumento entityName="SCDocumentacao" businessKey="idSCDocumentacao=${document.id
