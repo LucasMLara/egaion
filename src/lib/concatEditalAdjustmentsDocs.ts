@@ -111,112 +111,88 @@ export async function prepararAreasCredenciadaAjustes(
 }
 
 
-export async function prepararConsultoresCredenciada(
-  consultants: IConsultant[],
-  idSCCredenciada: string
+export async function prepararConsultoresCredenciadaAjustes(
+  DocsPessoais: Document[],
+  DocsPorArea: Document[]
 ): Promise<string> {
-  let xml = "<Consultores>";
-  for (const consultor of consultants) {
-    xml += `
-        <SCConsultorEdital>
-          <SCTecnico entityName="SCTecnico">
-            <Email>${consultor.email.email}</Email>
-            <Whatsapp>${formatDocEntry(consultor.contato)}</Whatsapp>
-            <CPF>${formatDocEntry(consultor.CPF)}</CPF>
-            <Assinante>True</Assinante>
-            <Telefone>${formatDocEntry(consultor.contato)}</Telefone>
-            <SCCredenciada>${idSCCredenciada}</SCCredenciada>
-            <EResponsavelLegal>True</EResponsavelLegal>
-            <Nome>${consultor.nome}</Nome>
-            <DocumentosPessoais>
-              <File fileName="${consultor.consultantCPF.name}">
-                ${await getBase64(new File([consultor.consultantCPF], consultor.consultantCPF.name))}
-              </File>
-            </DocumentosPessoais>
-            <ComprovanteVinculoPJ>
-              <File fileName="${consultor.comprovanteVinculoCNPJ.name}">
-                ${await getBase64(new File([consultor.comprovanteVinculoCNPJ], consultor.comprovanteVinculoCNPJ.name))}
-              </File>
-            </ComprovanteVinculoPJ>
-            <CompFormacaoAcademica>
-              <File fileName="${consultor.comprovanteFormacaoAcademica.name}">
-                ${await getBase64(new File([consultor.comprovanteFormacaoAcademica], consultor.comprovanteFormacaoAcademica.name))}
-              </File>
-            </CompFormacaoAcademica>
-            <RegistroProfissional>
-              <File fileName="${consultor.registroProfissionalClasse.name}">
-                ${await getBase64(new File([consultor.registroProfissionalClasse], consultor.registroProfissionalClasse.name))}
-              </File>
-            </RegistroProfissional>
-          </SCTecnico>
-          <NiveisParametrizacao>`;
+  // Função auxiliar para extrair o ID do consultor (limpa espaços)
+  const getConsultorId = (doc: Document) => doc.idSCTecnico?.trim();
 
-    // ** Group documents by areaId **
-    const groupedAreas = new Map<string, { areaName: string; documents: File[] }>();
-
-    for (const nivel of consultor.areaDocuments || []) {
-      if (!groupedAreas.has(nivel.areaId)) {
-        groupedAreas.set(nivel.areaId, { areaName: nivel.areaName, documents: [] });
-      }
-      groupedAreas.get(nivel.areaId)?.documents.push(nivel.files);
+  // Agrupar documentos pessoais por consultorId
+  const docsPessoaisPorConsultor: Record<string, Document[]> = {};
+  for (const doc of DocsPessoais) {
+    const consultorId = getConsultorId(doc);
+    if (!consultorId) continue;
+    if (!docsPessoaisPorConsultor[consultorId]) {
+      docsPessoaisPorConsultor[consultorId] = [];
     }
-
-    // ** Process grouped areas ** (Fix iteration over Map)
-    for (const [areaId, { areaName, documents }] of Array.from(groupedAreas.entries())) {
-      // Find matching area in consultor.areas
-      const area = consultor.areas?.find(a => a.id === areaId);
-      const naturezas = area?.naturezas ?? [];
-
-      // Generate XML for `naturezas`
-      const naturezasXML = naturezas
-        .map(
-          (natureza: string) => `
-              <SCNaturezaNivel>
-                <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza}'"/>
-              </SCNaturezaNivel>`
-        )
-        .join("");
-
-      // Generate XML for all `Documento` inside one `SCConsultorNivel`
-      const documentosXML = await Promise.all(
-        documents.map(
-          async (file: File) => `
-              <Documento>
-                <File fileName="${file.name}">
-                  ${await getBase64(new File([file], file.name))}
-                </File>
-              </Documento>`
-        )
-      );
-
-      xml += `
-            <SCConsultorNivel>
-              ${documentosXML.join("")}
-              <Parametrizacao>${areaName}</Parametrizacao>
-              <NaturezasPrestacao>
-                ${naturezasXML} 
-              </NaturezasPrestacao>
-            </SCConsultorNivel>`;
-    }
-
-    xml += `</NiveisParametrizacao>`;
-
-    if (consultor.localidades && consultor.localidades.length > 0) {
-      xml += `<Localidades>`;
-      for (const localidade of consultor.localidades) {
-        xml += `
-            <SCLocalidadeConsult>
-              <Localidade entityName="SCLocalidade" businessKey="idSCLocalidade='${localidade.idSCLocalidade}'"/>
-              <Prioridade>${localidade.prioridade}</Prioridade>
-            </SCLocalidadeConsult>`;
-      }
-      xml += `</Localidades>`;
-    }
-
-    xml += `</SCConsultorEdital>`;
+    docsPessoaisPorConsultor[consultorId].push(doc);
   }
-  xml += `</Consultores>`;
+
+  // Agrupar documentos por área por consultorId
+  const docsPorAreaPorConsultor: Record<string, Record<string, Document[]>> = {};
+  for (const doc of DocsPorArea) {
+    const consultorId = getConsultorId(doc);
+    const area = doc.areaName?.trim();
+    if (!consultorId || !area) continue;
+    if (!docsPorAreaPorConsultor[consultorId]) {
+      docsPorAreaPorConsultor[consultorId] = {};
+    }
+    if (!docsPorAreaPorConsultor[consultorId][area]) {
+      docsPorAreaPorConsultor[consultorId][area] = [];
+    }
+    docsPorAreaPorConsultor[consultorId][area].push(doc);
+  }
+
+  let xml = `<Consultores>`;
+
+  const todosConsultores = new Set([
+    ...Object.keys(docsPessoaisPorConsultor),
+    ...Object.keys(docsPorAreaPorConsultor)
+  ]);
+
+  for (const consultorId of todosConsultores) {
+    xml += `
+      <SCConsultorEdital>
+        <SCTecnico entityName="SCTecnico" businessKey="idSCTecnico='${consultorId}'">`;
+
+    const docsPessoais = docsPessoaisPorConsultor[consultorId] ?? [];
+    for (const doc of docsPessoais) {
+      const tipo = doc.tipo ?? "DocumentosPessoais";
+      const fileName = doc.fileName ?? "SemNome.pdf";
+      xml += `
+          <${tipo}>
+            <File fileName="${fileName}">mock64</File>
+          </${tipo}>`;
+    }
+
+    xml += `
+        </SCTecnico>
+        <NiveisParametrizacao>`;
+
+    const docsAreaPorParam = docsPorAreaPorConsultor[consultorId] ?? {};
+    for (const [parametrizacao, docs] of Object.entries(docsAreaPorParam)) {
+      xml += `
+          <SCConsultorNivel>
+            <Parametrizacao>${parametrizacao}</Parametrizacao>
+            <Documento>`;
+      for (const doc of docs) {
+        const fileName = doc.fileName ?? "SemNome.pdf";
+        xml += `
+              <File fileName="${fileName}">mock64</File>`;
+      }
+      xml += `
+            </Documento>
+          </SCConsultorNivel>`;
+    }
+
+    xml += `
+        </NiveisParametrizacao>
+      </SCConsultorEdital>`;
+  }
+
+  xml += `
+  </Consultores>`;
+
   return xml;
 }
-
-
