@@ -152,46 +152,44 @@ export default function MyEditalPage() {
       },
       body,
     };
+    try {
+      setEnviandoAjuste(true);
+      const response = await fetch(url, fetchOptions);
+      const text = await response.text();
+      console.log(text);
 
-    console.log(body);
-    // try {
-    //   setEnviandoAjuste(true);
-    //   const response = await fetch(url, fetchOptions);
-    //   const text = await response.text();
-    //   console.log(text);
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "application/xml");
 
-    //   const parser = new DOMParser();
-    //   const xmlDoc = parser.parseFromString(text, "application/xml");
+      const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
+      const errorMessage =
+        errorMessageElements.length > 0
+          ? errorMessageElements[0].textContent
+          : null;
 
-    //   const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
-    //   const errorMessage =
-    //     errorMessageElements.length > 0
-    //       ? errorMessageElements[0].textContent
-    //       : null;
-
-    //   if (errorMessage || !response.ok) {
-    //     console.error(
-    //       "Erro retornado pelo sistema:",
-    //       errorMessage || "Resposta não OK"
-    //     );
-    //     setEnviandoAjuste(false);
-    //     throw new Error(
-    //       errorMessage || "Erro ao Enviar os ajustes da inscrição."
-    //     );
-    //   } else {
-    //     toast.success("Ajustes Enviados!");
-    //     setEnviandoAjuste(false);
-    //   }
-    // } catch (e) {
-    //   if (e instanceof Error) {
-    //     toast.error("Erro ao Enviar os ajustes da inscrição.");
-    //     console.error(e.message);
-    //   } else {
-    //     toast.error("An unknown error occurred.");
-    //   }
-    //   console.error(e);
-    //   setEnviandoAjuste(false);
-    // }
+      if (errorMessage || !response.ok) {
+        console.error(
+          "Erro retornado pelo sistema:",
+          errorMessage || "Resposta não OK"
+        );
+        setEnviandoAjuste(false);
+        throw new Error(
+          errorMessage || "Erro ao Enviar os ajustes da inscrição."
+        );
+      } else {
+        toast.success("Ajustes Enviados!");
+        setEnviandoAjuste(false);
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error("Erro ao Enviar os ajustes da inscrição.");
+        console.error(e.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+      console.error(e);
+      setEnviandoAjuste(false);
+    }
   }, [
     numeroCaso,
     documentosEmpresaAjustes,
