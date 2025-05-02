@@ -162,7 +162,9 @@ export async function prepararConsultoresCredenciadaAjustes(
       const fileName = doc.fileName ?? "SemNome.pdf";
       xml += `
           <${tipo}>
-            <File fileName="${fileName}">mock64</File>
+            <File fileName="${fileName}">${await getBase64(
+        new File([doc.turnToBase64], doc.title)
+      )}</File>
           </${tipo}>`;
     }
 
@@ -179,7 +181,9 @@ export async function prepararConsultoresCredenciadaAjustes(
       for (const doc of docs) {
         const fileName = doc.fileName ?? "SemNome.pdf";
         xml += `
-              <File fileName="${fileName}">mock64</File>`;
+              <File fileName="${fileName}">${await getBase64(
+          new File([doc.turnToBase64], doc.title)
+        )}</File>`;
       }
       xml += `
             </Documento>
