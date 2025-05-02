@@ -15,6 +15,7 @@ export type Document = {
   file?: File[];
   turnToBase64: File;
   fileName?: string;
+  tipo?: string;
 };
 
 type History = {

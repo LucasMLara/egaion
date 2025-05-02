@@ -37,6 +37,21 @@ export default function DocsPessoaisConsultAdj({
     documentosPessoaisConsultoresAjustes,
   } = useEditalStore();
 
+  function handleDocType(fieldName: string): string {
+    switch (fieldName) {
+      case "Comprovante de Formação Acadêmica":
+        return "CompFormacaoAcademica";
+      case "Documentos Pessoais":
+        return "DocumentosPessoais";
+      case "Comprovante de Vínculo":
+        return "ComprovanteVinculoPJ";
+      case "Registro Profissional":
+        return "RegistroProfissional";
+      default:
+        return "Tipo de Arquivo Pessoal Nao Determinado";
+    }
+  }
+
   async function handleFieldSubmit(
     fieldName: string,
     file: File | undefined,
@@ -44,10 +59,10 @@ export default function DocsPessoaisConsultAdj({
   ) {
     const fullFieldName = `documentos.${fieldName}` as const;
     const isValid = await trigger(fullFieldName);
-
     if (isValid && file) {
       const blobUrl = URL.createObjectURL(file);
       const documento = {
+        tipo: handleDocType(fieldName.split("-")[0]),
         fileName: file.name,
         blob: blobUrl,
         id: idSCDocumentacao,
