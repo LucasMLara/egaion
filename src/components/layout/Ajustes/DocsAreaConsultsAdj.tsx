@@ -47,12 +47,14 @@ export default function DocsAreaConsultsAdj({
     <div className="space-y-6">
       {Object.entries(DocumentosDosConsultoresPorAreaAjustesProp).map(
         ([consultor, areas]) => {
+          const nomeDoConsultor = consultor.split("-")[0];
+          const idSCTecnico = consultor.split("-")[1];
           return (
             <div
               key={consultor}
               className="border p-4 my-2 rounded-xl shadow-lg"
             >
-              <span className="font-bold flex my-2">{consultor}</span>
+              <span className="font-bold flex my-2">{nomeDoConsultor}</span>
               {Object.keys(areas).map((area) => {
                 const uniqueKey = `${consultor} - ${area}`.replaceAll(
                   ".",
@@ -109,6 +111,7 @@ export default function DocsAreaConsultsAdj({
                                 id: `${uniqueKey}-${file.name}`,
                                 turnToBase64: file,
                                 fileName: file.name,
+                                idSCTecnico,
                               })
                             );
                             documentosConvertidos.forEach((doc) =>
