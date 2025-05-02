@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import {
   prepararDocumentosCredenciadaAjustes,
   prepararAreasCredenciadaAjustes,
-  prepararConsultoresCredenciada,
+  prepararConsultoresCredenciadaAjustes,
 } from "@/lib/concatEditalAdjustmentsDocs";
 
 export default function MyEditalPage() {
@@ -68,7 +68,7 @@ export default function MyEditalPage() {
   ): DocumentosAgrupadosPorConsultorEArea {
     return docs.reduce((acc, doc) => {
       if (doc.Aprovado === false) {
-        const consultorKey = `${doc.Nome}`;
+        const consultorKey = `${doc.Nome} - ${doc.idSCTecnico}`;
         const areaKey = doc.Parametrizacao;
         if (!acc[consultorKey]) acc[consultorKey] = {};
         if (!acc[consultorKey][areaKey]) acc[consultorKey][areaKey] = [];
@@ -93,16 +93,18 @@ export default function MyEditalPage() {
     const agrupado: Record<string, DocumentoConsultor[]> = {};
 
     for (const doc of array) {
-      if (!agrupado[doc.CPF]) agrupado[doc.CPF] = [];
-      agrupado[doc.CPF].push(doc);
+      if (!agrupado[doc.idSCTecnico]) agrupado[doc.idSCTecnico] = [];
+      agrupado[doc.idSCTecnico].push(doc);
     }
 
-    return Object.entries(agrupado).map(([cpf, documentos]) => ({
-      nome: documentos[0]?.Nome ?? "", // segurança básica
-      cpf,
+    return Object.entries(agrupado).map(([idSCTecnico, documentos]) => ({
+      nome: documentos[0]?.Nome ?? "",
+      cpf: documentos[0]?.CPF ?? "",
+      idSCTecnico,
       documentos,
     }));
   }
+
   const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
 
   const enviarAjustes = useCallback(async () => {
@@ -124,8 +126,13 @@ export default function MyEditalPage() {
                                 ${await prepararDocumentosCredenciadaAjustes(
                                   documentosEmpresaAjustes
                                 )}
-                                ${await prepararAreasCredenciadaAjustes(
-                                  DocumentosQualificacaoEmpresaAjustes
+                                  ${await prepararAreasCredenciadaAjustes(
+                                    DocumentosQualificacaoEmpresaAjustes
+                                  )}
+
+                                ${await prepararConsultoresCredenciadaAjustes(
+                                  documentosPessoaisConsultoresAjustes,
+                                  DocumentosQualificacaoConsultoresAjustes
                                 )}
                               </SCCredenciadasEdital>
                             </Entities>
@@ -146,7 +153,7 @@ export default function MyEditalPage() {
       body,
     };
 
-    // console.log(body);
+    console.log(body);
     // try {
     //   setEnviandoAjuste(true);
     //   const response = await fetch(url, fetchOptions);
@@ -189,6 +196,8 @@ export default function MyEditalPage() {
     numeroCaso,
     documentosEmpresaAjustes,
     DocumentosQualificacaoEmpresaAjustes,
+    documentosPessoaisConsultoresAjustes,
+    DocumentosQualificacaoConsultoresAjustes,
   ]);
 
   const cancelarInscricao = useCallback(async () => {
@@ -287,7 +296,6 @@ export default function MyEditalPage() {
         if (!rawCaseNumber) {
           throw new Error("Nenhum Número de Caso encontrado.");
         }
-
         setNumeroCaso(rawCaseNumber);
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
         setDocumentosPessoaisConsultores(
