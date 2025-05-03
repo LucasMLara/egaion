@@ -1,12 +1,8 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
-import { useEditalStore } from "@/store/EditalRegister";
+
 export default function CadastroRealizado() {
-  const { reset } = useEditalStore();
-  //TODO  CONTINUAR AQUI
-  // useEffect(() => reset(), [reset]);
   return (
     <div className="flex flex-col h-full items-center justify-center">
       <div className="text-center flex w-5/6 md:w-3/4 flex-col rounded-md border-2 bg-neutral-500 justify-center items-center p-7">
