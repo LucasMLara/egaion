@@ -24,6 +24,7 @@ export default function DocsEmpresaAdj({
     documentosEmpresaAjustes,
     inserirDocumentosEmpresaAjustes,
     removerDocumentosEmpresaAjustes,
+    alterarPermissaoAjuste,
   } = useEditalStore();
 
   const {
@@ -82,10 +83,14 @@ export default function DocsEmpresaAdj({
       removerDocumentosEmpresaAjustes(documentId);
     }
   }
-  //TODO usar essa variavel abaixo para bloquear o botao de envio e colocar todas as props da pagina principal em cada componente para ler no console e trabalhar com os dados recebidos
+
   const allFilesUploaded = documentosPendentes.every((doc) =>
     documentosEmpresaAjustes.some((d) => d.id === doc.idSCDocumentacao)
   );
+
+  useEffect(() => {
+    alterarPermissaoAjuste("DocsEmpresaAdj", allFilesUploaded);
+  }, [alterarPermissaoAjuste, allFilesUploaded]);
 
   if (documentosParaAjustes.length === 0) return <p>n tem nada</p>;
 

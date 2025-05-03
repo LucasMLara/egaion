@@ -2,7 +2,7 @@ import {
   DocumentosAgrupadosPorConsultorEArea,
   generateConsultorAreaDocsSchema,
 } from "@/types/types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +41,23 @@ export default function DocsAreaConsultsAdj({
     cadastrarDocumentosQualificacaoConsultoresAjustes,
     removerDocumentosQualificacaoConsultoresAjustes,
     DocumentosQualificacaoConsultoresAjustes,
+    alterarPermissaoAjuste,
   } = useEditalStore();
+
+  const allDocsPreenchidos = Object.entries(
+    DocumentosDosConsultoresPorAreaAjustesProp
+  ).every(([consultor, areas]) => {
+    return Object.keys(areas).every((area) => {
+      const uniqueKey = `${consultor} - ${area}`.replaceAll(".", "__DOT__");
+      return DocumentosQualificacaoConsultoresAjustes.some(
+        (doc) => doc.title === uniqueKey
+      );
+    });
+  });
+
+  useEffect(() => {
+    alterarPermissaoAjuste("DocsQualifTecConsultAdj", allDocsPreenchidos);
+  }, [alterarPermissaoAjuste, allDocsPreenchidos]);
 
   return (
     <div className="space-y-6">

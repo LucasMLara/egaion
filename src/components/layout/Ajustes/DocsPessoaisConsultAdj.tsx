@@ -10,6 +10,7 @@ import {
   generateConsultorDocsSchema,
   IGenerateConsultorDocs,
 } from "@/types/types";
+import { useEffect } from "react";
 
 export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes,
@@ -35,6 +36,7 @@ export default function DocsPessoaisConsultAdj({
     inserirDocumentosPessoaisConsultorAjustes,
     removerDocumentosPessoaisConsultorAjustes,
     documentosPessoaisConsultoresAjustes,
+    alterarPermissaoAjuste,
   } = useEditalStore();
 
   function handleDocType(fieldName: string): string {
@@ -95,6 +97,10 @@ export default function DocsPessoaisConsultAdj({
         return existing !== undefined;
       })
   );
+  useEffect(() => {
+    alterarPermissaoAjuste("DocsPessoaisConsultAdj", allfilesUploaded);
+  }, [alterarPermissaoAjuste, allfilesUploaded]);
+
   return (
     <div className="space-y-6">
       {documentosDosConsultoresParaAjustes.map((consultor) => (

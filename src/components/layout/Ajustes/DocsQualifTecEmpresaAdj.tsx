@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 interface Props {
   DocumentosQualificacaoEmpresaAjustesProp: Record<
@@ -27,6 +28,7 @@ export default function DocsQualifTecEmpresaAdj({
     cadastrarDocumentosQualificacaoEmpresaAjustes,
     removerDocumentosQualificacaoEmpresaAjustes,
     DocumentosQualificacaoEmpresaAjustes,
+    alterarPermissaoAjuste,
   } = useEditalStore();
   const schema = generateEmpresaAreaDocsSchema(
     Object.values(DocumentosQualificacaoEmpresaAjustesProp).flat()
@@ -42,6 +44,24 @@ export default function DocsQualifTecEmpresaAdj({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
+
+  const allDocsPreenchidos = Object.values(
+    DocumentosQualificacaoEmpresaAjustesProp
+  )
+    .flat()
+    .every((doc) => {
+      const uniqueKey = `${doc.Parametrizacao} - ${doc.NomeInput}`.replaceAll(
+        ".",
+        "__DOT__"
+      );
+      return DocumentosQualificacaoEmpresaAjustes.some(
+        (d) => d.id === doc.idSCCredenciada && d.title === uniqueKey
+      );
+    });
+
+  useEffect(() => {
+    alterarPermissaoAjuste("DocsQualifTecEmpresaAdj", allDocsPreenchidos);
+  }, [alterarPermissaoAjuste, allDocsPreenchidos]);
 
   return (
     <div className="space-y-6">

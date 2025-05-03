@@ -65,6 +65,12 @@ export type IEditalStore = {
   Historico: History[];
   Anexos: Document[];
   permissaoDeCadastroEdital: boolean;
+  permissaoCadastroAjuste: {
+    DocsEmpresaAdj: boolean;
+    DocsPessoaisConsultAdj: boolean;
+    DocsQualifTecEmpresaAdj: boolean;
+    DocsQualifTecConsultAdj: boolean;
+  };
   permissaoDeCadastroConsultor: boolean;
   activeArea: string;
   currentEditalId: string;
@@ -85,6 +91,11 @@ type editalActions = {
   reset: () => void;
   removerConsultor: (consultorId: string) => void;
   alterarPermissaoEdital: (permitir: boolean) => void;
+  alterarPermissaoAjuste: (
+    componente: keyof IEditalStore["permissaoCadastroAjuste"],
+    permitir: boolean
+  ) => void;
+
   alterarPermissaoConsultor: (permitir: boolean) => void;
   cadastrarDocumento: (documento: Document) => void;
   cadastrarDocumentosTecnicos: (areaId: string, documento: Document[]) => void;
@@ -152,6 +163,12 @@ const initialState: IEditalStore = {
   Anexos: [],
   Qualificacao: [],
   permissaoDeCadastroEdital: false,
+  permissaoCadastroAjuste: {
+    DocsEmpresaAdj: false,
+    DocsPessoaisConsultAdj: false,
+    DocsQualifTecEmpresaAdj: false,
+    DocsQualifTecConsultAdj: false,
+  },
   permissaoDeCadastroConsultor: false,
   activeArea: "",
   currentEditalId: "",
@@ -260,6 +277,13 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
       limparConsultores: () => set({ Consultores: [] }),
       alterarPermissaoEdital: (permitir) =>
         set({ permissaoDeCadastroEdital: permitir }),
+      alterarPermissaoAjuste: (componente, permitir) =>
+        set((state) => ({
+          permissaoCadastroAjuste: {
+            ...state.permissaoCadastroAjuste,
+            [componente]: permitir,
+          },
+        })),
       alterarPermissaoConsultor: (permitir) =>
         set({ permissaoDeCadastroConsultor: permitir }),
       setActiveArea: (areaId) => set({ activeArea: areaId }),
