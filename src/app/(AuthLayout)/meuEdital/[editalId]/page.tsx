@@ -44,12 +44,13 @@ export default function MyEditalPage() {
   const [cancelando, setCancelando] = useState(false);
   const [enviandoAjuste, setEnviandoAjuste] = useState(false);
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
+
   const {
     documentosEmpresaAjustes,
     documentosPessoaisConsultoresAjustes,
     DocumentosQualificacaoEmpresaAjustes,
     DocumentosQualificacaoConsultoresAjustes,
-    reset,
+    permissaoCadastroAjuste,
   } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
@@ -339,66 +340,7 @@ export default function MyEditalPage() {
       <h1 className="text-2xl font-bold mb-6">
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
-      <section className="mt-6 flex justify-end space-x-4">
-        <Button onClick={() => router.back()} variant="outline" type="button">
-          Voltar
-        </Button>
-        <Button onClick={() => reset()} variant="destructive" type="button">
-          RESETA
-        </Button>
-        <Button
-          onClick={() => {
-            // console.log(
-            //   "DocumentosQualificacaoEmpresaAjustes",
-            //   DocumentosQualificacaoEmpresaAjustes
-            // );
-            // console.log("documentosEmpresaAjustes", documentosEmpresaAjustes);
-            console.log(
-              "DocumentosQualificacaoConsultoresAjustes",
-              DocumentosQualificacaoConsultoresAjustes
-            );
-            console.log(
-              "documentosPessoaisConsultoresAjustes",
-              documentosPessoaisConsultoresAjustes
-            );
-          }}
-          variant="ghost"
-          type="button"
-        >
-          LOGAR STATE
-        </Button>
-        <Dialog>
-          {/* <DialogTrigger asChild>
-            <Button variant="outline">Cancelar Inscrição</Button>
-          </DialogTrigger> */}
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Cancelar Inscrição</DialogTitle>
-              <DialogDescription>
-                Tem certeza de que deseja cancelar a inscrição? Esta ação não
-                pode ser desfeita.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                disabled={cancelando}
-                type="button"
-                variant="destructive"
-                onClick={cancelarInscricao}
-              >
-                {cancelando ? (
-                  <LoaderIcon className="animate-spin" />
-                ) : (
-                  "Confirmar Cancelamento da Inscrição"
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <Button disabled={enviandoAjuste} onClick={() => enviarAjustes()}>
-          {enviandoAjuste ? <LoaderIcon className="animate-spin" /> : "Enviar"}
-        </Button>
-      </section>
+
       <Tabs defaultValue="docspessoaisconsultores" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
@@ -443,6 +385,50 @@ export default function MyEditalPage() {
           />
         </TabsContent>
       </Tabs>
+      <section className="mt-6 flex justify-end space-x-4">
+        <Button onClick={() => router.back()} variant="outline" type="button">
+          Voltar
+        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Cancelar Inscrição</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Cancelar Inscrição</DialogTitle>
+              <DialogDescription>
+                Tem certeza de que deseja cancelar a inscrição? Esta ação não
+                pode ser desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                disabled={cancelando}
+                type="button"
+                variant="destructive"
+                onClick={cancelarInscricao}
+              >
+                {cancelando ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Confirmar Cancelamento da Inscrição"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Button
+          disabled={
+            enviandoAjuste ||
+            !Object.values(permissaoCadastroAjuste).every(
+              (status) => status === true
+            )
+          }
+          onClick={() => enviarAjustes()}
+        >
+          {enviandoAjuste ? <LoaderIcon className="animate-spin" /> : "Enviar"}
+        </Button>
+      </section>
     </section>
   );
 }
