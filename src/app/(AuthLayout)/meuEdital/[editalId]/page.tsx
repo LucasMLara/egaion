@@ -341,7 +341,7 @@ export default function MyEditalPage() {
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
 
-      <Tabs defaultValue="docspessoaisconsultores" className="w-full">
+      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
