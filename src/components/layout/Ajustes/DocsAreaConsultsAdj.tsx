@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 import { z } from "zod";
 import { toast } from "sonner";
+import NoContent from "../NoContent";
 
 interface Props {
   DocumentosDosConsultoresPorAreaAjustesProp: DocumentosAgrupadosPorConsultorEArea;
@@ -58,6 +59,11 @@ export default function DocsAreaConsultsAdj({
   useEffect(() => {
     alterarPermissaoAjuste("DocsQualifTecConsultAdj", allDocsPreenchidos);
   }, [alterarPermissaoAjuste, allDocsPreenchidos]);
+
+  if (!DocumentosDosConsultoresPorAreaAjustesProp)
+    return (
+      <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
+    );
 
   return (
     <div className="space-y-6">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditalStore } from "@/store/EditalRegister";
+import NoContent from "../NoContent";
 
 type DocumentosParaAjustes = {
   Aprovado: boolean;
@@ -92,7 +93,10 @@ export default function DocsEmpresaAdj({
     alterarPermissaoAjuste("DocsEmpresaAdj", allFilesUploaded);
   }, [alterarPermissaoAjuste, allFilesUploaded]);
 
-  if (documentosParaAjustes.length === 0) return <p>n tem nada</p>;
+  if (documentosParaAjustes.length === 0)
+    return (
+      <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
+    );
 
   return (
     <div className="space-y-4">

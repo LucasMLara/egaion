@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import NoContent from "../NoContent";
 
 interface Props {
   DocumentosQualificacaoEmpresaAjustesProp: Record<
@@ -62,6 +63,11 @@ export default function DocsQualifTecEmpresaAdj({
   useEffect(() => {
     alterarPermissaoAjuste("DocsQualifTecEmpresaAdj", allDocsPreenchidos);
   }, [alterarPermissaoAjuste, allDocsPreenchidos]);
+
+  if (!DocumentosQualificacaoEmpresaAjustesProp)
+    return (
+      <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
+    );
 
   return (
     <div className="space-y-6">

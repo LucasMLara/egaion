@@ -11,6 +11,7 @@ import {
   IGenerateConsultorDocs,
 } from "@/types/types";
 import { useEffect } from "react";
+import NoContent from "../NoContent";
 
 export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes,
@@ -87,7 +88,6 @@ export default function DocsPessoaisConsultAdj({
     }
   }
 
-  //TODO usar essa variavel abaixo para bloquear o botao de envio e colocar todas as props da pagina principal em cada componente para ler no console e trabalhar com os dados recebidos
   const allfilesUploaded = documentosDosConsultoresParaAjustes.every(
     (consultor) =>
       consultor.documentos.every((doc) => {
@@ -100,6 +100,11 @@ export default function DocsPessoaisConsultAdj({
   useEffect(() => {
     alterarPermissaoAjuste("DocsPessoaisConsultAdj", allfilesUploaded);
   }, [alterarPermissaoAjuste, allfilesUploaded]);
+
+  if (documentosDosConsultoresParaAjustes.length === 0)
+    return (
+      <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
+    );
 
   return (
     <div className="space-y-6">
