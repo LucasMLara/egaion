@@ -51,6 +51,7 @@ export default function MyEditalPage() {
     DocumentosQualificacaoEmpresaAjustes,
     DocumentosQualificacaoConsultoresAjustes,
     permissaoCadastroAjuste,
+    reset,
   } = useEditalStore();
   const [documentosDaEmpresa, setDocumentosDaEmpresa] = useState([]);
   const [documentosPessoaisConsultores, setDocumentosPessoaisConsultores] =
@@ -157,18 +158,19 @@ export default function MyEditalPage() {
       setEnviandoAjuste(true);
       const response = await fetch(url, fetchOptions);
       const text = await response.text();
-      console.log(text);
-
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "application/xml");
-
       const errorMessageElements = xmlDoc.getElementsByTagName("errorMessage");
+      const taskDisplayName = xmlDoc.getElementsByTagName("taskDisplayName");
+      const taskDisplayNameMsg =
+        taskDisplayName.length > 0 &&
+        taskDisplayName[0].textContent === "Analisar Documentação";
       const errorMessage =
         errorMessageElements.length > 0
           ? errorMessageElements[0].textContent
           : null;
 
-      if (errorMessage || !response.ok) {
+      if ((errorMessage || !response.ok) && !taskDisplayNameMsg) {
         console.error(
           "Erro retornado pelo sistema:",
           errorMessage || "Resposta não OK"
@@ -181,6 +183,8 @@ export default function MyEditalPage() {
         toast.success("Ajustes Enviados!");
         setEnviandoAjuste(false);
       }
+
+      reset();
     } catch (e) {
       if (e instanceof Error) {
         toast.error("Erro ao Enviar os ajustes da inscrição.");
@@ -197,6 +201,7 @@ export default function MyEditalPage() {
     DocumentosQualificacaoEmpresaAjustes,
     documentosPessoaisConsultoresAjustes,
     DocumentosQualificacaoConsultoresAjustes,
+    reset,
   ]);
 
   const cancelarInscricao = useCallback(async () => {
