@@ -7,6 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditalStore } from "@/store/EditalRegister";
 import NoContent from "../NoContent";
+import { toast } from "sonner";
 
 type DocumentosParaAjustes = {
   Aprovado: boolean;
@@ -72,6 +73,9 @@ export default function DocsEmpresaAdj({
         turnToBase64: file,
       };
       inserirDocumentosEmpresaAjustes(documento);
+      toast.success("Arquivo preparado com sucesso!");
+    } else {
+      toast.error("Erro ao validar arquivo. Insira-o novamente.");
     }
   }
 

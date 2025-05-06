@@ -12,6 +12,7 @@ import {
 } from "@/types/types";
 import { useEffect } from "react";
 import NoContent from "../NoContent";
+import { toast } from "sonner";
 
 export default function DocsPessoaisConsultAdj({
   documentosDosConsultoresParaAjustes,
@@ -63,6 +64,7 @@ export default function DocsPessoaisConsultAdj({
   ) {
     const fullFieldName = `documentos.${fieldName}` as const;
     const isValid = await trigger(fullFieldName);
+
     if (isValid && file) {
       const blobUrl = URL.createObjectURL(file);
       const documento = {
@@ -75,6 +77,9 @@ export default function DocsPessoaisConsultAdj({
         idSCTecnico,
       };
       inserirDocumentosPessoaisConsultorAjustes(documento);
+      toast.success("Arquivo preparado com sucesso!");
+    } else {
+      toast.error("Erro ao validar arquivo. Insira-o novamente.");
     }
   }
 
