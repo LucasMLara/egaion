@@ -46,6 +46,17 @@ export default function Home() {
       </h1>
       <div className="flex flex-wrap gap-6 py-10 place-content-center">
         {myEditals
+          .sort((a, b) => {
+            const statusPriority: Record<string, number> = {
+              pending: 0,
+              error: 1,
+              ok: 2,
+            };
+
+            const getStatusPriority = (status: string | null | undefined) =>
+              statusPriority[status ?? "ok"] ?? 2;
+            return getStatusPriority(a.Status) - getStatusPriority(b.Status);
+          })
           .map((card) => (
             <MyEditalCard
               status={card.Status}
@@ -60,8 +71,7 @@ export default function Home() {
               editalType={card.TipodeCredenciamento}
               justificativa={card.JustificativaNaoAprovacao}
             />
-          ))
-          .reverse()}
+          ))}
       </div>
     </section>
   );
