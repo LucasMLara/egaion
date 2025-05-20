@@ -36,6 +36,7 @@ import {
   prepararAreasCredenciadaAjustes,
   prepararConsultoresCredenciadaAjustes,
 } from "@/lib/concatEditalAdjustmentsDocs";
+import NoContent from "@/components/layout/NoContent";
 
 export default function MyEditalPage() {
   const { editalId } = useParams();
@@ -44,6 +45,7 @@ export default function MyEditalPage() {
   const [cancelando, setCancelando] = useState(false);
   const [enviandoAjuste, setEnviandoAjuste] = useState(false);
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
+  const [justificativa, setJustificativa] = useState("");
 
   const {
     documentosEmpresaAjustes,
@@ -182,6 +184,7 @@ export default function MyEditalPage() {
       } else {
         toast.success("Ajustes Enviados!");
         setEnviandoAjuste(false);
+        router.push("/");
       }
 
       reset();
@@ -202,6 +205,7 @@ export default function MyEditalPage() {
     documentosPessoaisConsultoresAjustes,
     DocumentosQualificacaoConsultoresAjustes,
     reset,
+    router,
   ]);
 
   const cancelarInscricao = useCallback(async () => {
@@ -297,10 +301,23 @@ export default function MyEditalPage() {
           documentosPessoaisConsultores?.[0]?.NumeroCaso ??
           documentosDosConsultoresPorArea?.[0]?.NumeroCaso;
 
+        const rawJustificativa =
+          documentosDaEmpresa?.[0]?.JustificativaNaoAprovacao ??
+          DocumentosQualificacaoTecnicaEmpresa?.[0]
+            ?.JustificativaNaoAprovacao ??
+          documentosPessoaisConsultores?.[0]?.JustificativaNaoAprovacao ??
+          documentosDosConsultoresPorArea?.[0]?.JustificativaNaoAprovacao;
+
+        console.log(rawCaseNumber);
+
+        if (!rawJustificativa) {
+          throw new Error("Não foi inserido justificativa.");
+        }
         if (!rawCaseNumber) {
           throw new Error("Nenhum Número de Caso encontrado.");
         }
         setNumeroCaso(rawCaseNumber);
+        setJustificativa(rawJustificativa);
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
         setDocumentosPessoaisConsultores(
           agruparPorConsultor(data.documentosPessoaisConsultores || [])
@@ -323,7 +340,6 @@ export default function MyEditalPage() {
 
     fetchData();
   }, [editalId, numeroCaso]);
-
   const nomeEdital = (() => {
     const values = Object.values(documentosDosConsultoresPorArea);
     if (!values.length) return null;
@@ -346,8 +362,12 @@ export default function MyEditalPage() {
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
 
-      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="justificativaEmpresa" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="justificativaEmpresa" className="text-center">
+            <span className="hidden lg:inline">Justificativa</span>
+            <FileText className="inline lg:hidden w-6 h-6" />
+          </TabsTrigger>
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
             <FileText className="inline lg:hidden w-6 h-6" />
@@ -369,6 +389,9 @@ export default function MyEditalPage() {
         </TabsList>
         <TabsContent value="ajustesDocumentosEmpresa">
           <DocsEmpresaAdj documentosParaAjustes={documentosDaEmpresa} />
+        </TabsContent>
+        <TabsContent value="justificativaEmpresa">
+          <NoContent texto={justificativa} />
         </TabsContent>
         <TabsContent value="docspessoaisconsultores">
           <DocsPessoaisConsultAdj
