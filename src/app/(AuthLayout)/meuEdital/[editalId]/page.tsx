@@ -308,8 +308,6 @@ export default function MyEditalPage() {
           documentosPessoaisConsultores?.[0]?.JustificativaNaoAprovacao ??
           documentosDosConsultoresPorArea?.[0]?.JustificativaNaoAprovacao;
 
-        console.log(rawCaseNumber);
-
         if (!rawJustificativa) {
           throw new Error("Não foi inserido justificativa.");
         }
