@@ -48,7 +48,9 @@ export default function MyEditalCard({
         >
           <CardHeader>
             <CardTitle>{editalCardTitle}</CardTitle>
-            <CardDescription>
+            <CardDescription
+              className={status === "error" ? "text-neutral-950" : ""}
+            >
               {`${editalCardDate ? editalCardDate : currentDate}`}
             </CardDescription>
           </CardHeader>
