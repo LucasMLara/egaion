@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosDosDocumentos: Array<{ [key: string]: any }> = await prisma.$queryRaw`
             SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome, d.idSCDocumentacao, ce.NumeroCaso
+            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome, d.idSCDocumentacao, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
             FROM SCCredenciadasEdital ce
             INNER JOIN SCDocCredenciadaEdital dce ON dce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             INNER JOIN SCDocumentacao d ON d.idSCDocumentacao = dce.DadosDocumento
@@ -39,7 +39,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosQualificacaoTecnica: Array<{ [key: string]: any }> = await prisma.$queryRaw`
             SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Atestado de Capacidade Técnica' as NomeInput, ce.NumeroCaso
+                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Atestado de Capacidade Técnica' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
                     FROM SCCredenciadasEdital ce
                     INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
                     INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
@@ -48,7 +48,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
                     AND pe.ApvAtestadoCapacidadeTec = 0
                     UNION ALL 
                     SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Relato de Experiência' as NomeInput, ce.NumeroCaso
+                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Relato de Experiência' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
                     FROM SCCredenciadasEdital ce
                     INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
                     INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
@@ -69,7 +69,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         const documentosConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
         select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Comprovante de Formação Acadêmica' as NomeInput, ce.NumeroCaso
+            'Comprovante de Formação Acadêmica' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
@@ -82,7 +82,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Comprovante de Vínculo' as NomeInput, ce.NumeroCaso
+            'Comprovante de Vínculo' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
@@ -95,7 +95,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Documentos Pessoais' as NomeInput, ce.NumeroCaso
+            'Documentos Pessoais' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
@@ -108,7 +108,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Registro Profissional' as NomeInput, ce.NumeroCaso
+            'Registro Profissional' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
@@ -129,7 +129,7 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         const docsParametrizacaoConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
         SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
         c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico,t.Nome, t.CPF,
-        ccn.Parametrizacao,ccn.Aprovado, ce.NumeroCaso
+        ccn.Parametrizacao,ccn.Aprovado, ce.NumeroCaso,  ce.JustificativaNaoAprovacao
         FROM SCCredenciadasEdital ce
         INNER JOIN SCConsultorEdital cce ON cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
         INNER JOIN SCConsultorNivel ccn ON ccn.SCConsultorEdital = cce.idSCConsultorEdital
