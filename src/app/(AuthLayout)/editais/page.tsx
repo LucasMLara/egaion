@@ -43,7 +43,7 @@ export default function Editais() {
               key={card.idSCEdital}
               editalCardContent={card.ResumoEdital}
               editalCardTitle={card.NomeEdital}
-              editalCardDate={formatDate(card.InicioEdital)}
+              editalCardDate={card.InicioEdital}
               editalDialogTitle={card.NomeEdital}
               editalDialogDescription={card.Objetivos}
               editalDialogContent={card.Objetivos}
