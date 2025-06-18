@@ -63,9 +63,9 @@ export default function Home() {
               key={card.idSCCredenciadasEdital}
               editalCardContent={card.ResumoEdital}
               editalCardTitle={card.NomeEdital}
-              editalCardDate={formatDate(card.InicioEdital)}
+              editalCardDate={card.InicioEdital}
               editalDialogTitle={card.NomeEdital}
-              editalDialogDescription={formatDate(card.InicioEdital)}
+              editalDialogDescription={card.InicioEdital}
               editalDialogContent={card.ResumoEdital}
               editalId={card.idSCCredenciadasEdital}
               editalType={card.TipodeCredenciamento}
