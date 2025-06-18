@@ -23,8 +23,8 @@ export async function GET() {
       sce.JustificativaNaoAprovacao,
       se.ResumoEdital,
       se.NomeEdital,
-      se.InicioEdital,
-      se.FimEdital,
+      format(se.InicioEdital, 'dd/MM/yyyy') as InicioEdital,  
+      format(se.FimEdital, 'dd/MM/yyyy') as FimEdital,
       ssce.DescricaoAplicativo as Status,
       stc.Descricao as TipodeCredenciamento
     FROM sCCredenciadasEdital sce
