@@ -46,6 +46,7 @@ export default function MyEditalPage() {
   const [enviandoAjuste, setEnviandoAjuste] = useState(false);
   const [numeroCaso, setNumeroCaso] = useState<string | null>(null);
   const [justificativa, setJustificativa] = useState("");
+  const [dataPrazo, setDataPrazo] = useState("");
 
   const {
     documentosEmpresaAjustes,
@@ -289,6 +290,7 @@ export default function MyEditalPage() {
         const res = await fetch(`/api/myEditals/${editalId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
+        console.log(data);
         const {
           documentosDaEmpresa,
           DocumentosQualificacaoTecnicaEmpresa,
@@ -308,12 +310,23 @@ export default function MyEditalPage() {
           documentosPessoaisConsultores?.[0]?.JustificativaNaoAprovacao ??
           documentosDosConsultoresPorArea?.[0]?.JustificativaNaoAprovacao;
 
+        const dataPrazoAjustes =
+          documentosDaEmpresa?.[0]?.DataPrazoAjustes ??
+          DocumentosQualificacaoTecnicaEmpresa?.[0]?.DataPrazoAjustes ??
+          documentosPessoaisConsultores?.[0]?.DataPrazoAjustes ??
+          documentosDosConsultoresPorArea?.[0]?.DataPrazoAjustes;
+
         if (!rawJustificativa) {
           throw new Error("Não foi inserido justificativa.");
         }
         if (!rawCaseNumber) {
           throw new Error("Nenhum Número de Caso encontrado.");
         }
+        if (!dataPrazoAjustes) {
+          throw new Error("Nenhuma data de prazo foi informada.");
+        }
+
+        setDataPrazo(dataPrazoAjustes);
         setNumeroCaso(rawCaseNumber);
         setJustificativa(rawJustificativa);
         setDocumentosDaEmpresa(data.documentosDaEmpresa || []);
@@ -389,7 +402,7 @@ export default function MyEditalPage() {
           <DocsEmpresaAdj documentosParaAjustes={documentosDaEmpresa} />
         </TabsContent>
         <TabsContent value="justificativaEmpresa">
-          <NoContent texto={justificativa} />
+          <NoContent texto={justificativa} data={dataPrazo} />
         </TabsContent>
         <TabsContent value="docspessoaisconsultores">
           <DocsPessoaisConsultAdj
