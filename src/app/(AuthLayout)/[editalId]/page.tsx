@@ -216,8 +216,7 @@ export default function EditalId({
   const idScCredenciada = data?.user.idSCCredenciada;
 
   async function enviarDadosEdital() {
-    const url =
-      "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
+    const url = `${process.env.NEXT_PUBLIC_WEB_SERVICE}`;
     const body = `
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
           <soap:Header/>
@@ -263,6 +262,7 @@ export default function EditalId({
       },
       body,
     };
+    console.log(body);
     try {
       setLoading(true);
       const response = await fetch(url, fetchOptions);

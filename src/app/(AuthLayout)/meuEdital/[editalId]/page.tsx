@@ -110,7 +110,7 @@ export default function MyEditalPage() {
     }));
   }
 
-  const url = "http://192.168.2.149/EGAION/webservices/workflowenginesoa.asmx";
+  const url = `${process.env.NEXT_PUBLIC_WEB_SERVICE}`;
 
   const enviarAjustes = useCallback(async () => {
     const body = `
@@ -200,6 +200,7 @@ export default function MyEditalPage() {
       setEnviandoAjuste(false);
     }
   }, [
+    url,
     numeroCaso,
     documentosEmpresaAjustes,
     DocumentosQualificacaoEmpresaAjustes,
@@ -282,7 +283,7 @@ export default function MyEditalPage() {
       console.error(e);
       setCancelando(false);
     }
-  }, [numeroCaso, router]);
+  }, [numeroCaso, router, url]);
 
   useEffect(() => {
     const fetchData = async () => {
