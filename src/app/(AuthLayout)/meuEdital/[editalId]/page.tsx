@@ -249,7 +249,6 @@ export default function MyEditalPage() {
       setCancelando(true);
       const response = await fetch(url, fetchOptions);
       const text = await response.text();
-      console.log(text);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "application/xml");
@@ -291,7 +290,6 @@ export default function MyEditalPage() {
         const res = await fetch(`/api/myEditals/${editalId}`);
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const data = await res.json();
-        console.log(data);
         const {
           documentosDaEmpresa,
           DocumentosQualificacaoTecnicaEmpresa,

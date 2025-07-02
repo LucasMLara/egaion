@@ -176,8 +176,6 @@ export default function CreateConsultant() {
           naturezas: naturezasMap.get(doc.areaId as string) || [],
         })),
       };
-
-      // console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");

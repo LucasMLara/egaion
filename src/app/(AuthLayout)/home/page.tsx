@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import MyEditalCard from "@/components/layout/MyEditalCard";
 import { useMyEditals } from "@/store/useMyEditals";
 import { LoaderIcon } from "lucide-react";
-import { formatDate } from "@/lib/utils";
 
 export default function Home() {
   const { myEditals, setListMyEditals } = useMyEditals();
@@ -17,6 +16,7 @@ export default function Home() {
       setLoading(false);
     } catch (e) {
       console.log("Erro desconhecido", e);
+      setLoading(false);
     }
   }, [setListMyEditals]);
 

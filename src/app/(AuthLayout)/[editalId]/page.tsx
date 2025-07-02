@@ -262,7 +262,6 @@ export default function EditalId({
       },
       body,
     };
-    console.log(body);
     try {
       setLoading(true);
       const response = await fetch(url, fetchOptions);
