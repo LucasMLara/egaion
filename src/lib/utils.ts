@@ -160,5 +160,40 @@ export function transformData(input: InputItem[]): OutputItem[] {
       }
     }
   });
-  return result;
+  const resultWithServices = addServiceLeaves(result);
+  return resultWithServices;
 }
+
+type ServiceType = "Consultoria" | "Instrutoria";
+
+function addServiceLeaves(tree: OutputItem[]): OutputItem[] {
+  const SERVICES: ServiceType[] = ["Consultoria", "Instrutoria"];
+
+  const clone = (n: OutputItem): OutputItem => ({
+    id: n.id,
+    name: n.name,
+    subLevels: n.subLevels?.map(clone) ?? []
+  });
+
+  const withServices = (n: OutputItem): OutputItem => {
+    const node = clone(n);
+
+    if (!node.subLevels || node.subLevels.length === 0) {
+      // folha → vira pai de duas folhas “Consultoria/Instrutoria”
+      node.subLevels = SERVICES.map((svc, idx) => ({
+        // gera id derivado só pra diferenciar (se precisar id único estrito,
+        // troque por um gerador ou hash)
+        id: Number(`${node.id}${idx + 1}`),
+        name: `${node.name} - ${svc}`,
+        subLevels: []
+      }));
+      return node;
+    }
+
+    node.subLevels = node.subLevels.map(withServices);
+    return node;
+  };
+
+  return tree.map(withServices);
+}
+
