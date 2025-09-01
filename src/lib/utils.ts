@@ -160,8 +160,7 @@ export function transformData(input: InputItem[]): OutputItem[] {
       }
     }
   });
-  const resultWithServices = addServiceLeaves(result);
-  return resultWithServices;
+  return result
 }
 
 type ServiceType = "Consultoria" | "Instrutoria";
