@@ -63,8 +63,6 @@ export default function AreaCard({
     cadastrarDocumentosTecnicos,
     activeArea,
     limparDocumentosTecnicos,
-    setNaturezaPrestacao,
-    clearNaturezaPrestacao,
     limparConsultores,
   } = useEditalStore();
 
@@ -73,14 +71,6 @@ export default function AreaCard({
     defaultValues: { mockInputFiles: [] },
   });
 
-  const handleNaturezaSubmit = (naturezas: MultipleCheckBoxOptions[]) => {
-    setSelectedNaturezas(naturezas);
-    const naturezaPrestacao = naturezas.map((natureza) => ({
-      ...natureza,
-      areaId: activeArea,
-    }));
-    setNaturezaPrestacao(naturezaPrestacao, activeArea);
-  };
   const handleRemoveArea = (areaId: string) => {
     if (Qualificacao.length === 1) {
       limparConsultores();
@@ -88,22 +78,15 @@ export default function AreaCard({
     }
     removerArea(areaId);
   };
-  const handleResetNaturezas = () => {
-    setSelectedNaturezas([]);
-    clearNaturezaPrestacao(activeArea);
-  };
 
   useEffect(() => {
     const areaHasFiles = Qualificacao.some(
       (area) => area.areaId === areaId && area.AreaDocuments.length > 0
     );
-    const areaHasNatureza = Qualificacao.some(
-      (area) => area.areaId === areaId && area.naturezaPrestacao.length > 0
-    );
 
     setTravarBotaoMap((prev) => ({
       ...prev,
-      [areaId]: !areaHasFiles || !areaHasNatureza,
+      [areaId]: !areaHasFiles,
     }));
   }, [Qualificacao, areaId]);
 
@@ -159,8 +142,7 @@ export default function AreaCard({
   };
 
   const handleResetDocuments = () => {
-    setSelectedNaturezas([]);
-    limparDocumentosTecnicos();
+    limparDocumentosTecnicos(activeArea);
     toast.warning("Documentos removidos com sucesso!");
   };
   return (
@@ -317,7 +299,7 @@ export default function AreaCard({
                     </form>
                   </Form>
                 )}
-                <div className="flex gap-2 justify-evenly m-2">
+                {/* <div className="flex gap-2 justify-evenly m-2">
                   <CheckboxFormMultiplo
                     labelSelecionados="Natureza da Prestação"
                     opcoes={naturezasPrestacao}
@@ -326,7 +308,7 @@ export default function AreaCard({
                     opcoesSelecionadas={selectedNaturezas}
                     onErrorChange={setCheckboxHasError}
                   />
-                </div>
+                </div> */}
               </DialogDescription>
               {Object.keys(form.formState.errors).length > 0 ||
                 checkboxHasError ||

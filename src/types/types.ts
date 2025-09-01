@@ -225,7 +225,6 @@ export const consultantSchema = z.object({
 export const fileInputSchema = z.object({
   arquivosTecnicos: z.array(
     z.object({
-      naturezas: z.array(z.string()).min(1, "Selecione pelo menos uma natureza"),
       areaId: z.string(),
       areaName: z.string(),
       files: z

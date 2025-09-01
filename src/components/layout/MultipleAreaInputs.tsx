@@ -71,7 +71,6 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
         id: item.areaId,
         label: item.areaName,
         value: item.areaId,
-        naturezas: item.naturezas,
       })
     );
 
@@ -90,9 +89,9 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     alterarPermissaoConsultor(false);
   };
 
-  const todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada = Qualificacao.every(
-    (area) => area.naturezaPrestacao.length > 0
-  );
+  // const todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada = Qualificacao.every(
+  //   (area) => area.naturezaPrestacao.length > 0
+  // );
 
   const areasSemNatureza = Qualificacao.filter(
     ({ naturezaPrestacao }) => naturezaPrestacao.length === 0
@@ -151,7 +150,7 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
                   />
                 )}
               />
-              <Controller
+              {/* <Controller
                 name={`arquivosTecnicos.${index}.naturezas`}
                 control={control}
                 render={({ field }) => (
@@ -189,12 +188,8 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
                     </div>
                   </div>
                 )}
-              />
-              {errors.arquivosTecnicos?.[index]?.naturezas && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.arquivosTecnicos[index].naturezas.message}
-                </p>
-              )}
+              /> */}
+
               {errors.arquivosTecnicos?.[index]?.files && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.arquivosTecnicos[index].files.message}
@@ -206,31 +201,13 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
             <Button
               type="submit"
               className="w-full"
-              disabled={
-                Object.keys(errors).length > 0 ||
-                !todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada
-              }
+              disabled={Object.keys(errors).length > 0}
             >
               Validar Documentos
             </Button>
           </div>
         </form>
       )}
-      {!todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada ? (
-        <div className="bg-auxiliary-warning-400 p-5 rounded-lg w-full my-2 ">
-          <h1 className="text-xl font-bold  text-center">
-            Selecione a natureza da prestação de todas as áreas selecionadas
-          </h1>
-          <span className="text-lg">Áreas Pendentes:</span>
-          <ul>
-            {areasSemNatureza.map(({ name, areaId }) => (
-              <li key={areaId} className="list-disc list-inside">
-                {name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </div>
   );
 };
