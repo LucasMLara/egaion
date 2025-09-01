@@ -100,7 +100,7 @@ type editalActions = {
   cadastrarDocumento: (documento: Document) => void;
   cadastrarDocumentosTecnicos: (areaId: string, documento: Document[]) => void;
   removerDocumento: (id: string) => void;
-  limparDocumentosTecnicos: () => void;
+  limparDocumentosTecnicos: (areaId: string) => void;
   inserirArea: (area: Qualificacao) => void;
   removerArea: (areaId: string) => void;
   setActiveArea: (areaId: string) => void;
@@ -372,12 +372,17 @@ export const useEditalStore = create<IEditalStore & editalActions>()(
         }));
       },
 
-      limparDocumentosTecnicos: () => {
+      limparDocumentosTecnicos: (areaId) => {
         set((state) => ({
-          Qualificacao: state.Qualificacao.map((qualificacao) => ({
-            ...qualificacao,
-            AreaDocuments: [],
-          })),
+          Qualificacao: state.Qualificacao.map((qualificacao) => {
+            if (qualificacao.areaId === areaId) {
+              return {
+                ...qualificacao,
+                AreaDocuments: [],
+              };
+            }
+            return qualificacao;
+          }),
         }));
       },
 
