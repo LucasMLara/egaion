@@ -48,11 +48,13 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             },
         });
 
-        const serializedFoundEdital = JSON.parse(
+        const serializedEdital = JSON.parse(
+
             JSON.stringify(foundEdital, (_, value) =>
                 typeof value === "bigint" ? value.toString() : value
             )
         );
+
 
         const foundEditalDocuments = await prisma.sCDocumentacao.findMany({
             where: {
@@ -72,11 +74,6 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             return NextResponse.json({ message: "Nenhum edital com este ID foi encontrado" }, { status: 404 });
         }
 
-        const serializedEdital = JSON.parse(
-            JSON.stringify(foundEdital, (_, value) =>
-                typeof value === "bigint" ? value.toString() : value
-            )
-        );
 
         const serializedEditalAttachments = JSON.parse(
             JSON.stringify(foundEditalAttachments, (_, value) =>
@@ -93,7 +90,7 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             JSON.stringify(foundEditalDocuments, (_, value) => typeof value === "bigint" ? value.toString() : value)
         )
 
-        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters, serializedEditalLocalidades, serializedFoundEdital });
+        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters, serializedEditalLocalidades });
 
     } catch (error: any) {
         console.error("Error fetching data:", error);
