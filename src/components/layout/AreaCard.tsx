@@ -164,7 +164,6 @@ export default function AreaCard({
                 aria-label="Remover área"
                 className="absolute top-2 right-2 hover:text-red-500 hover:scale-110 transition-all"
                 onClick={async (e) => {
-                  console.log("AAAAAAAAA");
                   e.stopPropagation();
                   const ok = await confirm({
                     title: "Remover área?",
