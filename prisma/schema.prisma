@@ -3336,7 +3336,7 @@ model SCChamadas {
   baCreatedTime BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCChamadas_baCreatedTime")
   baGuid        String  @default(dbgenerated("newid()"), map: "DF_SCChamadas_baGuid") @db.UniqueIdentifier
   SCEdital      BigInt?
-  Descricao     String? @db.NVarChar(100)
+  Descricao     String? @db.NVarChar(2000)
 
   @@index([SCEdital], map: "SCChamadas_F1")
 }
@@ -3413,6 +3413,10 @@ model SCCredenciadora {
   PesquisaLocalidade     BigInt?
   PesquisaNomeDocumentac String? @db.NVarChar(50)
   PesquisaDocumentacao   BigInt?
+  PesquisaStatusEdital   BigInt?
+  PesquisaNomeJusti      String? @db.NVarChar(50)
+  PesquisaTipoDoc        BigInt?
+  PesquisaTipoJusti      BigInt?
 }
 
 model SCCronograma {
@@ -3437,6 +3441,8 @@ model SCDocCredenciadaEdital {
   SCCredenciadasEdital     BigInt?
   Teste                    Int?     @db.TinyInt
   Aprovado                 Boolean?
+  JustificativaPadrao      BigInt?
+  JustificativaNaoAprovaca String?  @db.NText
 
   @@index([SCCredenciadasEdital], map: "SCDocCredenciadaEdital_F1")
 }
@@ -3525,6 +3531,14 @@ model SCEdital {
   ConfirmarDadosCadastro     Boolean?
   SelecionadoExclusao        Boolean?
   ObjetoEditalBase64         String?   @db.NText
+  LimiteMaximoNivel1         Int?
+  LimiteMaximoNivel2         Int?
+  LimiteMaximoNivel3         Int?
+  LimiteMaximoNivel4         Int?
+  LimiteMaximoNivel5         Int?
+  LimiteMaximoNivel6         Int?
+  LimiteMaximoNivel7         Int?
+  LimiteMaximoNivelNatPrest  Int?
 
   @@index([Credenciadora], map: "SCEdital_F1")
 }
@@ -3693,6 +3707,7 @@ model SCParamEditalNv1 {
   IdNivel              Int?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv1_F1")
 }
@@ -3707,6 +3722,7 @@ model SCParamEditalNv2 {
   Escolhido            Boolean?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv2_F1")
 }
@@ -3721,6 +3737,7 @@ model SCParamEditalNv3 {
   Escolhido            Boolean?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv3_F1")
 }
@@ -3735,6 +3752,7 @@ model SCParamEditalNv4 {
   Escolhido            Boolean?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv4_F1")
 }
@@ -3749,6 +3767,7 @@ model SCParamEditalNv5 {
   Nivel5Parametrizacao BigInt?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv5_F1")
 }
@@ -3763,6 +3782,7 @@ model SCParamEditalNv6 {
   Nivel6Parametrizacao BigInt?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv6_F1")
 }
@@ -3777,6 +3797,7 @@ model SCParamEditalNv7 {
   Nivel7Parametrizacao BigInt?
   SCEdital             BigInt?
   Populado             Boolean?
+  Parametrizacao       String?  @db.NVarChar(50)
 
   @@index([SCEdital], map: "SCParamEditalNv7_F1")
 }
@@ -3806,6 +3827,7 @@ model SCParametrizacaoEdital {
   NaturezasdaPrestacaoStr   String?  @db.NVarChar(50)
   ApvAtestadoCapacidadeTec  Boolean?
   ApvRelatoExperiencia      Boolean?
+  NivelNPParametrizacao     BigInt?
 
   @@index([SCCredenciadasEdital], map: "SCParametrizacaoEdital_F2")
   @@index([SCEdital], map: "SCParametrizacaoEdital_F3")
@@ -5024,4 +5046,83 @@ model SCTipoCadastroCred {
   dplySCTipoCadastroCred Int?     @db.TinyInt
   Codigo                 Int?
   Descricao              String?  @db.NVarChar(50)
+}
+
+model SCJustificativaPadra {
+  idSCJustificativaPadra BigInt    @id(map: "pkcc7d506470591a1ee07594be771")
+  finalEnt               Int       @default(10073, map: "DF__SCJustifi__final__72729D3D")
+  baCreatedTime          BigInt    @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCJustificativaPadra_baCreatedTime")
+  baGuid                 String    @default(dbgenerated("newid()"), map: "DF_SCJustificativaPadra_baGuid") @db.UniqueIdentifier
+  Tags                   String?   @db.NVarChar(200)
+  Nome                   String?   @db.NVarChar(50)
+  DataCriacao            DateTime? @db.DateTime
+  Validoate              DateTime? @db.DateTime
+  Ativo                  Boolean?
+  SCCredenciadora        BigInt?
+  Justificativa          String?
+
+  @@index([SCCredenciadora], map: "SCJustificativaPadra_F1")
+}
+
+model SCParamEditalNivel {
+  idSCParamEditalNivel BigInt   @id(map: "pk992d26946c5a0a7341454ec22d0")
+  finalEnt             Int      @default(10070, map: "DF__SCParamEd__final__04073D93")
+  baCreatedTime        BigInt   @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCParamEditalNivel_baCreatedTime")
+  baGuid               String   @default(dbgenerated("newid()"), map: "DF_SCParamEditalNivel_baGuid") @db.UniqueIdentifier
+  Parametrizacao       String?  @db.NVarChar(50)
+  NaturezaPrestacao    BigInt?
+  Nivel1               BigInt?
+  Nivel2               BigInt?
+  Nivel3               BigInt?
+  Nivel4               BigInt?
+  Nivel5               BigInt?
+  Nivel6               BigInt?
+  Nivel7               BigInt?
+  Escolhido            Boolean?
+  SCEdital             BigInt?
+  ParametrizacaoConcat String?  @db.NVarChar(100)
+
+  @@index([SCEdital], map: "SCParamEditalNivel_F1")
+}
+
+model SCTipoDocApvParam {
+  idSCTipoDocApvParam   BigInt   @id(map: "pke5c3ad54f4db5c11b197e7588e8")
+  finalEnt              Int      @default(10075, map: "DF__SCTipoDoc__final__465F10D5")
+  guidSCTipoDocApvParam String   @unique(map: "SCTipoDocApvParam_UKG") @default(dbgenerated("newid()"), map: "DF__SCTipoDoc__guidS__4753350E") @db.UniqueIdentifier
+  dsblSCTipoDocApvParam Boolean?
+  dplySCTipoDocApvParam Int?     @db.TinyInt
+  Codigo                Int?
+  Descricao             String?  @db.NVarChar(50)
+}
+
+model SCTipoDocAv {
+  idSCTipoDocAv        BigInt  @id(map: "pk667d1ae4c02b2a80fa72fca809d")
+  finalEnt             Int     @default(10077, map: "DF__SCTipoDoc__final__5D42762D")
+  baCreatedTime        BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCTipoDocAv_baCreatedTime")
+  baGuid               String  @default(dbgenerated("newid()"), map: "DF_SCTipoDocAv_baGuid") @db.UniqueIdentifier
+  TipoDocumento        BigInt?
+  SCJustificativaPadra BigInt?
+
+  @@index([SCJustificativaPadra], map: "SCTipoDocAv_F1")
+}
+
+model SCTipoJust {
+  idSCTipoJust         BigInt  @id(map: "pk8bfceb1481d964231b5ddf3b536")
+  finalEnt             Int     @default(10078, map: "DF__SCTipoJus__final__7519FFBE")
+  baCreatedTime        BigInt  @default(dbgenerated("CONVERT([bigint],datediff(second,'1970-01-01',getutcdate()))*(1000)"), map: "DF_SCTipoJust_baCreatedTime")
+  baGuid               String  @default(dbgenerated("newid()"), map: "DF_SCTipoJust_baGuid") @db.UniqueIdentifier
+  SCJustificativaPadra BigInt?
+  TipoJustificativa    BigInt?
+
+  @@index([SCJustificativaPadra], map: "SCTipoJust_F1")
+}
+
+model SCTipoJustifParam {
+  idSCTipoJustifParam   BigInt   @id(map: "pkdfd6225428aa67b77898486f905")
+  finalEnt              Int      @default(10076, map: "DF__SCTipoJus__final__53B90BF3")
+  guidSCTipoJustifParam String   @unique(map: "SCTipoJustifParam_UKG") @default(dbgenerated("newid()"), map: "DF__SCTipoJus__guidS__54AD302C") @db.UniqueIdentifier
+  dsblSCTipoJustifParam Boolean?
+  dplySCTipoJustifParam Int?     @db.TinyInt
+  Codigo                Int?
+  Descricao             String?  @db.NVarChar(100)
 }
