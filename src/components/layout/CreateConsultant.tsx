@@ -352,11 +352,13 @@ export default function CreateConsultant() {
                     <Input
                       accept="application/pdf, image/jpeg, image/jpg"
                       type="file"
+                      multiple
                       ref={comprovanteFormacaoAcademicaRef}
                       className="transition-all"
                       onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
-                          field.onChange(e.target.files[0]);
+                        if (e.target.files) {
+                          const filesArray = Array.from(e.target.files);
+                          field.onChange(filesArray);
                         }
                       }}
                     />

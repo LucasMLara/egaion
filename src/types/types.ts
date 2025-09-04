@@ -217,7 +217,9 @@ export const consultantSchema = z.object({
     ),
   consultantCPF: fileSchema,
   comprovanteVinculoCNPJ: fileSchema,
-  comprovanteFormacaoAcademica: fileSchema,
+  comprovanteFormacaoAcademica: z
+    .array(fileSchema)
+    .min(1, "Insira pelo menos um arquivo de formação acadêmica"),
   registroProfissionalClasse: fileSchema,
 });
 
