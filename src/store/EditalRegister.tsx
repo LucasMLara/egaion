@@ -34,7 +34,6 @@ export type NaturezaPrestacao = {
 export type Qualificacao = {
   name: string;
   areaId: string;
-  naturezaPrestacao: NaturezaPrestacao[];
   AreaDocuments: Document[];
   subLevels: string[];
   Consultores: IConsultant[];
