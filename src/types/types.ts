@@ -166,7 +166,6 @@ export const consultantSchema = z.object({
   areas: z.array(z.object({
     label: z.string(),
     id: z.string(),
-    naturezas: z.array(z.string()),
   })).optional(),
   id: z.string(),
   nome: z.string().min(1, "Nome é obrigatório"),
