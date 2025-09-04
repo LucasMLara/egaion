@@ -1,4 +1,11 @@
 export type IAvailableEdital = {
+  LimiteMaximoNivel1: null,
+  LimiteMaximoNivel2: null,
+  LimiteMaximoNivel3: null,
+  LimiteMaximoNivel4: null,
+  LimiteMaximoNivel5: null,
+  LimiteMaximoNivel6: null,
+  LimiteMaximoNivel7: null,
   idSCEdital: string;
   ObjetoEditalBase64: string;
   finalEnt: number;
@@ -63,4 +70,4 @@ export type TActions = {
 
 
 
-  
+

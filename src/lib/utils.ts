@@ -129,6 +129,16 @@ export type OutputItem = {
   subLevels: OutputItem[];
 };
 
+export interface Limites {
+  LimiteMaximoNivel1: number | null;
+  LimiteMaximoNivel2: number | null;
+  LimiteMaximoNivel3: number | null;
+  LimiteMaximoNivel4: number | null;
+  LimiteMaximoNivel5: number | null;
+  LimiteMaximoNivel6: number | null;
+  LimiteMaximoNivel7: number | null;
+}
+
 export function transformData(input: InputItem[]): OutputItem[] {
   const idMap = new Map<string, OutputItem>();
 

@@ -6,6 +6,7 @@ import {
   createBlobUrl,
   transformData,
   InputItem,
+  Limites,
 } from "@/lib/utils";
 import {
   Dialog,
@@ -88,6 +89,13 @@ export default function EditalId({
     SelecionadoExclusao: "",
     serializedEditalHistory: [],
     serializedEditalAttachments: [],
+    LimiteMaximoNivel1: null,
+    LimiteMaximoNivel2: null,
+    LimiteMaximoNivel3: null,
+    LimiteMaximoNivel4: null,
+    LimiteMaximoNivel5: null,
+    LimiteMaximoNivel6: null,
+    LimiteMaximoNivel7: null,
   };
   const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(
     initialCurrentEditalState
@@ -96,6 +104,29 @@ export default function EditalId({
   const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>(
     []
   );
+  const [limites, setLimites] = useState<Limites>({
+    LimiteMaximoNivel1: null,
+    LimiteMaximoNivel2: null,
+    LimiteMaximoNivel3: null,
+    LimiteMaximoNivel4: null,
+    LimiteMaximoNivel5: null,
+    LimiteMaximoNivel6: null,
+    LimiteMaximoNivel7: null,
+  });
+
+  useEffect(() => {
+    if (currentEdital) {
+      setLimites({
+        LimiteMaximoNivel1: currentEdital.LimiteMaximoNivel1,
+        LimiteMaximoNivel2: currentEdital.LimiteMaximoNivel2,
+        LimiteMaximoNivel3: currentEdital.LimiteMaximoNivel3,
+        LimiteMaximoNivel4: currentEdital.LimiteMaximoNivel4,
+        LimiteMaximoNivel5: currentEdital.LimiteMaximoNivel5,
+        LimiteMaximoNivel6: currentEdital.LimiteMaximoNivel6,
+        LimiteMaximoNivel7: currentEdital.LimiteMaximoNivel7,
+      });
+    }
+  }, [currentEdital]);
 
   const [requiredEditalDocs, setRequiredEditalDocs] = useState<
     RequiredDocuments[]
@@ -159,7 +190,6 @@ export default function EditalId({
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
-
   useEffect(() => {
     async function fetchEdital() {
       try {
@@ -212,7 +242,6 @@ export default function EditalId({
   ]);
 
   const { data } = useSession();
-
   const idScCredenciada = data?.user.idSCCredenciada;
 
   async function enviarDadosEdital() {
@@ -335,7 +364,10 @@ export default function EditalId({
           <InsertEditalDocuments documentosRequeridos={editalDocsPerCategory} />
         </TabsContent>
         <TabsContent value="qualificacaotecnica">
-          <InsertQualificacaoTecnicaDocs areas={editalAreas} />
+          <InsertQualificacaoTecnicaDocs
+            areas={editalAreas}
+            limites={limites}
+          />
         </TabsContent>
         <TabsContent value="historico">
           <EditalHistory historico={history} />

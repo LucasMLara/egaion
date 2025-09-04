@@ -15,12 +15,14 @@ interface Level {
   name: string;
   subLevels: Level[];
 }
+import { Limites } from "@/lib/utils";
 
 interface SelectAreaProps {
   data: Level[];
+  limites: Limites;
 }
 
-const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
+const SelectArea: React.FC<SelectAreaProps> = ({ data, limites }) => {
   const [selectedAreas, setSelectedAreas] = useState<Level[]>([]);
   const { inserirArea, Qualificacao } = useEditalStore();
   const [existeSubniveis, setExisteSubniveis] = useState(false);
@@ -34,6 +36,22 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
   const setAreaOnStore = (): void => {
     const nomeAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.name;
     const idAreaSelecionada = selectedAreas[selectedAreas.length - 1]?.id;
+
+    const nivelAtual = selectedAreas.length;
+    const chaveLimite = `LimiteMaximoNivel${nivelAtual}` as keyof Limites;
+    const limite = limites[chaveLimite];
+
+    const areasNoMesmoNivel = Qualificacao.filter(
+      (area) => area.subLevels.length === nivelAtual - 1
+    );
+
+    if (limite !== null && areasNoMesmoNivel.length >= limite) {
+      toast.error(
+        `Você só pode selecionar até ${limite} áreas no nível ${nivelAtual}`
+      );
+      return;
+    }
+
     if (nomeAreaSelecionada) {
       const areaExists = Qualificacao.some(
         (area) => area.name === nomeAreaSelecionada
@@ -43,7 +61,6 @@ const SelectArea: React.FC<SelectAreaProps> = ({ data }) => {
         toast.error("A área selecionada já está inclusa");
       } else {
         const novaArea = {
-          naturezaPrestacao: [],
           name: nomeAreaSelecionada,
           areaId: idAreaSelecionada.toString(),
           Consultores: [],
