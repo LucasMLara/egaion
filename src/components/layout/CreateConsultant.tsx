@@ -152,17 +152,10 @@ export default function CreateConsultant() {
 
     function onSubmit(data: IConsultant) {
       const uniqueId = nanoid();
-      const naturezasMap = new Map(
-        consultantNaturezasPorAreas.map((area) => [area.id, area.naturezas])
-      );
       const newConsultant = {
         ...data,
         areas: handleConsultantAreas.map((area) => ({
           ...area,
-          naturezas:
-            consultantNaturezasPorAreas.find(
-              (naturezaArea) => naturezaArea.id === area.id
-            )?.naturezas || [],
         })),
         id: uniqueId,
         localidades: localidadesDoConsultor.map((localidade, index) => ({
@@ -173,13 +166,13 @@ export default function CreateConsultant() {
           areaId: doc.areaId as string,
           files: doc.turnToBase64,
           areaName: doc.areaName as string,
-          naturezas: naturezasMap.get(doc.areaId as string) || [],
         })),
       };
-      cadastrarConsultor(newConsultant);
+      console.log(newConsultant);
+      // cadastrarConsultor(newConsultant);
 
-      toast.success("Consultor cadastrado com sucesso!");
-      resetConsultantForm();
+      // toast.success("Consultor cadastrado com sucesso!");
+      // resetConsultantForm();
     }
 
     return (

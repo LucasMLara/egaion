@@ -217,10 +217,21 @@ export const consultantSchema = z.object({
     ),
   consultantCPF: fileSchema,
   comprovanteVinculoCNPJ: fileSchema,
+  registroProfissionalClasse: fileSchema,
   comprovanteFormacaoAcademica: z
     .array(fileSchema)
-    .min(1, "Insira pelo menos um arquivo de formação acadêmica"),
-  registroProfissionalClasse: fileSchema,
+    .min(1, { message: "Insira pelo menos um arquivo de formação acadêmica" })
+    .superRefine((files, ctx) => {
+      files.forEach((file) => {
+        if (!["application/pdf", "image/jpeg", "image/jpg"].includes(file.type) || file.size > 1024 * 1024 * 10) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Arquivos devem ser PDF ou imagem (JPEG/PNG) e ter no máximo 10MB",
+            path: [],
+          });
+        }
+      });
+    })
 });
 
 export const fileInputSchema = z.object({
