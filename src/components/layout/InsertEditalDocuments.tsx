@@ -34,7 +34,7 @@ export default function InsertEditalDocuments({
     Qualificacao,
     Consultores,
     RequiredDocumentsQty,
-    checkQualificacaoConsultants
+    checkQualificacaoConsultants,
   } = useEditalStore();
 
   async function handleFieldSubmit(
@@ -52,7 +52,7 @@ export default function InsertEditalDocuments({
         blob: blobUrl,
         id: idSCDocumentacao,
         idSCDocumentacao,
-        turnToBase64: file
+        turnToBase64: file,
       };
       cadastrarDocumento(documento);
     }
@@ -61,9 +61,8 @@ export default function InsertEditalDocuments({
   const allFilesUploaded = Documentos.length === RequiredDocumentsQty;
 
   useEffect(() => {
-    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+    Qualificacao.map(({ AreaDocuments }) => {
       if (
-        naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
         !allFilesUploaded ||
@@ -74,7 +73,13 @@ export default function InsertEditalDocuments({
         alterarPermissaoEdital(true);
       }
     });
-  }, [Qualificacao, alterarPermissaoEdital, allFilesUploaded, Consultores, checkQualificacaoConsultants]);
+  }, [
+    Qualificacao,
+    alterarPermissaoEdital,
+    allFilesUploaded,
+    Consultores,
+    checkQualificacaoConsultants,
+  ]);
 
   function handleRemoveFile(documentId: string) {
     const documentToRemove = Documentos.find((doc) => doc.id === documentId);
@@ -137,32 +142,32 @@ export default function InsertEditalDocuments({
                                   </Button>
                                 </div>
                               ) : (
-                                  <Input
+                                <Input
                                   accept="application/pdf, image/jpeg, image/jpg"
                                   type="file"
                                   onChange={async (e) => {
                                     const file = e.target.files?.[0];
                                     field.onChange(file);
                                     if (file) {
-                                    form.clearErrors(
-                                      inputName as `editalDocs.${number}.${string}`
-                                    );
-                                    await handleFieldSubmit(
-                                      inputName,
-                                      file,
-                                      idSCDocumentacao
-                                    );
+                                      form.clearErrors(
+                                        inputName as `editalDocs.${number}.${string}`
+                                      );
+                                      await handleFieldSubmit(
+                                        inputName,
+                                        file,
+                                        idSCDocumentacao
+                                      );
                                     } else {
-                                    form.setError(
-                                      inputName as `editalDocs.${number}.${string}`,
-                                      {
-                                      type: "manual",
-                                      message: "Campo Obrigatório",
-                                      }
-                                    );
+                                      form.setError(
+                                        inputName as `editalDocs.${number}.${string}`,
+                                        {
+                                          type: "manual",
+                                          message: "Campo Obrigatório",
+                                        }
+                                      );
                                     }
                                   }}
-                                  />
+                                />
                               )}
                             </div>
                           </FormControl>

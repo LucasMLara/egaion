@@ -23,9 +23,8 @@ export default function ConsultantsArea() {
   } = useEditalStore();
 
   useEffect(() => {
-    Qualificacao.map(({ naturezaPrestacao, AreaDocuments }) => {
+    Qualificacao.map(({ AreaDocuments }) => {
       if (
-        naturezaPrestacao.length === 0 ||
         AreaDocuments.length === 0 ||
         Consultores.length === 0 ||
         Documentos.length !== RequiredDocumentsQty ||
