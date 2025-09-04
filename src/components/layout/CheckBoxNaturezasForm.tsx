@@ -50,16 +50,15 @@ export default function CheckboxFormMultiplo({
 
   const { Qualificacao, activeArea } = useEditalStore();
 
-
   useEffect(() => {
     const formErrors = Object.keys(form.formState.errors).length > 0;
     setError(formErrors);
     onErrorChange?.(formErrors);
-  }, [form.formState.errors, onErrorChange])
+  }, [form.formState.errors, onErrorChange]);
 
   useEffect(() => {
     const hasAreasPreviouslySelected = Qualificacao.some(
-      (area) => area.areaId === activeArea && area.naturezaPrestacao.length > 0
+      (area) => area.areaId === activeArea
     );
 
     hasAreasPreviouslySelected
@@ -78,65 +77,61 @@ export default function CheckboxFormMultiplo({
     toast.success("Opções selecionadas com sucesso!");
   }
 
-  return submittedAreas ? (
-    <div className="flex flex-col gap-4">
-      <h2>{labelSelecionados}</h2>
-      <ul>
-        {Qualificacao.map((area) =>
-          area.naturezaPrestacao
-            .filter((natureza) => natureza.areaId === activeArea)
-            .map((natureza) => <li key={natureza.id}>{natureza.label}</li>)
-        )}
-      </ul>
-      <Button onClick={onReset}>Selecionar Novamente</Button>
-    </div>
-  ) : (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="options"
-          render={() => (
-            <FormItem>
-              <FormDescription>Selecione pelo menos uma opção:</FormDescription>
-              <div className="flex flex-wrap gap-2">
-                {opcoes.map((item) => (
-                  <FormField
-                    key={item.id}
-                    control={form.control}
-                    name="options"
-                    render={({ field }) => (
-                      <FormItem className="flex gap-3 items-center justify-center">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.label)}
-                            onCheckedChange={(checked) =>
-                              checked
-                                ? field.onChange([...field.value, item.label])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.label
+  return (
+    submittedAreas && (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="options"
+            render={() => (
+              <FormItem>
+                <FormDescription>
+                  Selecione pelo menos uma opção:
+                </FormDescription>
+                <div className="flex flex-wrap gap-2">
+                  {opcoes.map((item) => (
+                    <FormField
+                      key={item.id}
+                      control={form.control}
+                      name="options"
+                      render={({ field }) => (
+                        <FormItem className="flex gap-3 items-center justify-center">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item.label)}
+                              onCheckedChange={(checked) =>
+                                checked
+                                  ? field.onChange([...field.value, item.label])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== item.label
+                                      )
                                     )
-                                  )
-                            }
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {item.label}
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={Object.keys(form.formState.errors).length > 0}>
-          Confirmar Seleção
-        </Button>
-      </form>
-    </Form>
+                              }
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            {item.label}
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={Object.keys(form.formState.errors).length > 0}
+          >
+            Confirmar Seleção
+          </Button>
+        </form>
+      </Form>
+    )
   );
 }

@@ -89,14 +89,6 @@ const MultipleAreaInputs: React.FC<MultipleAreaInputsProps> = ({
     alterarPermissaoConsultor(false);
   };
 
-  // const todasAsAreasPossuemPeloMenosUmaNaturezaSelecionada = Qualificacao.every(
-  //   (area) => area.naturezaPrestacao.length > 0
-  // );
-
-  const areasSemNatureza = Qualificacao.filter(
-    ({ naturezaPrestacao }) => naturezaPrestacao.length === 0
-  );
-
   return (
     <div>
       {submittedData ? (
