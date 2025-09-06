@@ -100,6 +100,16 @@ export default function EditalId({
   const [currentEdital, setCurrentEdital] = useState<IAvailableEdital>(
     initialCurrentEditalState
   );
+  type ObjetosEdital = {
+    NomeArquivo: string;
+    NomeAtributoDocumento: string;
+    Base64: string;
+    SCEdital: string;
+  };
+  const [DocsObjetosEdital, setDocsObjetoEdital] = useState<ObjetosEdital[]>(
+    []
+  );
+
   const [editalHistory, setEditalHistory] = useState<HistoryItem[]>([]);
   const [editalAttachments, setEditalAttachments] = useState<AttachmentItem[]>(
     []
@@ -186,7 +196,7 @@ export default function EditalId({
       };
     });
   }, [editalAttachments]);
-
+  console.log(DocsObjetosEdital);
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
@@ -198,6 +208,7 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
+          setDocsObjetoEdital(data.sanitizedObjetosDoEdital);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           carregarLimitesDeLocalidade({
@@ -392,17 +403,20 @@ export default function EditalId({
               do edital.
             </h1>
             <ul className="my-3">
-              <li className="text-center text-lg font-bold text-blue-600 underline ">
-                <a
-                  href={createBlobUrl(
-                    currentEdital.ObjetoEditalBase64,
-                    "application/pdf"
-                  )}
-                  target="_blank"
-                >
-                  Objeto do Edital
-                </a>
-              </li>
+              {DocsObjetosEdital &&
+                DocsObjetosEdital.map((doc) => (
+                  <li
+                    key={doc.NomeArquivo}
+                    className="text-center text-lg font-bold text-blue-600 underline "
+                  >
+                    <a
+                      href={createBlobUrl(doc.Base64, "application/pdf")}
+                      target="_blank"
+                    >
+                      {doc.NomeArquivo}
+                    </a>
+                  </li>
+                ))}
             </ul>
           </div>
         </TabsContent>

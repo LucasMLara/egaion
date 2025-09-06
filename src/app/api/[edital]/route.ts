@@ -35,6 +35,19 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             )
         );
 
+        const ObjetosDoEdital: Array<{ [key: string]: any }> = await prisma.$queryRaw`
+        SELECT * from vw_DocumentosLeituraApp where SCEdital = ${edital}`;
+
+
+        const sanitizedObjetosDoEdital = ObjetosDoEdital.map((objeto) =>
+            Object.fromEntries(
+                Object.entries(objeto).map(([key, value]) => [
+                    key,
+                    typeof value === "bigint" ? value.toString() : value,
+                ])
+            )
+        );
+
 
         const foundEditalAttachments = await prisma.anexo.findMany({
             where: {
@@ -90,7 +103,7 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             JSON.stringify(foundEditalDocuments, (_, value) => typeof value === "bigint" ? value.toString() : value)
         )
 
-        return NextResponse.json({ serializedEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters, serializedEditalLocalidades });
+        return NextResponse.json({ serializedEdital, sanitizedObjetosDoEdital, serializedEditalHistory, serializedEditalAttachments, serializedEditalDocuments, serializedEditalDocCategorias, serializedEditalParameters, serializedEditalLocalidades });
 
     } catch (error: any) {
         console.error("Error fetching data:", error);
