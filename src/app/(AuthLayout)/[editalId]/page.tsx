@@ -79,6 +79,7 @@ export default function EditalId({
     Objetivos: "",
     EscolhaLocalidades: false,
     Status: "",
+    InicioEditalFormatado: "",
     PesquisaNome: "",
     PesquisaCNPJ: "",
     PesquisaStatusCred: "",
@@ -196,7 +197,6 @@ export default function EditalId({
       };
     });
   }, [editalAttachments]);
-  console.log(DocsObjetosEdital);
   const editalAreas = useMemo(() => {
     return transformData(areas);
   }, [areas]);
@@ -208,9 +208,11 @@ export default function EditalId({
         if (!response.ok) {
           console.error("Error:", data.error || data.message);
         } else {
+          console.log(data.serializedEdital);
+          setDocsObjetoEdital(data.sanitizedObjetosDoEdital);
           setDocsObjetoEdital(data.sanitizedObjetosDoEdital);
           setAreas(data.serializedEditalParameters);
-          setCurrentEdital(data.serializedEdital);
+          setCurrentEdital(data.serializedEdital[0]);
           carregarLimitesDeLocalidade({
             QuantidadeMaximaLocalidade:
               data.serializedEdital.QuantidadeMaximaLocalidade,
@@ -396,7 +398,7 @@ export default function EditalId({
               Edital : {currentEdital.NomeEdital}{" "}
             </h1>
             <h2 className="text-center text-lg">
-              Data: {formatDate(currentEdital.InicioEdital)}
+              Data: {currentEdital.InicioEditalFormatado}
             </h2>
             <h1 className="text-center text-md font-semibold my-3">
               Clique no Link abaixo para visualizar as informaçoes atualizadas

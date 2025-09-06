@@ -22,6 +22,7 @@ export type IAvailableEdital = {
   Credenciadora: string;
   TipoChamadas: string;
   InicioEdital: string;
+  InicioEditalFormatado: string;
   Objetivos: string;
   EscolhaLocalidades: boolean;
   Status: string | null;
