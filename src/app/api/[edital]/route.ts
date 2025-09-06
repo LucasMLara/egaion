@@ -55,10 +55,11 @@ export async function GET(_: Request, { params }: { params: { edital: string } }
             },
         });
 
-        const foundEdital: Array<{ [key: string]: any }> = await prisma.$queryRaw`
-        SELECT format(InicioEdital, 'dd/MM/yyyy') as InicioEditalFormatado, * FROM sCEdital where idSCEdital = ${edital}`
-
-
+        const foundEdital = await prisma.sCEdital.findUnique({
+            where: {
+                idSCEdital: parseInt(edital),
+            },
+        });
 
         const serializedEdital = JSON.parse(
 

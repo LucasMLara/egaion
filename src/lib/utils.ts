@@ -2,13 +2,31 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { IEditalCard, IDocCard } from "@/types/types";
 import Dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-export function formatDate(date: string) {
-  const parsedDate = Dayjs(date);
+
+Dayjs.extend(utc);
+
+
+
+/**
+ * Formata uma data do banco (UTC) em string legível.
+ * @param date - string ISO ou objeto Date
+ * @param format - padrão de saída (default: DD/MM/YYYY)
+ * @returns string formatada ou "Data não definida."
+ */
+export function formatDate(
+  date: string | Date | null | undefined,
+  format: string = "DD/MM/YYYY"
+): string {
+  if (!date) return "Data não definida.";
+
+  const parsedDate = Dayjs.utc(date);
   return parsedDate.isValid()
-    ? parsedDate.format("DD/MM/YYYY")
+    ? parsedDate.format(format)
     : "Data não definida.";
 }
+
 export function sanitizeData(data: any[]) {
   return data.map((edital) =>
     Object.fromEntries(
