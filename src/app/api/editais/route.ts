@@ -14,7 +14,8 @@ export async function GET() {
             se.ResumoEdital,
             format(se.InicioEdital, 'dd/MM/yyyy') as InicioEdital,
             format(se.FimEdital, 'dd/MM/yyyy') as FimEdital,
-            stc.Descricao as TipodeCredenciamento
+            stc.Descricao as TipodeCredenciamento,
+            se.Status as Status
         FROM sCEdital se
         JOIN SCTipoCredenciame stc ON se.TipodeCredenciamento = stc.idSCTipoCredenciame
         `;

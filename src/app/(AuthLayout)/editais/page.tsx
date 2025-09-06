@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import EditalCard from "@/components/layout/EditalCard";
 import { useAvailableEditals } from "@/store/useAvailableEditals";
-import { formatDate } from "@/lib/utils";
 import { LoaderIcon } from "lucide-react";
+
+import { IAvailableEdital } from "@/store/useAvailableEditals/types";
 
 export default function Editais() {
   const { availableEditals, setListEditals } = useAvailableEditals();
@@ -14,7 +15,11 @@ export default function Editais() {
       try {
         const response = await fetch("/api/editais");
         const { editais } = await response.json();
-        setListEditals(editais);
+        const editaisAtivos = editais.filter(
+          (edital: IAvailableEdital) => edital.Status === "1"
+        );
+
+        setListEditals(editaisAtivos);
         setLoading(false);
       } catch (error) {
         console.error("Erro", error);
@@ -30,6 +35,17 @@ export default function Editais() {
       </div>
     );
   }
+
+  if (availableEditals.length === 0) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <h1 className="text-2xl font-bold  bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-md w-3/4 text-center">
+          Não há editais disponíveis no momento.
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <section className="flex flex-wrap gap-6 py-10 items-center justify-center flex-col">
       <h1 className="text-2xl font-bold text-neutral-700 text-center m-9">
