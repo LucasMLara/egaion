@@ -1,6 +1,8 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MessageCircleQuestionIcon } from "lucide-react";
+
 import {
   consultantSchema,
   IConsultant,
@@ -10,6 +12,13 @@ import { useEditalStore } from "@/store/EditalRegister";
 import { nanoid } from "nanoid";
 
 import { defineStepper } from "@stepperize/react";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import {
   Form,
@@ -169,10 +178,10 @@ export default function CreateConsultant() {
         })),
       };
       console.log(newConsultant);
-      // cadastrarConsultor(newConsultant);
+      cadastrarConsultor(newConsultant);
 
-      // toast.success("Consultor cadastrado com sucesso!");
-      // resetConsultantForm();
+      toast.success("Consultor cadastrado com sucesso!");
+      resetConsultantForm();
     }
 
     return (
@@ -338,8 +347,18 @@ export default function CreateConsultant() {
               name="comprovanteFormacaoAcademica"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex flex-col items-center my-4">
+                  <div className="flex text-center items-center justify-center my-4 gap-1 ">
                     <FormLabel>Comprovante de Formação Acadêmica</FormLabel>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <MessageCircleQuestionIcon className="size-4 text-muted-foreground hover:text-primary-400 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Permitido inserir mais de um documento por vez</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                   <FormControl>
                     <Input
