@@ -33,6 +33,7 @@ export default function Login() {
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
+                autoFocus
                 className="transition-all"
                 id="email"
                 type="text"
@@ -59,7 +60,7 @@ export default function Login() {
                   className="pr-10 transition-all"
                 />
                 <Button
-                  variant='link'
+                  variant="link"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
