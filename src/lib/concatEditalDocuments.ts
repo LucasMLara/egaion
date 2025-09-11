@@ -143,11 +143,17 @@ export async function prepararConsultoresCredenciada(
                 ${await getBase64(new File([consultor.comprovanteVinculoCNPJ], consultor.comprovanteVinculoCNPJ.name))}
               </File>
             </ComprovanteVinculoPJ>
-            <CompFormacaoAcademica>
-              <File fileName="${consultor.comprovanteFormacaoAcademica.name}">
-                ${await getBase64(new File([consultor.comprovanteFormacaoAcademica], consultor.comprovanteFormacaoAcademica.name))}
-              </File>
-            </CompFormacaoAcademica>
+            <CompFormacaoAcademica>`;
+    if (consultor.comprovanteFormacaoAcademica && consultor.comprovanteFormacaoAcademica.length > 0) {
+      for (const file of consultor.comprovanteFormacaoAcademica) {
+        xml += `
+              <File fileName="${file.name}">
+                ${await getBase64(new File([file], file.name))}
+              </File>`;
+      }
+    }
+    xml += `
+      </CompFormacaoAcademica>
             <RegistroProfissional>
               <File fileName="${consultor.registroProfissionalClasse.name}">
                 ${await getBase64(new File([consultor.registroProfissionalClasse], consultor.registroProfissionalClasse.name))}
@@ -167,20 +173,7 @@ export async function prepararConsultoresCredenciada(
     }
 
     // ** Process grouped areas ** (Fix iteration over Map)
-    for (const [areaId, { areaName, documents }] of Array.from(groupedAreas.entries())) {
-      // Find matching area in consultor.areas
-      const area = consultor.areas?.find(a => a.id === areaId);
-      const naturezas = area?.naturezas ?? [];
-
-      // Generate XML for `naturezas`
-      const naturezasXML = naturezas
-        .map(
-          (natureza: string) => `
-              <SCNaturezaNivel>
-                <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza}'"/>
-              </SCNaturezaNivel>`
-        )
-        .join("");
+    for (const [_areaId, { areaName, documents }] of Array.from(groupedAreas.entries())) {
 
       // Generate XML for all `Documento` inside one `SCConsultorNivel`
       const documentosXML = await Promise.all(
