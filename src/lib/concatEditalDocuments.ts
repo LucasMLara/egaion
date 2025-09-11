@@ -35,29 +35,13 @@ export async function prepararAreasCredenciada(
   let xml = "<NiveisFinais>";
 
   for (const area of Areas) {
-    const nivelParametrizacaoEdital = area.subLevels.length + 1;
     xml += `\n    <SCParametrizacaoEdital>`;
 
     if (area.areaId) {
-      xml += `\n        <Nivel${nivelParametrizacaoEdital}Parametrizacao entityName="SCNivel${nivelParametrizacaoEdital}Parametrizacao" businessKey="idSCNivel${nivelParametrizacaoEdital}Parametrizacao='${area.areaId}'"/>`;
+      xml += `\n        <NivelNPParametrizacao entityName="SCParamEditalNivel" businessKey="idSCParamEditalNivel='${area.areaId}'"/>`;
     }
 
     xml += `\n        <Parametrizacao>${area.name}</Parametrizacao>`;
-
-    if (Array.isArray(area.subLevels) && area.subLevels.length > 0) {
-      xml += generateNivelXML(area.subLevels, 2);
-    }
-
-    if (
-      Array.isArray(area.naturezaPrestacao) &&
-      area.naturezaPrestacao.length > 0
-    ) {
-      xml += `\n        <NaturezasPrestacao>`;
-      for (const natureza of area.naturezaPrestacao) {
-        xml += `\n            <SCNaturezaNivel>\n                <NaturezaPrestacao entityName="SCNaturezaPrestacao" businessKey="Codigo='${natureza.id}'"/>\n            </SCNaturezaNivel>`;
-      }
-      xml += `\n        </NaturezasPrestacao>`;
-    }
 
     const categories = ["AtestadoCapacidadeTecnica", "RelatoExperiencia"];
     const categorizedDocuments: Record<string, Document[]> = {
@@ -98,24 +82,23 @@ export async function prepararAreasCredenciada(
   return xml;
 }
 
-function generateNivelXML(levels: any[], depth: number): string {
-  if (!Array.isArray(levels) || levels.length === 0) return "";
+// function generateNivelXML(levels: any[], depth: number): string {
+//   if (!Array.isArray(levels) || levels.length === 0) return "";
 
-  let xml = "";
+//   let xml = "";
 
-  for (const level of levels) {
-    if (!level.areaId) continue;
+//   for (const level of levels) {
+//     if (!level.areaId) continue;
 
-    xml += `\n        <Nivel${depth}Parametrizacao entityName="SCNivel${depth}Parametrizacao" businessKey="idSCNivel${depth}Parametrizacao='${level.areaId}'"/>`;
+//     xml += `\n        <Nivel${depth}Parametrizacao entityName="SCNivel${depth}Parametrizacao" businessKey="idSCNivel${depth}Parametrizacao='${level.areaId}'"/>`;
 
-    if (Array.isArray(level.subLevels) && level.subLevels.length > 0) {
-      xml += generateNivelXML(level.subLevels, depth + 1);
-    }
-  }
+//     if (Array.isArray(level.subLevels) && level.subLevels.length > 0) {
+//       xml += generateNivelXML(level.subLevels, depth + 1);
+//     }
+//   }
 
-  return xml;
-}
-
+//   return xml;
+// }
 export async function prepararConsultoresCredenciada(
   consultants: IConsultant[],
   idSCCredenciada: string
@@ -186,14 +169,10 @@ export async function prepararConsultoresCredenciada(
               </Documento>`
         )
       );
-
       xml += `
             <SCConsultorNivel>
               ${documentosXML.join("")}
               <Parametrizacao>${areaName}</Parametrizacao>
-              <NaturezasPrestacao>
-                ${naturezasXML} 
-              </NaturezasPrestacao>
             </SCConsultorNivel>`;
     }
 
