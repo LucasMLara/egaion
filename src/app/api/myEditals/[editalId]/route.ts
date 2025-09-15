@@ -17,12 +17,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosDosDocumentos: Array<{ [key: string]: any }> = await prisma.$queryRaw`
             SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome, d.idSCDocumentacao, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+            c.idSCCredenciada,c.RazaoSocial, dce.Aprovado, d.Nome, d.idSCDocumentacao, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
             FROM SCCredenciadasEdital ce
             INNER JOIN SCDocCredenciadaEdital dce ON dce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             INNER JOIN SCDocumentacao d ON d.idSCDocumentacao = dce.DadosDocumento
             INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
             INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+			INNER JOIN SCJustificativa j on j.idSCJustificativa = dce.Justificativa
             WHERE SCCredenciadasEdital = ${BigInt(editalId)}
             AND dce.Aprovado = 0
             `;
@@ -39,20 +40,25 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
         const dadosQualificacaoTecnica: Array<{ [key: string]: any }> = await prisma.$queryRaw`
             SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Atestado de Capacidade Técnica' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Atestado de Capacidade Técnica' as NomeInput, ce.NumeroCaso,  
+					j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
                     FROM SCCredenciadasEdital ce
                     INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
                     INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
                     INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+					inner join SCJustificativa j on j.idSCJustificativa = pe.JustificativaAtestado
                     WHERE SCCredenciadasEdital = ${BigInt(editalId)}
                     AND pe.ApvAtestadoCapacidadeTec = 0
+
                     UNION ALL 
+
                     SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
-                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Relato de Experiência' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+                    c.idSCCredenciada,c.RazaoSocial, pe.Parametrizacao, 'Relato de Experiência' as NomeInput, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
                     FROM SCCredenciadasEdital ce
                     INNER JOIN SCParametrizacaoEdital pe ON pe.SCCredenciadasEdital = ce.idSCCredenciadasEdital
                     INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
                     INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+					inner join SCJustificativa j on j.idSCJustificativa = pe.JustificativaRelato
                     WHERE SCCredenciadasEdital = ${BigInt(editalId)}
                     AND pe.ApvRelatoExperiencia = 0`
             ;
@@ -69,12 +75,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         const documentosConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
         select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Comprovante de Formação Acadêmica' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+            'Comprovante de Formação Acadêmica' as NomeInput, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
             inner join SCCredenciada c on c.idSCCredenciada = ce.Credenciada
             inner join SCEdital e on e.idSCEdital = ce.SCEdital
+			inner join SCJustificativa j on j.idSCJustificativa = t.JustificativaFormacaoAca
             where SCCredenciadasEdital = ${BigInt(editalId)}
             and t.ApvCompFormacaoAcademica = 0 
 
@@ -82,12 +89,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Comprovante de Vínculo' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+            'Comprovante de Vínculo' as NomeInput, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
             inner join SCCredenciada c on c.idSCCredenciada = ce.Credenciada
             inner join SCEdital e on e.idSCEdital = ce.SCEdital
+			inner join SCJustificativa j on j.idSCJustificativa = t.JustificativaVinculoPJ
             where SCCredenciadasEdital = ${BigInt(editalId)}
             and t.ApvComprovanteVinculoPJ = 0 
 
@@ -95,12 +103,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Documentos Pessoais' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+            'Documentos Pessoais' as NomeInput, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
             inner join SCCredenciada c on c.idSCCredenciada = ce.Credenciada
             inner join SCEdital e on e.idSCEdital = ce.SCEdital
+			inner join SCJustificativa j on j.idSCJustificativa = t.JustificativaDocsPessoais
             where SCCredenciadasEdital = ${BigInt(editalId)}
             AND t.ApvDocumentosPessoais = 0 
 
@@ -108,12 +117,13 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
 
             select ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
             c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico, t.Nome, t.CPF,
-            'Registro Profissional' as NomeInput, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+            'Registro Profissional' as NomeInput, ce.NumeroCaso,  j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
             from SCCredenciadasEdital ce
             inner join SCConsultorEdital cce on cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
             inner join SCTecnico t on t.idSCTecnico = cce.SCTecnico
             inner join SCCredenciada c on c.idSCCredenciada = ce.Credenciada
             inner join SCEdital e on e.idSCEdital = ce.SCEdital
+			inner join SCJustificativa j on j.idSCJustificativa = t.JustificativaProfissional
             where SCCredenciadasEdital = ${BigInt(editalId)}
             and t.ApvRegistroProfissional = 0`;
 
@@ -129,13 +139,14 @@ export async function GET(_: Request, { params }: { params: { editalId: string }
         const docsParametrizacaoConsultores: Array<{ [key: string]: any }> = await prisma.$queryRaw`
         SELECT ce.idSCCredenciadasEdital,  e.idSCEdital,e.NomeEdital,
         c.idSCCredenciada,c.RazaoSocial, cce.idSCConsultorEdital, t.idSCTecnico,t.Nome, t.CPF,
-        ccn.Parametrizacao,ccn.Aprovado, ce.NumeroCaso,  ce.JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
+        ccn.Parametrizacao,ccn.Aprovado, ce.NumeroCaso, j.JustificativaNaoAprovaca as JustificativaNaoAprovacao, format(ce.DataPrazoAjustes, 'dd/MM/yyyy') as DataPrazoAjustes
         FROM SCCredenciadasEdital ce
         INNER JOIN SCConsultorEdital cce ON cce.SCCredenciadasEdital = ce.idSCCredenciadasEdital
         INNER JOIN SCConsultorNivel ccn ON ccn.SCConsultorEdital = cce.idSCConsultorEdital
         INNER JOIN SCTecnico t ON t.idSCTecnico = cce.SCTecnico
         INNER JOIN SCCredenciada c ON c.idSCCredenciada = ce.Credenciada
         INNER JOIN SCEdital e ON e.idSCEdital = ce.SCEdital
+		inner join SCJustificativa j on j.idSCJustificativa = ccn.Justificativa
         WHERE SCCredenciadasEdital = ${BigInt(editalId)}
         AND (ccn.Aprovado = 0)
         `;
