@@ -9,10 +9,19 @@ import { useEditalStore } from "@/store/EditalRegister";
 import NoContent from "../NoContent";
 import { toast } from "sonner";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { MessageSquareWarningIcon } from "lucide-react";
+
 type DocumentosParaAjustes = {
   Aprovado: boolean;
   Nome: string;
   idSCDocumentacao: string;
+  JustificativaNaoAprovacao: string;
 };
 
 export default function DocsEmpresaAdj({
@@ -41,13 +50,12 @@ export default function DocsEmpresaAdj({
     reValidateMode: "onChange",
     defaultValues: {},
   });
-
   const documentosPendentes = useMemo(
     () => documentosParaAjustes.filter((doc) => !doc.Aprovado),
     [documentosParaAjustes]
   );
   useEffect(() => {
-    const subscription = watch((values, { name }) => {
+    const subscription = watch((_values, { name }) => {
       if (name) {
         trigger(name);
       }
@@ -107,7 +115,19 @@ export default function DocsEmpresaAdj({
       {documentosPendentes.map((doc) => (
         <div key={doc.Nome}>
           <Label className="flex items-center justify-center font-semibold my-2">
-            {doc.Nome}
+            <>
+              {doc.Nome} -{" "}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <MessageSquareWarningIcon className="size-4 text-muted-foreground hover:text-primary-400 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all cursor-help ml-1" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {doc.JustificativaNaoAprovacao}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </>
           </Label>
           <Controller
             name={doc.Nome}

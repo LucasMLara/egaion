@@ -107,6 +107,7 @@ export default function MyEditalPage() {
       cpf: documentos[0]?.CPF ?? "",
       idSCTecnico,
       documentos,
+      JustificativaNaoAprovacao: documentos[0]?.JustificativaNaoAprovacao ?? "",
     }));
   }
 
@@ -372,12 +373,8 @@ export default function MyEditalPage() {
         Realizar Ajustes - {nomeEdital ?? editalId}
       </h1>
 
-      <Tabs defaultValue="justificativaEmpresa" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="justificativaEmpresa" className="text-center">
-            <span className="hidden lg:inline">Justificativa</span>
-            <FileText className="inline lg:hidden w-6 h-6" />
-          </TabsTrigger>
+      <Tabs defaultValue="ajustesDocumentosEmpresa" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ajustesDocumentosEmpresa" className="text-center">
             <span className="hidden lg:inline">Documentos da Empresa</span>
             <FileText className="inline lg:hidden w-6 h-6" />
@@ -399,9 +396,6 @@ export default function MyEditalPage() {
         </TabsList>
         <TabsContent value="ajustesDocumentosEmpresa">
           <DocsEmpresaAdj documentosParaAjustes={documentosDaEmpresa} />
-        </TabsContent>
-        <TabsContent value="justificativaEmpresa">
-          <NoContent texto={justificativa} data={dataPrazo} />
         </TabsContent>
         <TabsContent value="docspessoaisconsultores">
           <DocsPessoaisConsultAdj

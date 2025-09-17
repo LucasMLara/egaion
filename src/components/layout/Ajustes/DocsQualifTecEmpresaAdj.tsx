@@ -15,6 +15,15 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import NoContent from "../NoContent";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { MessageSquareWarningIcon } from "lucide-react";
+
 interface Props {
   DocumentosQualificacaoEmpresaAjustesProp: Record<
     string,
@@ -92,7 +101,21 @@ export default function DocsQualifTecEmpresaAdj({
                   return (
                     <div key={uniqueKey} className="mb-4">
                       <div className="flex items-center justify-between my-4">
-                        <Label>{doc.NomeInput}</Label>
+                        <Label className="flex items-center justify-center font-medium my-2">
+                          <>
+                            {doc.NomeInput} -{" "}
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <MessageSquareWarningIcon className="size-4 text-muted-foreground hover:text-primary-400 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all cursor-help ml-1" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {doc.JustificativaNaoAprovacao}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </>
+                        </Label>
                         {arquivosSalvos.length > 0 && (
                           <Button
                             variant="ghost"

@@ -52,6 +52,7 @@ export interface DocumentoEmpresaAjuste {
   RazaoSocial: string;
   Parametrizacao: string;
   NomeInput: string;
+  JustificativaNaoAprovacao: string;
 }
 
 export const generateEmpresaAreaDocsSchema = (docs: DocumentoEmpresaAjuste[]) => {
@@ -445,12 +446,14 @@ export interface DocumentoConsultor {
   Nome: string;
   CPF: string;
   idSCTecnico: string;
+  JustificativaNaoAprovacao: string;
 }
 export type GrupoConsultor = {
   nome: string;
   cpf: string;
   idSCTecnico: string;
   documentos: DocumentoConsultor[];
+
 };
 
 export const schemaDocsPessoais = z.object({
@@ -469,6 +472,7 @@ export interface DocumentoQualificacao {
 export interface DocumentoConsultorPorArea {
   idSCCredenciadasEdital: string;
   idSCEdital: string;
+  JustificativaNaoAprovacao: string;
   NomeEdital: string;
   idSCCredenciada: string;
   RazaoSocial: string;

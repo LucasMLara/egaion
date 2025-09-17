@@ -6,6 +6,15 @@ import { Button } from "@/components/ui/button";
 import { useEditalStore } from "@/store/EditalRegister";
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { MessageSquareWarningIcon } from "lucide-react";
+
+import {
   GrupoConsultor,
   generateConsultorDocsSchema,
   IGenerateConsultorDocs,
@@ -127,7 +136,19 @@ export default function DocsPessoaisConsultAdj({
             return (
               <div key={doc.NomeInput} className="flex flex-col gap-1">
                 <Label className="flex items-center justify-center font-medium my-2">
-                  {doc.NomeInput}
+                  <>
+                    {doc.Nome} -{" "}
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <MessageSquareWarningIcon className="size-4 text-muted-foreground hover:text-primary-400 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all cursor-help ml-1" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {doc.JustificativaNaoAprovacao}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </>
                 </Label>
                 {existing ? (
                   <div className="flex items-center justify-center gap-2">

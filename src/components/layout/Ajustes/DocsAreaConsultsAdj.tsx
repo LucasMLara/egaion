@@ -15,6 +15,15 @@ import { z } from "zod";
 import { toast } from "sonner";
 import NoContent from "../NoContent";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { MessageSquareWarningIcon } from "lucide-react";
+
 interface Props {
   DocumentosDosConsultoresPorAreaAjustesProp: DocumentosAgrupadosPorConsultorEArea;
 }
@@ -89,7 +98,27 @@ export default function DocsAreaConsultsAdj({
                 return (
                   <div key={uniqueKey} className="mb-4">
                     <div className="flex items-center justify-between my-4">
-                      <Label className="text-sm font-bold">{area}</Label>
+                      {areas[area].map((doc, idx) => (
+                        <Label
+                          key={idx}
+                          className="flex items-center justify-center my-2 text-sm font-bold"
+                        >
+                          <>
+                            {area} -{" "}
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <MessageSquareWarningIcon className="size-4 text-muted-foreground hover:text-primary-400 stroke-black hover:stroke-primary-400 hover:scale-110 transition-all cursor-help ml-1" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {doc.JustificativaNaoAprovacao}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </>
+                        </Label>
+                      ))}
+
                       {arquivosSalvos.length > 0 && (
                         <Button
                           className="text-red-500 text-sm"
