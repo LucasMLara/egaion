@@ -137,7 +137,7 @@ export default function DocsPessoaisConsultAdj({
               <div key={doc.NomeInput} className="flex flex-col gap-1">
                 <Label className="flex items-center justify-center font-medium my-2">
                   <>
-                    {doc.Nome} -{" "}
+                    {doc.NomeInput} -{" "}
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
