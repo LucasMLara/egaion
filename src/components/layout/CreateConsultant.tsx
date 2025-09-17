@@ -177,7 +177,6 @@ export default function CreateConsultant() {
           areaName: doc.areaName as string,
         })),
       };
-      console.log(newConsultant);
       cadastrarConsultor(newConsultant);
 
       toast.success("Consultor cadastrado com sucesso!");
