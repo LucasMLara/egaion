@@ -41,7 +41,6 @@ export default function DocsEmpresaAdj({
   const {
     control,
     formState: { errors },
-    watch,
     setValue,
     trigger,
   } = useForm<IGenerateEmpresaDocs>({
@@ -54,14 +53,6 @@ export default function DocsEmpresaAdj({
     () => documentosParaAjustes.filter((doc) => !doc.Aprovado),
     [documentosParaAjustes]
   );
-  useEffect(() => {
-    const subscription = watch((_values, { name }) => {
-      if (name) {
-        trigger(name);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, trigger]);
 
   async function handleFieldSubmit(
     fieldName: string,
