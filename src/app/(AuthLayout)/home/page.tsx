@@ -61,11 +61,9 @@ export default function Home() {
             <MyEditalCard
               status={card.Status}
               key={card.idSCCredenciadasEdital}
-              editalCardContent={card.ResumoEdital}
               editalCardTitle={card.NomeEdital}
               editalCardDate={card.InicioEdital}
               editalDialogTitle={card.NomeEdital}
-              editalDialogDescription={card.InicioEdital}
               editalDialogContent={card.ResumoEdital}
               editalId={card.idSCCredenciadasEdital}
               editalType={card.TipodeCredenciamento}

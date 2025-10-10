@@ -34,7 +34,6 @@ export default function EditalCard({
   editalCardTitle,
   editalCardDate,
   editalDialogTitle,
-  editalDialogDescription,
   editalDialogContent,
   editalId,
   editalType,
@@ -76,7 +75,6 @@ export default function EditalCard({
           <DialogTitle>Detalhes do Edital: {editalDialogTitle}</DialogTitle>
           <DialogDescription className="font-ubuntu">
             <span className="flex flex-col gap-2 justify-center items-center">
-              <span>{editalDialogDescription}</span>
               <span>{editalType}</span>
             </span>
           </DialogDescription>

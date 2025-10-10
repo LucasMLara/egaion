@@ -57,12 +57,11 @@ export default function Editais() {
             <EditalCard
               status={null}
               key={card.idSCEdital}
-              editalCardContent={card.ResumoEdital}
+              editalCardContent={card.Objetivos}
+              editalDialogContent={card.ResumoEdital}
               editalCardTitle={card.NomeEdital}
               editalCardDate={card.InicioEdital}
               editalDialogTitle={card.NomeEdital}
-              editalDialogDescription={card.Objetivos}
-              editalDialogContent={card.Objetivos}
               editalId={card.idSCEdital}
               editalType={card.TipodeCredenciamento}
             />
