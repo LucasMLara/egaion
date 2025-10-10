@@ -209,7 +209,6 @@ export default function EditalId({
           console.error("Error:", data.error || data.message);
         } else {
           setDocsObjetoEdital(data.sanitizedObjetosDoEdital);
-          setDocsObjetoEdital(data.sanitizedObjetosDoEdital);
           setAreas(data.serializedEditalParameters);
           setCurrentEdital(data.serializedEdital);
           carregarLimitesDeLocalidade({
