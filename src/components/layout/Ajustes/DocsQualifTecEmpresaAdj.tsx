@@ -73,7 +73,7 @@ export default function DocsQualifTecEmpresaAdj({
     alterarPermissaoAjuste("DocsQualifTecEmpresaAdj", allDocsPreenchidos);
   }, [alterarPermissaoAjuste, allDocsPreenchidos]);
 
-  if (!DocumentosQualificacaoEmpresaAjustesProp)
+  if (Object.keys(DocumentosQualificacaoEmpresaAjustesProp).length === 0)
     return (
       <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
     );

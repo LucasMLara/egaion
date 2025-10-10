@@ -69,7 +69,7 @@ export default function DocsAreaConsultsAdj({
     alterarPermissaoAjuste("DocsQualifTecConsultAdj", allDocsPreenchidos);
   }, [alterarPermissaoAjuste, allDocsPreenchidos]);
 
-  if (!DocumentosDosConsultoresPorAreaAjustesProp)
+  if (Object.keys(DocumentosDosConsultoresPorAreaAjustesProp).length === 0)
     return (
       <NoContent texto="Não há documentos pendentes para preenchimento nesta sessão" />
     );
