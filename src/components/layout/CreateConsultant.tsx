@@ -145,7 +145,7 @@ export default function CreateConsultant() {
           emailConfirmation: "",
         },
         consultantCPF: undefined,
-        comprovanteFormacaoAcademica: undefined,
+        comprovanteFormacaoAcademica: [],
         comprovanteVinculoCNPJ: undefined,
         registroProfissionalClasse: undefined,
         contato: "",
